@@ -19,6 +19,17 @@ public interface HelloListener extends ParseTreeListener {
 	void exitExpression(@NotNull HelloParser.ExpressionContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HelloParser#assign}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssign(@NotNull HelloParser.AssignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#assign}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssign(@NotNull HelloParser.AssignContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HelloParser#program}.
 	 * @param ctx the parse tree
 	 */
@@ -28,6 +39,28 @@ public interface HelloListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitProgram(@NotNull HelloParser.ProgramContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmt(@NotNull HelloParser.StmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmt(@NotNull HelloParser.StmtContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#stmts}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmts(@NotNull HelloParser.StmtsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#stmts}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmts(@NotNull HelloParser.StmtsContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#literal}.

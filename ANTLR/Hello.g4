@@ -1,22 +1,47 @@
 // Define
 grammar Hello;
 
-program : expression
+program : stmts
     ;
 
-Assign
-    :
+//---------------Statement----------------
+
+stmts
+    : stmt SEMICOLON stmts*
     ;
 
+stmt
+    : assign
+    ;
+
+//---------------Assignment---------------
+assign
+    : Identifier ASSIGN expression
+    ;
+
+Identifier
+    : Letter LetterOrDigit*
+    ;
+
+Letter
+    : (CHARACTER|UNDERSCORE)
+    ;
+
+LetterOrDigit
+    : (CHARACTER|UNDERSCORE|NUMBER)
+    ;
+
+//---------------Expression---------------
 expression
     : expression ('*'|'/'|'%') expression
     | expression ('+'|'-') expression
     | literal
     ;
 
+//-------------Variable types-------------
 literal
-    :   IntegerLiteral
-    |   DecimalLiteral
+    : IntegerLiteral
+    | DecimalLiteral
     ;
 
 IntegerLiteral
@@ -28,15 +53,13 @@ DecimalLiteral
     | Digs
     ;
 
-
 Digs
     : Digit+
     ;
 
 Digit
-    : [0-9]
+    : NUMBER
     ;
-
 
 // The Null Literal
 
@@ -47,6 +70,11 @@ NullLiteral
 // Characters
 
 DOT             : '.';
+UPPERCASE       : [A-Z];
+LOWERCASE       : [a-z];
+CHARACTER       : (UPPERCASE | LOWERCASE);
+UNDERSCORE      : '_';
+NUMBER          : [0-9];
 
 // Operators
 
@@ -55,6 +83,7 @@ BANG            : '!';
 //TILDE           : '~';
 //QUESTION        : '?';
 //COLON           : ':';
+SEMICOLON       : ';';
 
 //Logical operators
 EQUAL           : '==';

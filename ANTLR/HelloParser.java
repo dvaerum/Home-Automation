@@ -14,21 +14,26 @@ public class HelloParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		IntegerLiteral=1, DecimalLiteral=2, Digs=3, Digit=4, NullLiteral=5, DOT=6, 
-		ASSIGN=7, BANG=8, EQUAL=9, GT=10, LT=11, LE=12, GE=13, NOTEQUAL=14, AND=15, 
-		OR=16, INC=17, DEC=18, ADD=19, SUB=20, MUL=21, DIV=22, MOD=23, ADD_ASSIGN=24, 
-		SUB_ASSIGN=25, MUL_ASSIGN=26, DIV_ASSIGN=27, AND_ASSIGN=28, MOD_ASSIGN=29, 
-		WS=30, COMMENT=31, LINE_COMMENT=32;
+		Identifier=1, Letter=2, LetterOrDigit=3, IntegerLiteral=4, DecimalLiteral=5, 
+		Digs=6, Digit=7, NullLiteral=8, DOT=9, UPPERCASE=10, LOWERCASE=11, CHARACTER=12, 
+		UNDERSCORE=13, NUMBER=14, ASSIGN=15, BANG=16, SEMICOLON=17, EQUAL=18, 
+		GT=19, LT=20, LE=21, GE=22, NOTEQUAL=23, AND=24, OR=25, INC=26, DEC=27, 
+		ADD=28, SUB=29, MUL=30, DIV=31, MOD=32, ADD_ASSIGN=33, SUB_ASSIGN=34, 
+		MUL_ASSIGN=35, DIV_ASSIGN=36, AND_ASSIGN=37, MOD_ASSIGN=38, WS=39, COMMENT=40, 
+		LINE_COMMENT=41;
 	public static final String[] tokenNames = {
-		"<INVALID>", "IntegerLiteral", "DecimalLiteral", "Digs", "Digit", "'null'", 
-		"'.'", "'='", "'!'", "'=='", "'>'", "'<'", "'<='", "'>='", "'!='", "'AND'", 
-		"'OR'", "'++'", "'--'", "'+'", "'-'", "'*'", "'/'", "'%'", "'+='", "'-='", 
-		"'*='", "'/='", "'&='", "'%='", "WS", "COMMENT", "LINE_COMMENT"
+		"<INVALID>", "Identifier", "Letter", "LetterOrDigit", "IntegerLiteral", 
+		"DecimalLiteral", "Digs", "Digit", "'null'", "'.'", "UPPERCASE", "LOWERCASE", 
+		"CHARACTER", "'_'", "NUMBER", "'='", "'!'", "';'", "'=='", "'>'", "'<'", 
+		"'<='", "'>='", "'!='", "'AND'", "'OR'", "'++'", "'--'", "'+'", "'-'", 
+		"'*'", "'/'", "'%'", "'+='", "'-='", "'*='", "'/='", "'&='", "'%='", "WS", 
+		"COMMENT", "LINE_COMMENT"
 	};
 	public static final int
-		RULE_program = 0, RULE_expression = 1, RULE_literal = 2;
+		RULE_program = 0, RULE_stmts = 1, RULE_stmt = 2, RULE_assign = 3, RULE_expression = 4, 
+		RULE_literal = 5;
 	public static final String[] ruleNames = {
-		"program", "expression", "literal"
+		"program", "stmts", "stmt", "assign", "expression", "literal"
 	};
 
 	@Override
@@ -51,8 +56,8 @@ public class HelloParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgramContext extends ParserRuleContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public StmtsContext stmts() {
+			return getRuleContext(StmtsContext.class,0);
 		}
 		public ProgramContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -74,7 +79,149 @@ public class HelloParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(6); expression(0);
+			setState(12); stmts();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StmtsContext extends ParserRuleContext {
+		public TerminalNode SEMICOLON() { return getToken(HelloParser.SEMICOLON, 0); }
+		public StmtsContext stmts(int i) {
+			return getRuleContext(StmtsContext.class,i);
+		}
+		public List<StmtsContext> stmts() {
+			return getRuleContexts(StmtsContext.class);
+		}
+		public StmtContext stmt() {
+			return getRuleContext(StmtContext.class,0);
+		}
+		public StmtsContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stmts; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).enterStmts(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).exitStmts(this);
+		}
+	}
+
+	public final StmtsContext stmts() throws RecognitionException {
+		StmtsContext _localctx = new StmtsContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_stmts);
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(14); stmt();
+			setState(15); match(SEMICOLON);
+			setState(19);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+			while ( _alt!=2 && _alt!=-1 ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(16); stmts();
+					}
+					} 
+				}
+				setState(21);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StmtContext extends ParserRuleContext {
+		public AssignContext assign() {
+			return getRuleContext(AssignContext.class,0);
+		}
+		public StmtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stmt; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).enterStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).exitStmt(this);
+		}
+	}
+
+	public final StmtContext stmt() throws RecognitionException {
+		StmtContext _localctx = new StmtContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_stmt);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(22); assign();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class AssignContext extends ParserRuleContext {
+		public TerminalNode ASSIGN() { return getToken(HelloParser.ASSIGN, 0); }
+		public TerminalNode Identifier() { return getToken(HelloParser.Identifier, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public AssignContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assign; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).enterAssign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof HelloListener ) ((HelloListener)listener).exitAssign(this);
+		}
+	}
+
+	public final AssignContext assign() throws RecognitionException {
+		AssignContext _localctx = new AssignContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_assign);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(24); match(Identifier);
+			setState(25); match(ASSIGN);
+			setState(26); expression(0);
 			}
 		}
 		catch (RecognitionException re) {
@@ -121,40 +268,40 @@ public class HelloParser extends Parser {
 		int _parentState = getState();
 		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
 		ExpressionContext _prevctx = _localctx;
-		int _startState = 2;
-		enterRecursionRule(_localctx, 2, RULE_expression, _p);
+		int _startState = 8;
+		enterRecursionRule(_localctx, 8, RULE_expression, _p);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(9); literal();
+			setState(29); literal();
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(19);
+			setState(39);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(17);
-					switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
+					setState(37);
+					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(11);
+						setState(31);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(12);
+						setState(32);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MUL) | (1L << DIV) | (1L << MOD))) != 0)) ) {
 						_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(13); expression(4);
+						setState(33); expression(4);
 						}
 						break;
 
@@ -162,23 +309,23 @@ public class HelloParser extends Parser {
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(14);
+						setState(34);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(15);
+						setState(35);
 						_la = _input.LA(1);
 						if ( !(_la==ADD || _la==SUB) ) {
 						_errHandler.recoverInline(this);
 						}
 						consume();
-						setState(16); expression(3);
+						setState(36); expression(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(21);
+				setState(41);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
 			}
 		}
@@ -212,12 +359,12 @@ public class HelloParser extends Parser {
 
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_literal);
+		enterRule(_localctx, 10, RULE_literal);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(22);
+			setState(42);
 			_la = _input.LA(1);
 			if ( !(_la==IntegerLiteral || _la==DecimalLiteral) ) {
 			_errHandler.recoverInline(this);
@@ -238,7 +385,7 @@ public class HelloParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 1: return expression_sempred((ExpressionContext)_localctx, predIndex);
+		case 4: return expression_sempred((ExpressionContext)_localctx, predIndex);
 		}
 		return true;
 	}
@@ -252,14 +399,18 @@ public class HelloParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\"\33\4\2\t\2\4\3"+
-		"\t\3\4\4\t\4\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3\24\n\3\f"+
-		"\3\16\3\27\13\3\3\4\3\4\3\4\2\3\4\5\2\4\6\2\5\3\2\27\31\3\2\25\26\3\2"+
-		"\3\4\31\2\b\3\2\2\2\4\n\3\2\2\2\6\30\3\2\2\2\b\t\5\4\3\2\t\3\3\2\2\2\n"+
-		"\13\b\3\1\2\13\f\5\6\4\2\f\25\3\2\2\2\r\16\f\5\2\2\16\17\t\2\2\2\17\24"+
-		"\5\4\3\6\20\21\f\4\2\2\21\22\t\3\2\2\22\24\5\4\3\5\23\r\3\2\2\2\23\20"+
-		"\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\5\3\2\2\2\27\25"+
-		"\3\2\2\2\30\31\t\4\2\2\31\7\3\2\2\2\4\23\25";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3+/\4\2\t\2\4\3\t\3"+
+		"\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\3\3\3\3\3\7\3\24\n\3\f\3\16"+
+		"\3\27\13\3\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
+		"\7\6(\n\6\f\6\16\6+\13\6\3\7\3\7\3\7\2\3\n\b\2\4\6\b\n\f\2\5\3\2 \"\3"+
+		"\2\36\37\3\2\6\7+\2\16\3\2\2\2\4\20\3\2\2\2\6\30\3\2\2\2\b\32\3\2\2\2"+
+		"\n\36\3\2\2\2\f,\3\2\2\2\16\17\5\4\3\2\17\3\3\2\2\2\20\21\5\6\4\2\21\25"+
+		"\7\23\2\2\22\24\5\4\3\2\23\22\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26"+
+		"\3\2\2\2\26\5\3\2\2\2\27\25\3\2\2\2\30\31\5\b\5\2\31\7\3\2\2\2\32\33\7"+
+		"\3\2\2\33\34\7\21\2\2\34\35\5\n\6\2\35\t\3\2\2\2\36\37\b\6\1\2\37 \5\f"+
+		"\7\2 )\3\2\2\2!\"\f\5\2\2\"#\t\2\2\2#(\5\n\6\6$%\f\4\2\2%&\t\3\2\2&(\5"+
+		"\n\6\5\'!\3\2\2\2\'$\3\2\2\2(+\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*\13\3\2\2"+
+		"\2+)\3\2\2\2,-\t\4\2\2-\r\3\2\2\2\5\25\')";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

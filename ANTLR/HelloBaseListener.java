@@ -29,13 +29,13 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(@NotNull HelloParser.AssignmentContext ctx) { }
+	@Override public void enterAssign(@NotNull HelloParser.AssignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(@NotNull HelloParser.AssignmentContext ctx) { }
+	@Override public void exitAssign(@NotNull HelloParser.AssignContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -49,6 +49,58 @@ public class HelloBaseListener implements HelloListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeclaration(@NotNull HelloParser.DeclarationContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStmts(@NotNull HelloParser.StmtsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStmts(@NotNull HelloParser.StmtsContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStmt(@NotNull HelloParser.StmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStmt(@NotNull HelloParser.StmtContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunction(@NotNull HelloParser.FunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction(@NotNull HelloParser.FunctionContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProgramtest(@NotNull HelloParser.ProgramtestContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProgramtest(@NotNull HelloParser.ProgramtestContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -81,52 +133,39 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(@NotNull HelloParser.StmtContext ctx) { }
+	@Override public void enterParameterList(@NotNull HelloParser.ParameterListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(@NotNull HelloParser.StmtContext ctx) { }
+	@Override public void exitParameterList(@NotNull HelloParser.ParameterListContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmts(@NotNull HelloParser.StmtsContext ctx) { }
+	@Override public void enterParameters(@NotNull HelloParser.ParametersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmts(@NotNull HelloParser.StmtsContext ctx) { }
+	@Override public void exitParameters(@NotNull HelloParser.ParametersContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionBody(@NotNull HelloParser.FunctionBodyContext ctx) { }
+	@Override public void enterTeststmts(@NotNull HelloParser.TeststmtsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionBody(@NotNull HelloParser.FunctionBodyContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeDeclarations(@NotNull HelloParser.TypeDeclarationsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeDeclarations(@NotNull HelloParser.TypeDeclarationsContext ctx) { }
+	@Override public void exitTeststmts(@NotNull HelloParser.TeststmtsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

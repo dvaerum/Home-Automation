@@ -1,40 +1,47 @@
 // Define
 grammar Hello;
 
-program : typeDeclarations* EOF
-    ;
+//---------------Test terminals----------------
+programtest : function+ ;
 
-typeDeclarations
-    :  'function' Identifier LPAREN RPAREN
-       functionBody
-       'endfunction'
-    ;
 
-functionBody
-    : declaration functionBody
-//    | controlStatements
-    | assignment
-//    | functionCall
+teststmts
+    : stmt teststmts
     |
     ;
 
-declaration
-    : primitiveType Identifier
+function
+    : 'function' Identifier parameters 'returns' primitiveType //TODO: Add composite data-types
+       teststmts
+      'endfunction'
     ;
+
+parameters
+    : LPAREN parameterList? RPAREN
+    ;
+
+parameterList
+    : declaration (',' declaration)*
+    ;
+
+//---------------End test terminals----------------
+
 //---------------Statement----------------
+program : stmts
+    ;
 
 stmts
-    : stmt EOL stmts
+    : stmt SEMICOLON stmts
     |
     ;
 
 stmt
     : declaration
- //   | assignment
+    | assign
     ;
 
 //---------------Assignment---------------
-assignment
+assign
     : Identifier ASSIGN expression
     ;
 
@@ -47,7 +54,7 @@ Letter
     ;
 
 LetterOrDigit
-    : (CHARACTER|UNDERSCORE|NUMBER)
+    : (CHARACTER|UNDERSCORE) //TODO Allow digits in variables
     ;
 
 //---------------Expression---------------
@@ -57,12 +64,12 @@ expression
     | literal
     ;
 
-//-------------Declarations---------------
-
-
+//---------------Declaration---------------
+declaration
+    : primitiveType Identifier
+    ;
 
 //-------------Variable types-------------
-
 literal
     : IntegerLiteral
     | DecimalLiteral
@@ -79,11 +86,11 @@ DecimalLiteral
     ;
 
 Digs
-    : Digit+
+    : Digit Digit*
     ;
 
 Digit
-    : NUMBER
+    : [0-9]
     ;
 
 // The Null Literal
@@ -103,11 +110,11 @@ primitiveType
 // Characters
 
 DOT             : '.';
-fragment UPPERCASE       : [A-Z];
-fragment LOWERCASE       : [a-z];
-fragment CHARACTER       : (UPPERCASE | LOWERCASE);
-fragment UNDERSCORE      : '_';
-fragment NUMBER          : [0-9];
+UPPERCASE       : [A-Z];
+LOWERCASE       : [a-z];
+CHARACTER       : (UPPERCASE | LOWERCASE);
+UNDERSCORE      : '_';
+NUMBER          : [0-9];
 
 // Operators
 
@@ -140,9 +147,10 @@ MOD             : '%';
 //BITOR           : '|';
 //CARET           : '^';
 
-//Separators
+//seperators
 LPAREN          : '(';
 RPAREN          : ')';
+
 
 ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';
@@ -156,19 +164,8 @@ MOD_ASSIGN      : '%=';
 // Whitespace and comments
 //
 
-EOC : (EOL|EOF)
-    ;
-
-NEWLINE : '\r'? '\n'
-    ;
-
-EOL : ('\r\n'|'\n'|'\r')
-    ;
-
 WS  :  [ \t\r\n\u000C]+ -> skip
     ;
-
-
 
 COMMENT
     :   '/*' .*? '*/' -> skip
@@ -177,3 +174,5 @@ COMMENT
 LINE_COMMENT
     :   '//' ~[\r\n]* -> skip
     ;
+
+//TODO: FIX INT VS DECIMAL ERROR

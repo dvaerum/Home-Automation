@@ -19,15 +19,15 @@ public interface HelloListener extends ParseTreeListener {
 	void exitExpression(@NotNull HelloParser.ExpressionContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#assignment}.
+	 * Enter a parse tree produced by {@link HelloParser#assign}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignment(@NotNull HelloParser.AssignmentContext ctx);
+	void enterAssign(@NotNull HelloParser.AssignContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#assignment}.
+	 * Exit a parse tree produced by {@link HelloParser#assign}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignment(@NotNull HelloParser.AssignmentContext ctx);
+	void exitAssign(@NotNull HelloParser.AssignContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#declaration}.
@@ -39,6 +39,50 @@ public interface HelloListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeclaration(@NotNull HelloParser.DeclarationContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#stmts}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmts(@NotNull HelloParser.StmtsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#stmts}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmts(@NotNull HelloParser.StmtsContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmt(@NotNull HelloParser.StmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmt(@NotNull HelloParser.StmtContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction(@NotNull HelloParser.FunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction(@NotNull HelloParser.FunctionContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#programtest}.
+	 * @param ctx the parse tree
+	 */
+	void enterProgramtest(@NotNull HelloParser.ProgramtestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#programtest}.
+	 * @param ctx the parse tree
+	 */
+	void exitProgramtest(@NotNull HelloParser.ProgramtestContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#primitiveType}.
@@ -63,48 +107,37 @@ public interface HelloListener extends ParseTreeListener {
 	void exitProgram(@NotNull HelloParser.ProgramContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#stmt}.
+	 * Enter a parse tree produced by {@link HelloParser#parameterList}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmt(@NotNull HelloParser.StmtContext ctx);
+	void enterParameterList(@NotNull HelloParser.ParameterListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#stmt}.
+	 * Exit a parse tree produced by {@link HelloParser#parameterList}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmt(@NotNull HelloParser.StmtContext ctx);
+	void exitParameterList(@NotNull HelloParser.ParameterListContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#stmts}.
+	 * Enter a parse tree produced by {@link HelloParser#parameters}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmts(@NotNull HelloParser.StmtsContext ctx);
+	void enterParameters(@NotNull HelloParser.ParametersContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#stmts}.
+	 * Exit a parse tree produced by {@link HelloParser#parameters}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmts(@NotNull HelloParser.StmtsContext ctx);
+	void exitParameters(@NotNull HelloParser.ParametersContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#functionBody}.
+	 * Enter a parse tree produced by {@link HelloParser#teststmts}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionBody(@NotNull HelloParser.FunctionBodyContext ctx);
+	void enterTeststmts(@NotNull HelloParser.TeststmtsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#functionBody}.
+	 * Exit a parse tree produced by {@link HelloParser#teststmts}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionBody(@NotNull HelloParser.FunctionBodyContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HelloParser#typeDeclarations}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeDeclarations(@NotNull HelloParser.TypeDeclarationsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HelloParser#typeDeclarations}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeDeclarations(@NotNull HelloParser.TypeDeclarationsContext ctx);
+	void exitTeststmts(@NotNull HelloParser.TeststmtsContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#literal}.

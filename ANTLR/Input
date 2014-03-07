@@ -1,2 +1,7 @@
-hello = 15*88;
-_bye = 88;
+function Setup()
+
+Integer test
+
+Integer test2
+
+endfunction

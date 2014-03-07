@@ -103,11 +103,11 @@ primitiveType
 // Characters
 
 DOT             : '.';
-fragment UPPERCASE       : [A-Z];
-fragment LOWERCASE       : [a-z];
-fragment CHARACTER       : (UPPERCASE | LOWERCASE);
-fragment UNDERSCORE      : '_';
-fragment NUMBER          : [0-9];
+UPPERCASE       : [A-Z];
+LOWERCASE       : [a-z];
+CHARACTER       : (UPPERCASE | LOWERCASE);
+UNDERSCORE      : '_';
+NUMBER          : [0-9];
 
 // Operators
 
@@ -165,7 +165,7 @@ NEWLINE : '\r'? '\n'
 EOL : ('\r\n'|'\n'|'\r')
     ;
 
-WS  :  [ \t\r\n\u000C]+ -> skip
+WS  :  [\t\r\n\u000C]+ -> skip
     ;
 
 

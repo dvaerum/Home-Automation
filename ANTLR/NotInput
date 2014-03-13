@@ -1,11 +1,8 @@
-function setup(Integer i, Boolean bool) returns Integer
-
-    Integer i
-    Boolean bool
-    Decimal doubl i =5+6*7
-
-endfunction
-
 function helloWorld() returns Decimal
     Boolean bool
+    helloWord()
+endfunction
+
+function helloWord() returns Decimal
+    Integer bool = 2 + 2 - 2 * 3
 endfunction

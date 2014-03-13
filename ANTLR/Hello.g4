@@ -11,16 +11,20 @@ teststmts
     ;
 
 function
-    : 'function' Identifier parameters 'returns' primitiveType //TODO: Add composite data-types
+    : 'function' Identifier declarationParameters 'returns' type //TODO: Add composite data-types
        teststmts
       'endfunction'
     ;
 
-parameters
-    : LPAREN parameterList? RPAREN
+funcParameters
+    : LPAREN (expression (',' expression)*)? RPAREN
     ;
 
-parameterList
+declarationParameters
+    : LPAREN (declaration (',' declaration)*)? RPAREN
+    ;
+
+declarationParameterList
     : declaration (',' declaration)*
     ;
 
@@ -31,14 +35,52 @@ program : stmts
     ;
 
 stmts
-    : stmt SEMICOLON stmts
+    : stmt stmts
     |
     ;
 
 stmt
     : declaration
     | assign
+    | ifStmt
+    | loop
+    | funcCall
     ;
+
+loop
+    :  'repeat' ('while'|'until') LPAREN expression RPAREN
+       stmts
+       'endrepeat'
+    |   'repeat' 'foreach' LPAREN type Identifier 'in' Identifier RPAREN
+       stmts
+       'endrepeat'
+    ;
+
+ifStmt
+    : 'if' LPAREN expression RPAREN
+        stmts
+        elseIfStmt*
+        elseStmt?
+      'endif'
+    ;
+
+elseIfStmt
+    : 'elseif' LPAREN expression RPAREN
+        stmts
+    ;
+
+elseStmt
+    : 'else' stmts?
+    ;
+
+condition
+    : (Identifier|literal) LOGICALOPERATOR (Identifier|literal)
+    ;
+
+funcCall
+    :  Identifier funcParameters
+    ;
+
 
 //---------------Assignment---------------
 assign
@@ -61,18 +103,24 @@ LetterOrDigit
 expression
     : expression ('*'|'/'|'%') expression
     | expression ('+'|'-') expression
+    | expression LOGICALOPERATOR expression
+    | funcCall
     | literal
+    | Identifier
+    | collectionInit
     ;
 
 //---------------Declaration---------------
 declaration
-    : primitiveType Identifier
+    : type Identifier (ASSIGN expression)?
     ;
 
 //-------------Variable types-------------
 literal
     : IntegerLiteral
     | DecimalLiteral
+    | booleanLiteral
+    | StringLiteral
     ;
 
 IntegerLiteral
@@ -85,12 +133,25 @@ DecimalLiteral
     | (DOT Digs)
     ;
 
+booleanLiteral
+    : 'true'
+    | 'false'
+    ;
+
+StringLiteral
+    : '"' LetterOrDigit* '"'
+    ;
+
 Digs
     : Digit Digit*
     ;
 
 Digit
     : [0-9]
+    ;
+
+collectionInit
+    : '{' (expression (',' expression)*)? '}'
     ;
 
 // The Null Literal
@@ -101,11 +162,23 @@ NullLiteral
 
 // Primitive types
 
+type
+    : primitiveType
+    | collectionType
+    ;
+
 primitiveType
     : 'Decimal'
     | 'Integer'
     | 'Boolean'
+    | 'String'
     ;
+
+collectionType
+    : 'List' '&' type '&'
+    | 'Dictionary' '&' type '&'
+    ;
+
 
 // Characters
 
@@ -114,7 +187,7 @@ UPPERCASE       : [A-Z];
 LOWERCASE       : [a-z];
 CHARACTER       : (UPPERCASE | LOWERCASE);
 UNDERSCORE      : '_';
-NUMBER          : [0-9];
+//NUMBER          : [0-9];
 
 // Operators
 
@@ -126,6 +199,7 @@ BANG            : '!';
 SEMICOLON       : ';';
 
 //Logical operators
+LOGICALOPERATOR : (EQUAL|GT|LT|LE|GE|NOTEQUAL|AND|OR); // TODO if GT and LT are apart of this list, the creation of List<> wont compute, atm use ï¿½ and ï¿½
 EQUAL           : '==';
 GT              : '>';
 LT              : '<';

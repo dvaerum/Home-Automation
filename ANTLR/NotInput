@@ -1,8 +1,12 @@
 function helloWorld() returns Decimal
-    Boolean bool
+    Boolean b = true
+    Integer i = 5
+    Decimal d = 5.5
+    String s = "Hej"
+    s = "Blah"
     helloWord()
 endfunction
 
-function helloWord() returns Decimal
-    Integer bool = 2 + 2 - 2 * 3
-endfunction
+//function helloWord() returns Decimal
+//    Integer bool = 2 + 2 - 2 * 3
+//endfunction

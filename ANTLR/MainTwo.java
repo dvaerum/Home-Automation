@@ -15,27 +15,12 @@ import java.io.FileInputStream;
 public class MainTwo {
     public static void main(String[] args) {
         try{
-            HelloLexer lexer = new HelloLexer(new ANTLRFileStream("NotINput"));
+            HelloLexer lexer = new HelloLexer(new ANTLRFileStream("NotInput"));
             HelloParser parser = new HelloParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.programtest();
-            ParseTreeWalker.DEFAULT.walk(new VarListener(), tree);
 
-
-//            ParseTree tree = parser.parse();
-//            TreeVisitor visitor = new TreeVisitor();
-//            visitor.visit(tree);
-
-//            HelloParser.ProgramtestContext pts = parser.programtest();
-//            ParseTree treeTwo = pts.getChild(1);
-//
-//TreeVisitor visitorTwo = new TreeVisitor();
-//            visitorTwo.visitProgramtest(treeTwo);
-
-
-//            //File fil = new File("NotInput");
-//            HelloLexer lexer = new HelloLexer(new ANTLRFileStream("NotInput"));
-//            HelloParser parser = new HelloParser(new CommonTokenStream(lexer));
-//            //parser.setTree
+            ExtractHelloVisitor visitor = new ExtractHelloVisitor();
+            System.out.println(visitor.visit(tree));
 
         }catch(Exception e)
         {

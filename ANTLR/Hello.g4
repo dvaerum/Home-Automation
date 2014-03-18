@@ -7,7 +7,7 @@ program : stmts
 //---------------Statement----------------
 
 stmts
-    : stmt SEMICOLON stmts*
+    : stmt EOL stmts*
     ;
 
 stmt
@@ -119,6 +119,9 @@ MOD_ASSIGN      : '%=';
 //
 // Whitespace and comments
 //
+
+EOL : ('\r\n'|'\n'|'\r')
+    ;
 
 WS  :  [ \t\r\n\u000C]+ -> skip
     ;

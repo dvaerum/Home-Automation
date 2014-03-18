@@ -19,15 +19,15 @@ public class HelloParser extends Parser {
 		UNDERSCORE=13, NUMBER=14, ASSIGN=15, BANG=16, SEMICOLON=17, EQUAL=18, 
 		GT=19, LT=20, LE=21, GE=22, NOTEQUAL=23, AND=24, OR=25, INC=26, DEC=27, 
 		ADD=28, SUB=29, MUL=30, DIV=31, MOD=32, ADD_ASSIGN=33, SUB_ASSIGN=34, 
-		MUL_ASSIGN=35, DIV_ASSIGN=36, AND_ASSIGN=37, MOD_ASSIGN=38, WS=39, COMMENT=40, 
-		LINE_COMMENT=41;
+		MUL_ASSIGN=35, DIV_ASSIGN=36, AND_ASSIGN=37, MOD_ASSIGN=38, EOL=39, WS=40, 
+		COMMENT=41, LINE_COMMENT=42;
 	public static final String[] tokenNames = {
 		"<INVALID>", "Identifier", "Letter", "LetterOrDigit", "IntegerLiteral", 
 		"DecimalLiteral", "Digs", "Digit", "'null'", "'.'", "UPPERCASE", "LOWERCASE", 
 		"CHARACTER", "'_'", "NUMBER", "'='", "'!'", "';'", "'=='", "'>'", "'<'", 
 		"'<='", "'>='", "'!='", "'AND'", "'OR'", "'++'", "'--'", "'+'", "'-'", 
-		"'*'", "'/'", "'%'", "'+='", "'-='", "'*='", "'/='", "'&='", "'%='", "WS", 
-		"COMMENT", "LINE_COMMENT"
+		"'*'", "'/'", "'%'", "'+='", "'-='", "'*='", "'/='", "'&='", "'%='", "EOL", 
+		"WS", "COMMENT", "LINE_COMMENT"
 	};
 	public static final int
 		RULE_program = 0, RULE_stmts = 1, RULE_stmt = 2, RULE_assign = 3, RULE_expression = 4, 
@@ -94,7 +94,7 @@ public class HelloParser extends Parser {
 	}
 
 	public static class StmtsContext extends ParserRuleContext {
-		public TerminalNode SEMICOLON() { return getToken(HelloParser.SEMICOLON, 0); }
+		public TerminalNode EOL() { return getToken(HelloParser.EOL, 0); }
 		public StmtsContext stmts(int i) {
 			return getRuleContext(StmtsContext.class,i);
 		}
@@ -126,7 +126,7 @@ public class HelloParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(14); stmt();
-			setState(15); match(SEMICOLON);
+			setState(15); match(EOL);
 			setState(19);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
@@ -399,13 +399,13 @@ public class HelloParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3+/\4\2\t\2\4\3\t\3"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3,/\4\2\t\2\4\3\t\3"+
 		"\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\3\3\3\3\3\7\3\24\n\3\f\3\16"+
 		"\3\27\13\3\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
 		"\7\6(\n\6\f\6\16\6+\13\6\3\7\3\7\3\7\2\3\n\b\2\4\6\b\n\f\2\5\3\2 \"\3"+
 		"\2\36\37\3\2\6\7+\2\16\3\2\2\2\4\20\3\2\2\2\6\30\3\2\2\2\b\32\3\2\2\2"+
 		"\n\36\3\2\2\2\f,\3\2\2\2\16\17\5\4\3\2\17\3\3\2\2\2\20\21\5\6\4\2\21\25"+
-		"\7\23\2\2\22\24\5\4\3\2\23\22\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26"+
+		"\7)\2\2\22\24\5\4\3\2\23\22\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26"+
 		"\3\2\2\2\26\5\3\2\2\2\27\25\3\2\2\2\30\31\5\b\5\2\31\7\3\2\2\2\32\33\7"+
 		"\3\2\2\33\34\7\21\2\2\34\35\5\n\6\2\35\t\3\2\2\2\36\37\b\6\1\2\37 \5\f"+
 		"\7\2 )\3\2\2\2!\"\f\5\2\2\"#\t\2\2\2#(\5\n\6\6$%\f\4\2\2%&\t\3\2\2&(\5"+

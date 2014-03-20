@@ -2,19 +2,22 @@
 grammar Hello;
 
 //---------------Test terminals----------------
-programtest : function+ ;
+program : block ;
 
-
-teststmts
-    : stmt teststmts
+block
+    : function block
     |
     ;
 
 function
-    : 'function' Identifier declarationParameters 'returns' type //TODO: Add composite data-types
-       teststmts
+    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) //TODO: Add composite data-types
+       stmts
       'endfunction'
     ;
+
+//---------------End test terminals----------------
+
+//-----------------Parameters----------------
 
 funcParameters
     : LPAREN (expression (',' expression)*)? RPAREN
@@ -28,11 +31,9 @@ declarationParameterList
     : declaration (',' declaration)*
     ;
 
-//---------------End test terminals----------------
+//----------------End Parameters------------------
 
-//---------------Statement----------------
-program : stmts
-    ;
+//------------------Statement---------------------
 
 stmts
     : stmt stmts
@@ -45,17 +46,20 @@ stmt
     | ifStmt
     | loop
     | funcCall
+    | variableMethodCall
+    | returnFunction
     ;
 
-loop
-    :  'repeat' ('while'|'until') LPAREN expression RPAREN
-       stmts
-       'endrepeat'
-    |   'repeat' 'foreach' LPAREN type Identifier 'in' Identifier RPAREN
-       stmts
-       'endrepeat'
+//----------------End Statements-----------------
+//---------------Declaration---------------
+declaration
+    : type identifierOrListIndex (ASSIGN expression)?
     ;
-
+//---------------Assignment---------------
+assign
+    : identifierOrListIndex ASSIGN expression
+    ;
+//---------------If statement-------------
 ifStmt
     : 'if' LPAREN expression RPAREN
         stmts
@@ -72,80 +76,115 @@ elseIfStmt
 elseStmt
     : 'else' stmts?
     ;
+//---------------Loops-------------
+loop
+    :  loopWhileOrUntil
+    |  loopForeach
+    ;
 
-condition
-    : (Identifier|literal) LOGICALOPERATOR (Identifier|literal)
+loopWhileOrUntil
+    :   'repeat' ('while'|'until') LPAREN expression RPAREN
+        stmts
+        'endrepeat'
+    ;
+
+loopForeach
+    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN
+       stmts
+       'endrepeat'
     ;
 
 funcCall
-    :  Identifier funcParameters
+    :  identifierOrListIndex funcParameters
     ;
 
+variableMethodCall
+    : identifierOrListIndex DOT funcCall
+    ;
 
-//---------------Assignment---------------
-assign
-    : Identifier ASSIGN expression
+returnFunction
+    : 'return' expression? // TODO change when identifierOrListIndex can be digits
+    ;
+
+condition
+    : (identifierOrListIndex|literal) logicalOperator (identifierOrListIndex|literal)
     ;
 
 Identifier
     : Letter LetterOrDigit*
     ;
 
-Letter
-    : (CHARACTER|UNDERSCORE)
-    ;
-
-LetterOrDigit
-    : (CHARACTER|UNDERSCORE) //TODO Allow digits in variables
+identifierOrListIndex
+    : Identifier
+    | Identifier '[' expression ']'
     ;
 
 //---------------Expression---------------
+
 expression
     : expression ('*'|'/'|'%') expression
     | expression ('+'|'-') expression
-    | expression LOGICALOPERATOR expression
+    | expression logicalOperator expression
+    | LPAREN expression RPAREN
     | funcCall
     | literal
-    | Identifier
     | collectionInit
+    | constructClass
+    | variableMethodCall
+    | identifierOrListIndex
     ;
 
-//---------------Declaration---------------
-declaration
-    : type Identifier (ASSIGN expression)?
+constructClass
+    : classes LPAREN ( (expression? (',' expression)*) |  constructClassPort  ) RPAREN // Todo doesn't work with the keyword 'PORT' yet followed by Digits
+    ;
+
+constructClassPort
+    : port IntegerLiteral
     ;
 
 //-------------Variable types-------------
 literal
-    : IntegerLiteral
+    : booleanLiteral
     | DecimalLiteral
-    | booleanLiteral
+    | IntegerLiteral
     | StringLiteral
     ;
 
 IntegerLiteral
-    : Digs
+    : Digits
     ;
 
 DecimalLiteral
-    : (Digs DOT Digs)
-    | (Digs DOT)
-    | (DOT Digs)
+    : (Digits DOT Digits)
+    | (Digits DOT)
+    | (DOT Digits)
     ;
 
 booleanLiteral
-    : 'true'
-    | 'false'
+    : 'false'
+    | 'true'
     ;
 
 StringLiteral
     : '"' LetterOrDigit* '"'
     ;
 
-Digs
+fragment
+Letter
+    : (CHARACTER|UNDERSCORE)
+    ;
+
+fragment
+LetterOrDigit
+    : (CHARACTER|UNDERSCORE|Digit)
+    ;
+
+fragment
+Digits
     : Digit Digit*
     ;
 
+fragment
 Digit
     : [0-9]
     ;
@@ -155,7 +194,6 @@ collectionInit
     ;
 
 // The Null Literal
-
 NullLiteral
     :   'null'
     ;
@@ -165,6 +203,7 @@ NullLiteral
 type
     : primitiveType
     | collectionType
+    | classes
     ;
 
 primitiveType
@@ -175,17 +214,27 @@ primitiveType
     ;
 
 collectionType
-    : 'List' '&' type '&'
-    | 'Dictionary' '&' type '&'
+    : 'List' '<' type '>'
+    | 'Dictionary' '<' type '>'
     ;
-
-
+// TODO remove, classes should be dynamically inserted at a later stage.
+classes
+    : 'Output'
+    | 'Input'
+    | 'Time'
+    ;
 // Characters
+port            : 'PORT';
+nothing         : 'Nothing';
 
 DOT             : '.';
+fragment
 UPPERCASE       : [A-Z];
+fragment
 LOWERCASE       : [a-z];
+fragment
 CHARACTER       : (UPPERCASE | LOWERCASE);
+fragment
 UNDERSCORE      : '_';
 //NUMBER          : [0-9];
 
@@ -199,15 +248,15 @@ BANG            : '!';
 SEMICOLON       : ';';
 
 //Logical operators
-LOGICALOPERATOR : (EQUAL|GT|LT|LE|GE|NOTEQUAL|AND|OR); // TODO if GT and LT are apart of this list, the creation of List<> wont compute, atm use ï¿½ and ï¿½
+logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
 EQUAL           : '==';
 GT              : '>';
 LT              : '<';
 LE              : '<=';
 GE              : '>=';
 NOTEQUAL        : '!=';
-AND             : 'AND';
-OR              : 'OR';
+//AND             : 'AND';
+//OR              : 'OR';
 
 //Numerical operations
 INC             : '++';

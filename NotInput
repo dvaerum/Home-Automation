@@ -1,21 +1,8 @@
-function helloWorld() returns Decimal
-    Boolean b = true
-    b = true
-    b = true
-    b = true
-    b = false
-    Decimal d = 2
-    Integer i = 5 - 3 + 2.5
-    Decimal d = 4.5
-    String s = "Hej"
-    s = true
-    helloWord()
-    //Boolean b = true == true
-    if(x==3)
-        x=x+1
-    endif
+function helloWorld1() returns Decimal
+    Decimal i = 3
+    repeat while(true)
+        return 4
+    endrepeat
 endfunction
 
-function helloWord() returns Decimal
-    Integer bool = 2 + 2 - 2 * 3
-endfunction
+

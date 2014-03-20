@@ -15,24 +15,24 @@ import java.io.FileInputStream;
 public class Main {
 
     public static void main(String[] args) {
-        try{
-            File fil = new File("NotInput");
-            FileInputStream fs = new FileInputStream(fil);
-            DataInputStream input = new DataInputStream(fs);
-            CharStream cs = new ANTLRInputStream(input);
-            HelloLexer lexer = new HelloLexer(cs);
-
-            CommonTokenStream tS = new CommonTokenStream(lexer);
-
-            HelloParser parser = new HelloParser(tS);
-
-            HelloParser.ProgramtestContext pts = parser.programtest();
-            System.out.println(pts.toStringTree());
-
-            System.out.println("Helllo");
-        }catch(Exception e)
-        {
-            System.err.println(e.toString());
-        }
+//        try{
+//            File fil = new File("NotInput");
+//            FileInputStream fs = new FileInputStream(fil);
+//            DataInputStream input = new DataInputStream(fs);
+//            CharStream cs = new ANTLRInputStream(input);
+//            HelloLexer lexer = new HelloLexer(cs);
+//
+//            CommonTokenStream tS = new CommonTokenStream(lexer);
+//
+//            HelloParser parser = new HelloParser(tS);
+//
+//            HelloParser.ProgramtestContext pts = parser.programtest();
+//            System.out.println(pts.toStringTree());
+//
+//            System.out.println("Helllo");
+//        }catch(Exception e)
+//        {
+//            System.err.println(e.toString());
+//        }
     }
 }

@@ -432,9 +432,12 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         scope.OpenScope();
 
         String loopType = ctx.getChild(1).getText();
+
         Type returnType = visitExpression(ctx.expression());
 
-        if(!returnType.equals(Type.TypeEnum.Boolean))
+        if(ctx.expression() != null && ctx.expression().literal() != null && ctx.expression().literal().booleanLiteral() != null)
+            returnType = new Type(Type.TypeEnum.Error, "Illegal loop expression booleanLiteral");
+        else if(!returnType.equals(Type.TypeEnum.Boolean))
             returnType = new Type(Type.TypeEnum.Error, String.format("Loop expressions should be of type Boolean - got %s", returnType.typeEnum));
 
         if(ctx.stmts().getChildCount() > 0)

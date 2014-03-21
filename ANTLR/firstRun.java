@@ -48,7 +48,8 @@ public class firstRun extends HelloBaseVisitor<Type> {
 
         //adds function + parameter types to symbol table.
         if(!scope.AddSymbol(funcName, symbol))
-            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d", funcName, ctx.getStart().getLine()));
+            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d",
+                                                                       funcName, ctx.getStart().getLine()));
         else
             returnType = new Type(Type.TypeEnum.Nothing, String.format("Function %s inserted", funcName));
 

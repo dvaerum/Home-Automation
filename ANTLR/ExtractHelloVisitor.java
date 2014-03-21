@@ -1,5 +1,7 @@
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jacob on 13-03-14.
  */
@@ -39,7 +41,7 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         else if(ctx.stmt().loop() != null)
             returnType = visitLoop(ctx.stmt().loop());
         else if(ctx.stmt().funcCall() != null)
-            returnType = super.visitFuncCall(ctx.stmt().funcCall());
+            returnType = visitFuncCall(ctx.stmt().funcCall());
         else if(ctx.stmt().returnFunction() != null)
         {
             returnType = visitReturnFunction((ctx.stmt().returnFunction()));
@@ -81,6 +83,7 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
 //        scope.AddSymbol(name, returnType);
         scope.OpenScope();
 
+        //Initializes stack for counting returns
         forkReturnStack.newStack();
         forkReturnStack.addFork();
 
@@ -89,14 +92,16 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
 
         Type stmtsType = null;
 
+        //Checks for stmts before visiting
         if(ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
         if(stmtsType != null && stmtsType.typeEnum != Type.TypeEnum.Error)
         {
+
             if(forkReturnStack.closed())
             {
-                //We have a return statement
+                //forks=returns. We have a return statement
                 System.out.println("Yay, return!");
             } else {
                 System.out.println("No return statement found");
@@ -106,6 +111,43 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         forkReturnStack.dispose();
 
         scope.CloseScope();
+        return returnType;
+    }
+
+    @Override
+    public Type visitFuncCall(@NotNull HelloParser.FuncCallContext ctx)
+    {
+        Type returnType = new Type(Type.TypeEnum.Nothing);
+        String funcName = ctx.identifierOrListIndex().getText();
+
+        ArrayList<Type> paramList = (ArrayList<Type>)visitFuncParameters(ctx.funcParameters()).value;
+
+        if(scope.SymbolExists(funcName))
+        {
+            if(scope.GetSymbol(funcName).type.parameters.equals(paramList))
+                returnType = new Type(Type.TypeEnum.Nothing);
+            else
+                returnType = new Type(Type.TypeEnum.Error, String.format("Function parameters doesn't match target function " +
+                                                                        "(too many/invalid type(s))"));
+        }
+        else
+            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s isn't defined", funcName));
+
+        return returnType;
+    }
+
+    @Override
+    public Type visitFuncParameters(@NotNull HelloParser.FuncParametersContext ctx)
+    {
+        Type returnType = new Type(Type.TypeEnum.Nothing, new ArrayList<Type>());
+        ArrayList<Type> genericList = new ArrayList<Type>();
+
+        for(HelloParser.ExpressionContext currCtx : ctx.expression())
+        {
+            genericList.add(new Type(scope.GetSymbol(currCtx.getText()).type.typeEnum));
+        }
+
+        returnType.value = genericList;
         return returnType;
     }
 
@@ -472,4 +514,3 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
 }
 
 //TODO: Unreachable code in if's and loops
-//TODO: Prevent infinite loops

@@ -1,1 +1,7 @@
-hello parrt
+function helloWorld1(Integer a) returns Decimal
+    Decimal i = 3 + a
+    return a
+//    repeat while(true)
+//        return 4
+//    endrepeat
+endfunction

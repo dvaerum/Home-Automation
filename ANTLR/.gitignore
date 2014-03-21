@@ -1,0 +1,10 @@
+*.class
+
+# Package Files #
+*.war
+*.ear
+
+# Local Files
+.idea
+out
+ANTLR/ANTLR.iml

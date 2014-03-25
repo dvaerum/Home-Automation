@@ -2,15 +2,25 @@
 grammar Hello;
 
 //---------------Test terminals----------------
-program : block ;
+program : global block EOF ;
 
-block
-    : function block
+global
+    : declaration* newline+ global
+    | assign* newline+ global
     |
     ;
 
+block
+    : function moreFunctions
+    | newline*
+    ;
+
+moreFunctions
+    : newline+ block
+    | newline*
+    ;
 function
-    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) //TODO: Add composite data-types
+    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
@@ -36,9 +46,11 @@ declarationParameterList
 //------------------Statement---------------------
 
 stmts
-    : stmt stmts
-    |
+    : stmt newline+ stmts
+    | newline*
     ;
+
+newline : '\r'? '\n' | '\r';
 
 stmt
     : declaration
@@ -48,20 +60,27 @@ stmt
     | funcCall
     | variableMethodCall
     | returnFunction
+    | incDec
     ;
 
-//----------------End Statements-----------------
+incDec
+    : identifierOrListIndex INC
+    | identifierOrListIndex DEC
+    ;
+
+//--------------End Statements-----------------
+
 //---------------Declaration---------------
 declaration
-    : type identifierOrListIndex (ASSIGN expression)?
+    : type identifierOrListIndex (AnyAssign expression)?
     ;
 //---------------Assignment---------------
 assign
-    : identifierOrListIndex ASSIGN expression
+    : identifierOrListIndex AnyAssign expression
     ;
 //---------------If statement-------------
 ifStmt
-    : 'if' LPAREN expression RPAREN
+    : 'if' LPAREN expression RPAREN newline+
         stmts
         elseIfStmt*
         elseStmt?
@@ -69,12 +88,13 @@ ifStmt
     ;
 
 elseIfStmt
-    : 'elseif' LPAREN expression RPAREN
+    : 'elseif' LPAREN expression RPAREN newline+
         stmts
     ;
 
 elseStmt
-    : 'else' stmts?
+    : 'else' newline+
+    stmts?
     ;
 //---------------Loops-------------
 loop
@@ -83,14 +103,14 @@ loop
     ;
 
 loopWhileOrUntil
-    :   'repeat' ('while'|'until') LPAREN expression RPAREN
+    :   'repeat' ('while'|'until') LPAREN expression RPAREN newline+
         stmts
         'endrepeat'
     ;
 
 loopForeach
-    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN
-       stmts
+    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN newline+
+        stmts
        'endrepeat'
     ;
 
@@ -124,14 +144,16 @@ identifierOrListIndex
 expression
     : expression ('*'|'/'|'%') expression
     | expression ('+'|'-') expression
+    | ('+'|'-') expression
+ //   | ('++'|'--') identifierOrListIndex
     | expression logicalOperator expression
-    | LPAREN expression RPAREN
     | funcCall
     | literal
     | collectionInit
     | constructClass
     | variableMethodCall
     | identifierOrListIndex
+    | LPAREN expression RPAREN
     ;
 
 constructClass
@@ -166,7 +188,7 @@ booleanLiteral
     ;
 
 StringLiteral
-    : '"' LetterOrDigit* '"'
+    : '"'  ~('\r' | '\n' | '"' | '\t' )*  '"'
     ;
 
 fragment
@@ -181,7 +203,7 @@ LetterOrDigit
 
 fragment
 Digits
-    : Digit Digit*
+    :  Digit Digit*
     ;
 
 fragment
@@ -223,10 +245,10 @@ classes
     | 'Input'
     | 'Time'
     ;
+
 // Characters
 port            : 'PORT';
 nothing         : 'Nothing';
-
 DOT             : '.';
 fragment
 UPPERCASE       : [A-Z];
@@ -240,7 +262,6 @@ UNDERSCORE      : '_';
 
 // Operators
 
-ASSIGN          : '=';
 BANG            : '!';
 //TILDE           : '~';
 //QUESTION        : '?';
@@ -249,12 +270,12 @@ SEMICOLON       : ';';
 
 //Logical operators
 logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
+NOTEQUAL        : '!=';
 EQUAL           : '==';
 GT              : '>';
 LT              : '<';
 LE              : '<=';
 GE              : '>=';
-NOTEQUAL        : '!=';
 //AND             : 'AND';
 //OR              : 'OR';
 
@@ -266,28 +287,31 @@ SUB             : '-';
 MUL             : '*';
 DIV             : '/';
 MOD             : '%';
-//BITAND          : '&';
-//BITOR           : '|';
-//CARET           : '^';
+BITAND          : '&';
+BITOR           : '|';
+CARET           : '^';
 
 //seperators
 LPAREN          : '(';
 RPAREN          : ')';
 
+AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN|ASSIGN) ;
 
+ASSIGN          : '=';
 ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';
 MUL_ASSIGN      : '*=';
 DIV_ASSIGN      : '/=';
-AND_ASSIGN      : '&=';
+//AND_ASSIGN      : '&=';
 //OR_ASSIGN       : '|=';
 //XOR_ASSIGN      : '^=';
 MOD_ASSIGN      : '%=';
+
 //
 // Whitespace and comments
 //
 
-WS  :  [ \t\r\n\u000C]+ -> skip
+WS  :  [ \t\u000C]+ -> skip
     ;
 
 COMMENT

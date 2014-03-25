@@ -140,17 +140,6 @@ public interface HelloListener extends ParseTreeListener {
 	void exitLoop(@NotNull HelloParser.LoopContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#ifStmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterIfStmt(@NotNull HelloParser.IfStmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HelloParser#ifStmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitIfStmt(@NotNull HelloParser.IfStmtContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link HelloParser#constructClassPort}.
 	 * @param ctx the parse tree
 	 */
@@ -160,6 +149,17 @@ public interface HelloListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstructClassPort(@NotNull HelloParser.ConstructClassPortContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#ifStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStmt(@NotNull HelloParser.IfStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#ifStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStmt(@NotNull HelloParser.IfStmtContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#classes}.
@@ -193,6 +193,17 @@ public interface HelloListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCondition(@NotNull HelloParser.ConditionContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#global}.
+	 * @param ctx the parse tree
+	 */
+	void enterGlobal(@NotNull HelloParser.GlobalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#global}.
+	 * @param ctx the parse tree
+	 */
+	void exitGlobal(@NotNull HelloParser.GlobalContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#stmt}.
@@ -250,6 +261,17 @@ public interface HelloListener extends ParseTreeListener {
 	void exitLogicalOperator(@NotNull HelloParser.LogicalOperatorContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HelloParser#newline}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewline(@NotNull HelloParser.NewlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#newline}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewline(@NotNull HelloParser.NewlineContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HelloParser#primitiveType}.
 	 * @param ctx the parse tree
 	 */
@@ -261,15 +283,15 @@ public interface HelloListener extends ParseTreeListener {
 	void exitPrimitiveType(@NotNull HelloParser.PrimitiveTypeContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#elseIfStmt}.
+	 * Enter a parse tree produced by {@link HelloParser#identifierOrListIndex}.
 	 * @param ctx the parse tree
 	 */
-	void enterElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
+	void enterIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#elseIfStmt}.
+	 * Exit a parse tree produced by {@link HelloParser#identifierOrListIndex}.
 	 * @param ctx the parse tree
 	 */
-	void exitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
+	void exitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#program}.
@@ -283,15 +305,15 @@ public interface HelloListener extends ParseTreeListener {
 	void exitProgram(@NotNull HelloParser.ProgramContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HelloParser#identifierOrListIndex}.
+	 * Enter a parse tree produced by {@link HelloParser#elseIfStmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
+	void enterElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HelloParser#identifierOrListIndex}.
+	 * Exit a parse tree produced by {@link HelloParser#elseIfStmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
+	void exitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#returnFunction}.
@@ -327,6 +349,17 @@ public interface HelloListener extends ParseTreeListener {
 	void exitFuncParameters(@NotNull HelloParser.FuncParametersContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HelloParser#incDec}.
+	 * @param ctx the parse tree
+	 */
+	void enterIncDec(@NotNull HelloParser.IncDecContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#incDec}.
+	 * @param ctx the parse tree
+	 */
+	void exitIncDec(@NotNull HelloParser.IncDecContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HelloParser#funcCall}.
 	 * @param ctx the parse tree
 	 */
@@ -347,6 +380,17 @@ public interface HelloListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeclarationParameterList(@NotNull HelloParser.DeclarationParameterListContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HelloParser#moreFunctions}.
+	 * @param ctx the parse tree
+	 */
+	void enterMoreFunctions(@NotNull HelloParser.MoreFunctionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HelloParser#moreFunctions}.
+	 * @param ctx the parse tree
+	 */
+	void exitMoreFunctions(@NotNull HelloParser.MoreFunctionsContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HelloParser#variableMethodCall}.

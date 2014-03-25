@@ -11,6 +11,12 @@ public class firstRun extends HelloBaseVisitor<Type> {
     SymbolTable scope = MainTwo.scope;
 
     @Override
+    public Type visitNewline(@NotNull HelloParser.NewlineContext ctx)
+    {
+        return new Type(Type.TypeEnum.Nothing);
+    }
+
+    @Override
     public Type visitBlock(@NotNull HelloParser.BlockContext ctx)
     {
         Type returnType = new Type(Type.TypeEnum.Nothing);
@@ -25,9 +31,9 @@ public class firstRun extends HelloBaseVisitor<Type> {
         }
 
         //Calls visitBlock recursively if it hasn't failed already.
-        if(ctx.block() != null && ctx.block().getChildCount() > 0)
+        if(ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
         {
-            blockType = visitBlock(ctx.block());
+            blockType = visitBlock(ctx.moreFunctions().block());
             if(!blockType.equals((Type.TypeEnum.Nothing)))
                 returnType = blockType;
         }

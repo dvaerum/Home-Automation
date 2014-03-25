@@ -172,19 +172,6 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfStmt(@NotNull HelloParser.IfStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIfStmt(@NotNull HelloParser.IfStmtContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterConstructClassPort(@NotNull HelloParser.ConstructClassPortContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -192,6 +179,19 @@ public class HelloBaseListener implements HelloListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConstructClassPort(@NotNull HelloParser.ConstructClassPortContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIfStmt(@NotNull HelloParser.IfStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfStmt(@NotNull HelloParser.IfStmtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -231,6 +231,19 @@ public class HelloBaseListener implements HelloListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCondition(@NotNull HelloParser.ConditionContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGlobal(@NotNull HelloParser.GlobalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGlobal(@NotNull HelloParser.GlobalContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -302,6 +315,19 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNewline(@NotNull HelloParser.NewlineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewline(@NotNull HelloParser.NewlineContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPrimitiveType(@NotNull HelloParser.PrimitiveTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -315,13 +341,13 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx) { }
+	@Override public void enterIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx) { }
+	@Override public void exitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -341,13 +367,13 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx) { }
+	@Override public void enterElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx) { }
+	@Override public void exitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -393,6 +419,19 @@ public class HelloBaseListener implements HelloListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIncDec(@NotNull HelloParser.IncDecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIncDec(@NotNull HelloParser.IncDecContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFuncCall(@NotNull HelloParser.FuncCallContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -413,6 +452,19 @@ public class HelloBaseListener implements HelloListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeclarationParameterList(@NotNull HelloParser.DeclarationParameterListContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMoreFunctions(@NotNull HelloParser.MoreFunctionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMoreFunctions(@NotNull HelloParser.MoreFunctionsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

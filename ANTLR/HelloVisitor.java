@@ -95,18 +95,18 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	T visitLoop(@NotNull HelloParser.LoopContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HelloParser#ifStmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIfStmt(@NotNull HelloParser.IfStmtContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link HelloParser#constructClassPort}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitConstructClassPort(@NotNull HelloParser.ConstructClassPortContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HelloParser#ifStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStmt(@NotNull HelloParser.IfStmtContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HelloParser#classes}.
@@ -128,6 +128,13 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCondition(@NotNull HelloParser.ConditionContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HelloParser#global}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGlobal(@NotNull HelloParser.GlobalContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HelloParser#stmt}.
@@ -165,6 +172,13 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	T visitLogicalOperator(@NotNull HelloParser.LogicalOperatorContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HelloParser#newline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNewline(@NotNull HelloParser.NewlineContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HelloParser#primitiveType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -172,11 +186,11 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	T visitPrimitiveType(@NotNull HelloParser.PrimitiveTypeContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HelloParser#elseIfStmt}.
+	 * Visit a parse tree produced by {@link HelloParser#identifierOrListIndex}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
+	T visitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HelloParser#program}.
@@ -186,11 +200,11 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	T visitProgram(@NotNull HelloParser.ProgramContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HelloParser#identifierOrListIndex}.
+	 * Visit a parse tree produced by {@link HelloParser#elseIfStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentifierOrListIndex(@NotNull HelloParser.IdentifierOrListIndexContext ctx);
+	T visitElseIfStmt(@NotNull HelloParser.ElseIfStmtContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HelloParser#returnFunction}.
@@ -214,6 +228,13 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	T visitFuncParameters(@NotNull HelloParser.FuncParametersContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HelloParser#incDec}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncDec(@NotNull HelloParser.IncDecContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HelloParser#funcCall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -226,6 +247,13 @@ public interface HelloVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDeclarationParameterList(@NotNull HelloParser.DeclarationParameterListContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HelloParser#moreFunctions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMoreFunctions(@NotNull HelloParser.MoreFunctionsContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HelloParser#variableMethodCall}.

@@ -96,10 +96,8 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         if(ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType != null && stmtsType.equals(Type.TypeEnum.Error))
+        if(stmtsType != null && !stmtsType.equals(Type.TypeEnum.Error))
         {
-
-            System.out.println(stmtsType.typeEnum);
 
             if(forkReturnStack.closed())
             {
@@ -131,7 +129,7 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
                 //returnType = new Type(Type.TypeEnum.Nothing);
             else
                 returnType = new Type(Type.TypeEnum.Error, String.format("Function parameters doesn't match target function " +
-                                                                        "(too many/invalid type(s))"));
+                        "(too many/invalid type(s))"));
         }
         else
             returnType = new Type(Type.TypeEnum.Error, String.format("Function %s isn't defined", funcName));
@@ -155,14 +153,14 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         }
 
         returnType.value = genericList;
-            return returnType;
+        return returnType;
     }
 
 
     @Override
-        public Type visitDeclarationParameters(@NotNull HelloParser.DeclarationParametersContext ctx)
-        {
-            Type returnType = new Type(Type.TypeEnum.Nothing);
+    public Type visitDeclarationParameters(@NotNull HelloParser.DeclarationParametersContext ctx)
+    {
+        Type returnType = new Type(Type.TypeEnum.Nothing);
 
         for(HelloParser.DeclarationContext currCtx : ctx.declaration())
         {
@@ -212,11 +210,27 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
     public Type visitAssign(@NotNull HelloParser.AssignContext ctx)
     {
         Type returnType;
+        String identifier;
+        if(ctx.identifierOrListIndex() != null)
+        {
+            identifier = ctx.identifierOrListIndex().getChild(0).getText();
 
-        String identifier = ctx.getChild(0).getText();
-        if(!scope.SymbolExists(identifier))
-            return new Type(Type.TypeEnum.Error, String.format("Assign to unknown identifier : %s", identifier));
+            //Sees if Collection exists
+            if(!scope.SymbolExists(identifier))
+                return new Type(Type.TypeEnum.Error, String.format("Assign to unknown identifier : %s", identifier));
 
+            //Check for bracket "["
+            if(ctx.identifierOrListIndex().getChild(1).getText().equals("["))
+                return new Type(scope.GetSymbol(identifier).type.typeEnum);
+            else
+                return new Type(Type.TypeEnum.List);
+        }
+        else
+        {
+            identifier = ctx.getChild(0).getText();
+            if(!scope.SymbolExists(identifier))
+                return new Type(Type.TypeEnum.Error, String.format("Assign to unknown identifier : %s", identifier));
+        }
         Type type = new Type(scope.GetSymbol(identifier).type.typeEnum);
 
 
@@ -276,15 +290,15 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
                 collectionType = Type.TypeEnum.List;
             else
                 collectionType = Type.TypeEnum.Dictionary;
-            
 
-           if(!scope.AddSymbol(ctx.getChild(1).getText(), new Type(collectionType, returnType.toList()))){
-               return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", ctx.getChild(1).getText()));
-           }
-           return returnType;
+
+            if(!scope.AddSymbol(ctx.getChild(1).getText(), new Type(collectionType, returnType.toList()))){
+                return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", ctx.getChild(1).getText()));
+            }
+            return returnType;
         }
 
-    Type type = visitType(ctx.type());
+        Type type = visitType(ctx.type());
         String identifier = ctx.getChild(1).getText();
         Type expression = null;
 
@@ -295,7 +309,7 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
             if(expression.equals(Type.TypeEnum.Error))
                 return expression;
 
-      }
+        }
 
         if(!scope.AddSymbol(identifier, type.typeEnum))
             return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", identifier));
@@ -343,11 +357,11 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
                     r1 = visitExpression(currCtx.expression(0));
                     operator = currCtx.getChild(1).getText();
                     r2 = visitExpression(currCtx.expression(1));
-    //                visitExpression(ctx.expression(0));
+                    //                visitExpression(ctx.expression(0));
                 }
                 else
                 {
-                   return returnType = visitLiteral(currCtx.literal());
+                    return returnType = visitLiteral(currCtx.literal());
                 }
 
             }
@@ -365,15 +379,15 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
                     returnType = new Type(Type.TypeEnum.Error, String.format("AND/OR can't be used with other types than boolean"));
                 else if(!((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && (r1.equals(Type.TypeEnum.Integer) || r1.equals(Type.TypeEnum.Decimal) || (r1.equals(Type.TypeEnum.Decimal) && r2.equals(Type.TypeEnum.Integer))) && r1.equals(r2)))
                     returnType = new Type(Type.TypeEnum.Error, String.format("Comparison can only be used with integers and decimals"));
-                
+
                 if(!returnType.equals(Type.TypeEnum.Error))
-                                returnType = new Type(Type.TypeEnum.Boolean, r1.value + operator + r2.value);
+                    returnType = new Type(Type.TypeEnum.Boolean, r1.value + operator + r2.value);
             }
             // Check for a single literal
             //Check if type is equal
             else if(r1.equals(r2))
             {
-                 returnType = new Type(r1.typeEnum, r1.value + operator + r2.value);
+                returnType = new Type(r1.typeEnum, r1.value + operator + r2.value);
             }
             //Check if it is possible to convert from Int to Dec
             else if((r1.equals(Type.TypeEnum.Integer) && r2.equals(Type.TypeEnum.Decimal)) || (r1.equals(Type.TypeEnum.Decimal) && r2.equals(Type.TypeEnum.Integer)))
@@ -401,6 +415,20 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
         }
         else if(ctx.identifierOrListIndex() != null)
         {
+            if(ctx.identifierOrListIndex().getChild(1).getText().equals("["))
+            {
+                String symbol = ctx.identifierOrListIndex().getChild(0).getText();
+                if(!scope.SymbolExists(symbol))
+                {
+                    returnType = new Type(Type.TypeEnum.Error, String.format("Couldn't evaluate expression. Symbol %s doesn't exist", symbol));
+                }
+                else
+                {
+                    returnType = scope.GetSymbol(symbol).type.typeParameters.get(0);
+                }
+            }
+            else
+            {
             String symbol = ctx.identifierOrListIndex().getChild(0).getText();
             if(!scope.SymbolExists(symbol))
             {
@@ -408,6 +436,7 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
             }
             else
                 returnType = new Type((scope.GetSymbol(symbol).type.typeEnum));
+            }
         }
         else if(ctx.funcCall() != null)
         {
@@ -591,11 +620,13 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
     //TODO: [lav prioritet] del visitExpression op, sÃ¥ det er mere overskueligt.
     //TODO: Collections
     //TODO: Foreach
-    //TODO: Insert new grammar
+    //TODO: Insert new grammar(DONE)
     //TODO: Kill Hello-names!
     //TODO: function calls in expressions(seems done)
-    //TODO: Man kan sÃ¦tte et element ind pÃ¥ liste uden curly brackets(Grammar)
-    //TODO: Indeksering
+    //TODO: Man kan sÃ¦tte et element ind pÃ¥ liste uden curly brackets
+    //TODO: Indeksering(DONE!)
+    //TODO: Metodekald
+    //TODO: Klasser
 
     // ------- NEW GRAMMAR ------
     //TODO: i++

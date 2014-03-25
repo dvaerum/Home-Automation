@@ -24,7 +24,7 @@ public class MainTwo {
             ParseTree tree = parser.program();
 
             firstRun firstVisit = new firstRun();
-            Type returnType = firstVisit.visitBlock((HelloParser.BlockContext)tree.getChild(0));
+            Type returnType = firstVisit.visitBlock((HelloParser.BlockContext)tree.getChild(1));
             if(returnType.equals(Type.TypeEnum.Error))
             {
                 System.out.println(String.format("Error: %s", returnType.value));

@@ -1,14 +1,23 @@
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jacob on 20-03-14.
  */
-public class firstRun extends HelloBaseVisitor<Type> {
+public class FirstRun extends HOMEBaseVisitor<Type> {
 
-    SymbolTable scope = MainTwo.scope;
+    SymbolTable scope = Main.scope;
+
+    //TODO: Determind if newline shall be removed or not
+    @Override
+    public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
+    {
+        return new Type(Type.TypeEnum.Nothing);
+    }
 
     @Override
-    public Type visitBlock(@NotNull HelloParser.BlockContext ctx)
+    public Type visitBlock(@NotNull HOMEParser.BlockContext ctx)
     {
         Type returnType = new Type(Type.TypeEnum.Nothing);
         Type blockType;
@@ -22,9 +31,9 @@ public class firstRun extends HelloBaseVisitor<Type> {
         }
 
         //Calls visitBlock recursively if it hasn't failed already.
-        if(ctx.block() != null && ctx.block().getChildCount() > 0)
+        if(ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
         {
-            blockType = visitBlock(ctx.block());
+            blockType = visitBlock(ctx.moreFunctions().block());
             if(!blockType.equals((Type.TypeEnum.Nothing)))
                 returnType = blockType;
         }
@@ -33,29 +42,59 @@ public class firstRun extends HelloBaseVisitor<Type> {
     }
 
     @Override
-    public Type visitFunction(@NotNull HelloParser.FunctionContext ctx)
+    public Type visitFunction(@NotNull HOMEParser.FunctionContext ctx)
     {
         Type returnType;
-        Type returns = visitType(ctx.type());
+        //If the function returns some identifier
+        Type returns;
+        if(ctx.type() != null)
+            returns = visitType(ctx.type());
+        //or the function returns nothing
+        else if(ctx.getChild(4).getText().equals("Nothing"))
+            returns = new Type(Type.TypeEnum.Nothing);
+        else //otherwise return error if other unexpected type
+            returns = new Type(Type.TypeEnum.Error);
+
         String funcName = ctx.getChild(1).getText();
 
-        if(!scope.AddSymbol(ctx.getChild(1).getText(), returns.typeEnum))
-            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d", funcName, ctx.getStart().getLine()));
+        //Gets the types of the parameters
+        ArrayList<Type> paramTypes = (ArrayList<Type>)visitDeclarationParameters(ctx.declarationParameters()).value;
+        Type symbol = new Type(Type.TypeEnum.Function, paramTypes, returns);
+
+        //adds function + parameter types to symbol table.
+        if(!scope.addSymbol(funcName, symbol))
+            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d",
+                                                                       funcName, ctx.getStart().getLine()));
         else
             returnType = new Type(Type.TypeEnum.Nothing, String.format("Function %s inserted", funcName));
 
         return returnType;
-        //return new Types(Types.Type.Nothing);
+    }
+    
+    @Override
+    public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
+    {
+        Type returnType = new Type(Type.TypeEnum.Nothing, new ArrayList<Type>());
+        ArrayList<Type> genericList = new ArrayList<Type>();
+
+        for(HOMEParser.DeclarationContext currCtx : ctx.declaration())
+        {
+            genericList.add(new Type(visitType(currCtx.type()).typeEnum));
+        }
+
+        returnType.value = genericList;
+        return returnType;
     }
 
+
     @Override
-    public Type visitType(@NotNull HelloParser.TypeContext ctx)
+    public Type visitType(@NotNull HOMEParser.TypeContext ctx)
     {
         return visitPrimitiveType(ctx.primitiveType());
     }
 
     @Override
-    public Type visitPrimitiveType(@NotNull HelloParser.PrimitiveTypeContext ctx)
+    public Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
     {
         Type returnType;
 

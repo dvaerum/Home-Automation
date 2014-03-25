@@ -7,15 +7,22 @@ import java.util.List;
  */
 public class Type {
     public enum TypeEnum {
-        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List
+        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method
     }
 
+    public ArrayList<Type> toList()
+    {
+        ArrayList<Type> list = new ArrayList<Type>();
+        list.add(this);
+        return list;
+    }
 
     public static List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
 
     ArrayList<Type> parameters = new ArrayList<Type>();
     Type returnTypeEnum;
     ArrayList<Type> typeParameters = new ArrayList<Type>();
+    Type objectType;
 
     final TypeEnum typeEnum;
     Object value;
@@ -30,6 +37,7 @@ public class Type {
         return this.typeEnum == t;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,6 +45,7 @@ public class Type {
 
         Type type = (Type) o;
 
+        if (objectType != null ? !objectType.equals(type.objectType) : type.objectType != null) return false;
         if (parameters != null ? !parameters.equals(type.parameters) : type.parameters != null) return false;
         if (returnTypeEnum != null ? !returnTypeEnum.equals(type.returnTypeEnum) : type.returnTypeEnum != null)
             return false;
@@ -47,23 +56,54 @@ public class Type {
         return true;
     }
 
+    public boolean checkParametersConvertToDecimal(ArrayList<Type> paramList) {
+
+        if(parameters.size() != paramList.size()){
+            return false;
+        }
+
+        for (int i = 0; i < paramList.size(); i++)
+        {
+            Type inputParam = paramList.get(i);
+            Type methodParam = parameters.get(i);
+            if(!methodParam.equals(inputParam))
+            {
+                if(methodParam.equals(Type.TypeEnum.Decimal) && inputParam.equals(Type.TypeEnum.Integer))
+                {
+
+                }
+                else
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public int hashCode() {
         int result = parameters != null ? parameters.hashCode() : 0;
         result = 31 * result + (returnTypeEnum != null ? returnTypeEnum.hashCode() : 0);
         result = 31 * result + (typeParameters != null ? typeParameters.hashCode() : 0);
+        result = 31 * result + (objectType != null ? objectType.hashCode() : 0);
         result = 31 * result + (typeEnum != null ? typeEnum.hashCode() : 0);
         return result;
     }
 
-    public Type(TypeEnum typeEnum)
-    {
+    public Type(TypeEnum typeEnum) {
         this.typeEnum = typeEnum;
         this.value = null;
     }
 
     public Type(TypeEnum typeEnum, ArrayList<Type> parameters, Type returnTypeEnum) {
         this.typeEnum = typeEnum;
+        this.parameters = parameters;
+        this.returnTypeEnum = returnTypeEnum;
+    }
+
+    public Type(TypeEnum typeEnum, Type objectType, ArrayList<Type> parameters, Type returnTypeEnum) {
+        this.typeEnum = typeEnum;
+        this.objectType = objectType;
         this.parameters = parameters;
         this.returnTypeEnum = returnTypeEnum;
     }
@@ -78,8 +118,6 @@ public class Type {
         this.typeEnum = typeEnum;
         this.value = value;
     }
-
-
 
     @Override
     public String toString()

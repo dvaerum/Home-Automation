@@ -1,9 +1,0 @@
-function helloWorld1(Integer a, Decimal b, Boolean f) returns Decimal
-    Decimal i = 3 + a
-    helloWorld1(a, b,a,a)
-    List<Integer> testList = {1, 2, 3}
-    return a
-//    repeat while(true)
-//        return 4
-//    endrepeat
-endfunction

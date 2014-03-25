@@ -1,8 +1,6 @@
-function helloWorld1() returns Decimal
-    Decimal i = 3
-    repeat while(true)
-        return 4
-    endrepeat
+Integer test = 1+1
+Integer tester = 1
+
+function setup() returns Nothing
+    Integer dennisernederen
 endfunction
-
-

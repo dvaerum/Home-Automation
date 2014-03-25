@@ -241,8 +241,32 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
     public Type visitDeclaration(@NotNull HelloParser.DeclarationContext ctx)
     {
         System.out.println("enter declaration....");
+
         Type returnType;
-        Type type = visitType(ctx.type());
+
+        if(ctx.type().collectionType() != null){
+            returnType = visitType(ctx.type().collectionType().type());
+
+            if(ctx.expression() != null && ctx.expression().collectionInit() != null){
+                for(HelloParser.ExpressionContext expressionContext : ctx.expression().collectionInit().expression()){
+                    Type expressionType = visitExpression(expressionContext);
+                    if(returnType.equals(expressionType)){
+                     } else if(returnType.equals(Type.TypeEnum.Decimal) && expressionType.equals(Type.TypeEnum.Integer)){
+                        System.out.println("List-shit should be converted");
+                    } else {
+                        returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types. Expected %s, got %s", returnType.typeEnum, expressionType.typeEnum));
+                        return returnType;
+                    }
+                }
+            }
+
+           if(!scope.AddSymbol(ctx.getChild(1).getText(), new Type(Type.TypeEnum.List, returnType.toList()))){
+               return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", ctx.getChild(1).getText()));
+           }
+           return returnType;
+        }
+
+    Type type = visitType(ctx.type());
         String identifier = ctx.getChild(1).getText();
         Type expression = null;
 
@@ -280,45 +304,65 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
     {
         Type returnType = new Type(Type.TypeEnum.Error, "Unknown expression");
 
+        //Check the expression consists of additional expressions.
         if(ctx.expression().size() > 0)
         {
-            Type r1, r2;
-            String operator;
+            Type r1 = null, r2 = null;
+            String operator = null;
 
-            //( Expr )
+            //1 expr = expression in parenteses
             if(ctx.expression().size() == 1)
             {
+                //Goes down in tree until there are more than one tree
                 HelloParser.ExpressionContext currCtx = ctx.expression(0);
-                while(currCtx.expression().size() == 1)
+                while(currCtx.expression().size() == 1 && currCtx.getChild(0).getText().equals(("(")))
                 {
                     currCtx = currCtx.expression(0);
                 }
 
-                r1 = visitExpression(currCtx.expression(0));
-                operator = currCtx.getChild(1).getText();
-                r2 = visitExpression(currCtx.expression(1));
-//                visitExpression(ctx.expression(0));
-            }else{
+                if(currCtx.expression().size() == 2)
+                {
+                    r1 = visitExpression(currCtx.expression(0));
+                    operator = currCtx.getChild(1).getText();
+                    r2 = visitExpression(currCtx.expression(1));
+    //                visitExpression(ctx.expression(0));
+                }
+                else
+                {
+                   return returnType = visitLiteral(currCtx.literal());
+                }
+
+            }
+            else //else two expressions
+            {
                 r1 = visitExpression(ctx.expression(0));
                 operator = ctx.getChild(1).getText();
                 r2 = visitExpression(ctx.expression(1));
             }
 
-            //1. Check if types are equal
-            //2. Check if types are decimal and integer
+            //Check if boolean expression
             if(Type.isBooleanOperator(operator))
             {
-                returnType = new Type(Type.TypeEnum.Boolean, r1.value + operator + r2.value);
+                if(!((operator.equals("AND") || operator.equals("OR")) && r1.equals(Type.TypeEnum.Boolean) && r1.equals(r2)))
+                    returnType = new Type(Type.TypeEnum.Error, String.format("AND/OR can't be used with other types than boolean"));
+                else if(!((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && (r1.equals(Type.TypeEnum.Integer) || r1.equals(Type.TypeEnum.Decimal) || (r1.equals(Type.TypeEnum.Decimal) && r2.equals(Type.TypeEnum.Integer))) && r1.equals(r2)))
+                    returnType = new Type(Type.TypeEnum.Error, String.format("Comparison can only be used with integers and decimals"));
+
+returnType = new Type(Type.TypeEnum.Boolean, r1.value + operator + r2.value);
             }
+            // Check for a single literal
+            //Check if type is equal
             else if(r1.equals(r2))
             {
-                returnType = new Type(r1.typeEnum, r1.value + operator + r2.value);
+                 returnType = new Type(r1.typeEnum, r1.value + operator + r2.value);
             }
+            //Check if it is possible to convert from Int to Dec
             else if((r1.equals(Type.TypeEnum.Integer) && r2.equals(Type.TypeEnum.Decimal)) || (r1.equals(Type.TypeEnum.Decimal) && r2.equals(Type.TypeEnum.Integer)))
             {
 //                System.out.println("\tShit should be converted, yo mama!");
                 returnType = new Type(Type.TypeEnum.Decimal, r1.value + operator + r2.value);
             }
+            //Check if one of the two results gives an error
             else if(r1.typeEnum == Type.TypeEnum.Error){
                 returnType = r1;
             }
@@ -512,5 +556,3 @@ public class ExtractHelloVisitor extends HelloBaseVisitor<Type>
 //        scope.CloseScope();
 //    }
 }
-
-//TODO: Unreachable code in if's and loops

@@ -1,5 +1,10 @@
 function helloWorld1(Integer a, Decimal b, Boolean f) returns Decimal
-    Integer i = 3 + ((((5))))
+    //Integer i = 3 + ((((5+3))))
+    List<Integer> hahaha = { 3, derp("hej"), 2}
+    //Dictionary<Integer> lolll = {{"one", 1}, {"two", 2}, {"three", 3}}
     return 0.5
-
 endfunction
+
+function derp(String x) returns Integer
+    return 5
+endfunction//HACKED

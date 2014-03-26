@@ -1,38 +1,48 @@
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.CommonTreeAdaptor;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+//import org.antlr.runtime.*;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.util.ArrayList;
+//import org.antlr.v4.runtime.ANTLRFileStream;
+//import org.antlr.v4.runtime.CommonTokenStream;
+//import org.antlr.v4.runtime.tree.ParseTree;
 
+
+/**
+ * Created by Jacob on 12-03-14.
+ */
 public class Main {
 
+    public static SymbolTable scope = new SymbolTable();
+
     public static void main(String[] args) {
-//        try{
-//            File fil = new File("NotInput");
-//            FileInputStream fs = new FileInputStream(fil);
-//            DataInputStream input = new DataInputStream(fs);
-//            CharStream cs = new ANTLRInputStream(input);
-//            HelloLexer lexer = new HelloLexer(cs);
-//
-//            CommonTokenStream tS = new CommonTokenStream(lexer);
-//
-//            HelloParser parser = new HelloParser(tS);
-//
-//            HelloParser.ProgramtestContext pts = parser.programtest();
-//            System.out.println(pts.toStringTree());
-//
-//            System.out.println("Helllo");
-//        }catch(Exception e)
-//        {
-//            System.err.println(e.toString());
-//        }
+        try{
+            HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
+            HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
+            ParseTree tree = parser.program();
+
+            FileReader fileR = new FileReader();
+            fileR.loadMethods();
+
+            ArrayList<Type> paramTypes = new ArrayList<Type>();
+            Type symbol = new Type(Type.TypeEnum.Function, paramTypes, new Type(Type.TypeEnum.String));
+            scope.addSymbol("toString", symbol);
+
+            FirstRun firstVisit = new FirstRun();
+            Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext)tree.getChild(1));
+            if(returnType.equals(Type.TypeEnum.Error))
+            {
+                System.out.println(String.format("Error: %s", returnType.value));
+            }
+            else
+            {
+                TypeChecker visitor = new TypeChecker();
+                visitor.visit(tree);
+            }
+
+        }catch(Exception e)
+        {
+            System.err.println(e.initCause(e.getCause()));
+        }
     }
 }

@@ -1,5 +1,5 @@
 // Define
-grammar Hello;
+grammar HOME;
 
 //---------------Test terminals----------------
 program : global block EOF ;

@@ -11,12 +11,13 @@ public class SymbolTable
     HashMap<String, SymbolInfo> table = new HashMap<String, SymbolInfo>();
     int currentScope = 0;
 
-    public void OpenScope()
+    public void openScope()
     {
         currentScope++;
+        System.out.println("Opening scope: " + currentScope);
     }
 
-    public void CloseScope()
+    public void closeScope()
     {
         if (currentScope <= 0)
             throw new RuntimeException("Closing nonexistant scope");
@@ -34,16 +35,16 @@ public class SymbolTable
         {
             table.remove(key);
         }
-
+        System.out.println("Closing scope: " + currentScope);
         currentScope--;
     }
 
-    public Boolean AddSymbol(String symbol, Type.TypeEnum type)
+    public Boolean addSymbol(String symbol, Type.TypeEnum type)
     {
-        return AddSymbol(symbol, new Type(type));
+        return addSymbol(symbol, new Type(type));
     }
 
-    public Boolean AddSymbol(String symbol, Type type)
+    public Boolean addSymbol(String symbol, Type type)
     {
         if (table.containsKey(symbol))
         {
@@ -56,7 +57,7 @@ public class SymbolTable
         return true;
     }
 
-    public Boolean SymbolExists(String symbol)
+    public Boolean symbolExists(String symbol)
     {
         if (table.containsKey(symbol))
         {
@@ -66,7 +67,7 @@ public class SymbolTable
         return false;
     }
 
-    public SymbolInfo GetSymbol(String symbol)
+    public SymbolInfo getSymbol(String symbol)
     {
         return table.get(symbol);
     }

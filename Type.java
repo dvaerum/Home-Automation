@@ -7,9 +7,15 @@ import java.util.List;
  */
 public class Type {
     public enum TypeEnum {
-        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List
+        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary
     }
 
+    public ArrayList<Type> toList()
+    {
+        ArrayList<Type> list = new ArrayList<Type>();
+        list.add(this);
+        return list;
+    }
 
     public static List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
 

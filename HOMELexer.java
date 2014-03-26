@@ -1,4 +1,4 @@
-// Generated from Hello.g4 by ANTLR 4.2
+// Generated from HOME.g4 by ANTLR 4.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -9,20 +9,20 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class HelloLexer extends Lexer {
+public class HOMELexer extends Lexer {
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__35=1, T__34=2, T__33=3, T__32=4, T__31=5, T__30=6, T__29=7, T__28=8,
-		T__27=9, T__26=10, T__25=11, T__24=12, T__23=13, T__22=14, T__21=15, T__20=16,
-		T__19=17, T__18=18, T__17=19, T__16=20, T__15=21, T__14=22, T__13=23,
-		T__12=24, T__11=25, T__10=26, T__9=27, T__8=28, T__7=29, T__6=30, T__5=31,
-		T__4=32, T__3=33, T__2=34, T__1=35, T__0=36, Identifier=37, IntegerLiteral=38,
-		DecimalLiteral=39, StringLiteral=40, NullLiteral=41, DOT=42, BANG=43,
-		SEMICOLON=44, NOTEQUAL=45, EQUAL=46, GT=47, LT=48, LE=49, GE=50, INC=51,
-		DEC=52, ADD=53, SUB=54, MUL=55, DIV=56, MOD=57, BITAND=58, BITOR=59, CARET=60,
-		LPAREN=61, RPAREN=62, AnyAssign=63, ASSIGN=64, ADD_ASSIGN=65, SUB_ASSIGN=66,
+		T__35=1, T__34=2, T__33=3, T__32=4, T__31=5, T__30=6, T__29=7, T__28=8, 
+		T__27=9, T__26=10, T__25=11, T__24=12, T__23=13, T__22=14, T__21=15, T__20=16, 
+		T__19=17, T__18=18, T__17=19, T__16=20, T__15=21, T__14=22, T__13=23, 
+		T__12=24, T__11=25, T__10=26, T__9=27, T__8=28, T__7=29, T__6=30, T__5=31, 
+		T__4=32, T__3=33, T__2=34, T__1=35, T__0=36, Identifier=37, IntegerLiteral=38, 
+		DecimalLiteral=39, StringLiteral=40, NullLiteral=41, DOT=42, BANG=43, 
+		SEMICOLON=44, NOTEQUAL=45, EQUAL=46, GT=47, LT=48, LE=49, GE=50, INC=51, 
+		DEC=52, ADD=53, SUB=54, MUL=55, DIV=56, MOD=57, BITAND=58, BITOR=59, CARET=60, 
+		LPAREN=61, RPAREN=62, AnyAssign=63, ASSIGN=64, ADD_ASSIGN=65, SUB_ASSIGN=66, 
 		MUL_ASSIGN=67, DIV_ASSIGN=68, MOD_ASSIGN=69, WS=70, COMMENT=71, LINE_COMMENT=72;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
@@ -30,39 +30,39 @@ public class HelloLexer extends Lexer {
 
 	public static final String[] tokenNames = {
 		"<INVALID>",
-		"']'", "'in'", "'endif'", "','", "'\n'", "'Dictionary'", "'['", "'endfunction'",
-		"'while'", "'Input'", "'\r'", "'if'", "'List'", "'false'", "'until'",
-		"'{'", "'Decimal'", "'PORT'", "'OR'", "'else'", "'}'", "'true'", "'Time'",
-		"'elseif'", "'AND'", "'endrepeat'", "'Nothing'", "'function'", "'return'",
-		"'Boolean'", "'String'", "'Integer'", "'repeat'", "'Output'", "'returns'",
-		"'foreach'", "Identifier", "IntegerLiteral", "DecimalLiteral", "StringLiteral",
-		"'null'", "'.'", "'!'", "';'", "'!='", "'=='", "'>'", "'<'", "'<='", "'>='",
-		"'++'", "'--'", "'+'", "'-'", "'*'", "'/'", "'%'", "'&'", "'|'", "'^'",
-		"'('", "')'", "AnyAssign", "'='", "'+='", "'-='", "'*='", "'/='", "'%='",
+		"']'", "'in'", "'endif'", "','", "'\n'", "'Dictionary'", "'['", "'endfunction'", 
+		"'while'", "'Input'", "'\r'", "'if'", "'List'", "'false'", "'until'", 
+		"'{'", "'Decimal'", "'PORT'", "'OR'", "'else'", "'}'", "'true'", "'Time'", 
+		"'elseif'", "'AND'", "'endrepeat'", "'Nothing'", "'function'", "'return'", 
+		"'Boolean'", "'String'", "'Integer'", "'repeat'", "'Output'", "'returns'", 
+		"'foreach'", "Identifier", "IntegerLiteral", "DecimalLiteral", "StringLiteral", 
+		"'null'", "'.'", "'!'", "';'", "'!='", "'=='", "'>'", "'<'", "'<='", "'>='", 
+		"'++'", "'--'", "'+'", "'-'", "'*'", "'/'", "'%'", "'&'", "'|'", "'^'", 
+		"'('", "')'", "AnyAssign", "'='", "'+='", "'-='", "'*='", "'/='", "'%='", 
 		"WS", "COMMENT", "LINE_COMMENT"
 	};
 	public static final String[] ruleNames = {
-		"T__35", "T__34", "T__33", "T__32", "T__31", "T__30", "T__29", "T__28",
-		"T__27", "T__26", "T__25", "T__24", "T__23", "T__22", "T__21", "T__20",
-		"T__19", "T__18", "T__17", "T__16", "T__15", "T__14", "T__13", "T__12",
-		"T__11", "T__10", "T__9", "T__8", "T__7", "T__6", "T__5", "T__4", "T__3",
-		"T__2", "T__1", "T__0", "Identifier", "IntegerLiteral", "DecimalLiteral",
-		"StringLiteral", "Letter", "LetterOrDigit", "Digits", "Digit", "NullLiteral",
-		"DOT", "UPPERCASE", "LOWERCASE", "CHARACTER", "UNDERSCORE", "BANG", "SEMICOLON",
-		"NOTEQUAL", "EQUAL", "GT", "LT", "LE", "GE", "INC", "DEC", "ADD", "SUB",
-		"MUL", "DIV", "MOD", "BITAND", "BITOR", "CARET", "LPAREN", "RPAREN", "AnyAssign",
-		"ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN",
+		"T__35", "T__34", "T__33", "T__32", "T__31", "T__30", "T__29", "T__28", 
+		"T__27", "T__26", "T__25", "T__24", "T__23", "T__22", "T__21", "T__20", 
+		"T__19", "T__18", "T__17", "T__16", "T__15", "T__14", "T__13", "T__12", 
+		"T__11", "T__10", "T__9", "T__8", "T__7", "T__6", "T__5", "T__4", "T__3", 
+		"T__2", "T__1", "T__0", "Identifier", "IntegerLiteral", "DecimalLiteral", 
+		"StringLiteral", "Letter", "LetterOrDigit", "Digits", "Digit", "NullLiteral", 
+		"DOT", "UPPERCASE", "LOWERCASE", "CHARACTER", "UNDERSCORE", "BANG", "SEMICOLON", 
+		"NOTEQUAL", "EQUAL", "GT", "LT", "LE", "GE", "INC", "DEC", "ADD", "SUB", 
+		"MUL", "DIV", "MOD", "BITAND", "BITOR", "CARET", "LPAREN", "RPAREN", "AnyAssign", 
+		"ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", 
 		"WS", "COMMENT", "LINE_COMMENT"
 	};
 
 
-	public HelloLexer(CharStream input) {
+	public HOMELexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Hello.g4"; }
+	public String getGrammarFileName() { return "HOME.g4"; }
 
 	@Override
 	public String[] getTokenNames() { return tokenNames; }

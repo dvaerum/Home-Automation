@@ -2,6 +2,7 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 //import org.antlr.v4.runtime.ANTLRFileStream;
 //import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,34 +16,41 @@ public class Main {
 
     public static SymbolTable scope = new SymbolTable();
 
-    public static void main(String[] args) {
-        try{
-            HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
-            HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
-            ParseTree tree = parser.program();
+    public static void main(String[] args) throws IOException {
+        HOMELexer lexer = new HOMELexer(new ANTLRFileStream("Input"));
+        HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
 
-            FileReader fileR = new FileReader();
-            fileR.loadMethods();
+        //Custom error handler
+        CustomErrorListener errorListener = new CustomErrorListener(false);
+        parser.addErrorListener(errorListener);
 
-            ArrayList<Type> paramTypes = new ArrayList<Type>();
-            Type symbol = new Type(Type.TypeEnum.Function, paramTypes, new Type(Type.TypeEnum.String));
-            scope.addSymbol("toString", symbol);
+        ParseTree tree = parser.program();
 
-            FirstRun firstVisit = new FirstRun();
-            Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext)tree.getChild(1));
-            if(returnType.equals(Type.TypeEnum.Error))
-            {
-                System.out.println(String.format("Error: %s", returnType.value));
-            }
-            else
-            {
-                TypeChecker visitor = new TypeChecker();
-                visitor.visit(tree);
-            }
+        FileReader fileR = new FileReader();
+        fileR.loadMethods();
 
-        }catch(Exception e)
+        ArrayList<Type> paramTypes = new ArrayList<Type>();
+        Type symbol = new Type(Type.TypeEnum.Function, paramTypes, new Type(Type.TypeEnum.String));
+        scope.addSymbol("toString", symbol);
+
+        FirstRun firstVisit = new FirstRun();
+        Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext)tree.getChild(1));
+        if(returnType.equals(Type.TypeEnum.Error))
         {
-            System.err.println(e.initCause(e.getCause()));
+            System.out.println(String.format("Error: %s", returnType.value));
         }
+        else
+        {
+            TypeChecker visitor = new TypeChecker();
+            visitor.visit(tree);
+        }
+
+
+        System.out.println("Error Message:");
+        for (String s : errorListener.ErrorMessages()) {
+            System.out.printf(s);
+        }
+
+        //System.err.println(e.initCause(e.getCause()));
     }
 }

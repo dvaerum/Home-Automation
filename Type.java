@@ -7,7 +7,11 @@ import java.util.List;
  */
 public class Type {
     public enum TypeEnum {
+<<<<<<< HEAD
         Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method
+=======
+        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary
+>>>>>>> 0e7e74e3a376e1aafe7243f066f2c8d782a9863f
     }
 
     public ArrayList<Type> toList()

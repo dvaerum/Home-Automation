@@ -5,6 +5,7 @@
 *.ear
 
 # Local Files
+.directory
 .idea
 out
 ANTLR/ANTLR.iml

@@ -6,5 +6,6 @@
 
 # Local Files
 .idea
+.directory
 out
 ANTLR/ANTLR.iml

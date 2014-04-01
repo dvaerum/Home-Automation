@@ -9,7 +9,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
     SymbolTable scope = Main.scope;
 
-    //TODO: Determind if newline shall be removed or not
+    //TODO: Determine if newline shall be removed or not
     @Override
     public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
     {
@@ -36,6 +36,13 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             blockType = visitBlock(ctx.moreFunctions().block());
             if(!blockType.equals((Type.TypeEnum.Nothing)))
                 returnType = blockType;
+        }
+
+        //TODO: Check if returning false positives
+        //Checks if "setup" function has been found
+        if(!scope.symbolExists("Setup"))
+        {
+            returnType = new Type(Type.TypeEnum.Error, "No \"Setup\" function found, please provide one.");
         }
 
         return returnType;

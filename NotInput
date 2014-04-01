@@ -1,6 +1,8 @@
-Integer test = 1+1
-Integer tester = 1
+function Setup(Integer x) returns String
+    lol()
+    return "hahahahah"
+endfunction
 
-function setup() returns Nothing
-    Boolean asdf = true+1
+function lol() returns Nothing
+    Setup(2, 43)
 endfunction

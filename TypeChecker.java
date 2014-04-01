@@ -158,7 +158,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         ArrayList<Type> paramList = (ArrayList<Type>)visitFuncParameters(ctx.funcParameters()).value;
 
-        if(scope.symbolExists(funcName))
+        if(funcName.equals("Setup"))
+        {
+            returnType = new Type(Type.TypeEnum.Error, "\"Setup\" function can't be called.");
+        }
+        else if(scope.symbolExists(funcName))
         {
             if(scope.getSymbol(funcName).type.parameters.equals(paramList))
                 returnType = scope.getSymbol(funcName).type.returnTypeEnum;
@@ -807,16 +811,19 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    //TODO: [lav prioritet] del visitExpression op, sÃƒÂ¥ det er mere overskueligt.
-    //TODO: Collections
-    //TODO: Foreach (Vent til collection)
-    //TODO: function calls in expressions(seems done)
-    //TODO: Man kan saette et element ind pa liste uden curly brackets
-    //TODO: Indeksering(Done for lister, dictionary ikke tjekket)
+    //TODO: Methods on functioncalls
+    //TODO: Collections[ Frederik ]
+    //TODO: Indeksering(Done for lister, dictionary ikke tjekket.v  Vent pÃ¥ collection)
     //TODO: Klasser
     //TODO: Lav bedre error message til metodekald, nÃ¥r en variabel ikke er blevet deklareret[Vent pÃ¥ Dennis' listener]
     //TODO: Beslut: passing by references vs value
+    //TODO: Methods on collection[venter pÃ¥ Frederik]
     // ------- NEW GRAMMAR -------
-    //TODO: Whitespaces
     //TODO: int i = -2
+
+    // --------- Til 2. iteration --------
+    //TODO: [lav prioritet]del visitExpression op, sÃƒÆ’Ã‚Â¥ det er mere overskueligt.
+    //TODO: Foreach (Vent til collection)
+    //TODO: Events
+    
 }

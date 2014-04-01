@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Integer.add(Integer, Integer) > Integer
 String.toString() > String
 Integer.toString() > String
@@ -6,7 +5,3 @@ Decimal.toString() > String
 Decimal.toInteger() > Integer
 Integer.add(Integer, Integer) > Integer
 Integer.test(Decimal) > Integer
-=======
-String.toString() > String
-Integer.toString() > String
->>>>>>> 0e7e74e3a376e1aafe7243f066f2c8d782a9863f

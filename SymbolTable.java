@@ -57,15 +57,12 @@ public class SymbolTable
         return true;
     }
 
-<<<<<<< HEAD
     public Boolean addSymbolMethod(String symbol, Type type)
     {
         return addSymbol(symbol + type.objectType.toString(), type);
     }
 
 
-=======
->>>>>>> 0e7e74e3a376e1aafe7243f066f2c8d782a9863f
     public Boolean symbolExists(String symbol)
     {
         if (table.containsKey(symbol))
@@ -76,14 +73,11 @@ public class SymbolTable
         return false;
     }
 
-<<<<<<< HEAD
     public Boolean symbolExists(String symbol, Type.TypeEnum objectType)
     {
         return symbolExists(symbol + objectType.toString());
     }
 
-=======
->>>>>>> 0e7e74e3a376e1aafe7243f066f2c8d782a9863f
     public SymbolInfo getSymbol(String symbol)
     {
         return table.get(symbol);

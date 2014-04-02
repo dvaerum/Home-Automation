@@ -172,25 +172,11 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HOMEParser#newline}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNewline(@NotNull HOMEParser.NewlineContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link HOMEParser#primitiveType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#program}.
@@ -205,6 +191,13 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#returnFunction}.

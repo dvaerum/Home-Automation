@@ -261,17 +261,6 @@ public interface HOMEListener extends ParseTreeListener {
 	void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HOMEParser#newline}.
-	 * @param ctx the parse tree
-	 */
-	void enterNewline(@NotNull HOMEParser.NewlineContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#newline}.
-	 * @param ctx the parse tree
-	 */
-	void exitNewline(@NotNull HOMEParser.NewlineContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link HOMEParser#primitiveType}.
 	 * @param ctx the parse tree
 	 */
@@ -281,17 +270,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#program}.
@@ -314,6 +292,17 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#identifierOrListIndex}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#returnFunction}.

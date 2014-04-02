@@ -57,6 +57,12 @@ public class SymbolTable
         return true;
     }
 
+    public Boolean addSymbolMethod(String symbol, Type type)
+    {
+        return addSymbol(symbol + type.objectType.toString(), type);
+    }
+
+
     public Boolean symbolExists(String symbol)
     {
         if (table.containsKey(symbol))
@@ -67,8 +73,18 @@ public class SymbolTable
         return false;
     }
 
+    public Boolean symbolExists(String symbol, Type.TypeEnum objectType)
+    {
+        return symbolExists(symbol + objectType.toString());
+    }
+
     public SymbolInfo getSymbol(String symbol)
     {
         return table.get(symbol);
+    }
+
+    public SymbolInfo getSymbol(String symbol, Type.TypeEnum objectType)
+    {
+        return table.get(symbol + objectType.toString());
     }
 }

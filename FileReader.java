@@ -15,10 +15,9 @@ public class FileReader {
     {
         try {
             Scanner sc = new Scanner(new File("Methods"));
-            List<String> lines = new ArrayList<String>();
             String str;
 
-            Pattern ptrn = Pattern.compile("(\\w+).([a-zA-Z0-9_]+)(\\(\\)) > (\\w+)");
+            Pattern ptrn = Pattern.compile("^([A-Z][a-z]+).([a-zA-Z0-9_]+)\\(((?:\\w(?:, )?)*)\\) > (\\w+)");
 
             while(sc.hasNextLine()){
                 str = sc.nextLine();
@@ -26,22 +25,32 @@ public class FileReader {
 
                 if(mtchr.matches())
                 {
-
                     Type objType = String2Type(mtchr.group(1));
                     String methodName = mtchr.group(2);
+                    String[] args = mtchr.group(3).replaceAll("\\s", "").split(",");
+                    ArrayList<Type> params = new ArrayList<>();
                     Type returnType = String2Type(mtchr.group(4));
 
-                    Type symbol = new Type(Type.TypeEnum.Function, new ArrayList<Type>(), returnType);
-                    scope.addSymbol(methodName, symbol);
-                    System.out.println(objType + " - " + methodName + " returns " + returnType);
+                    if(!args[0].equals(""))
+                    {
+                        for(String strParam : args)
+                        {
+                            params.add(String2Type(strParam));
+                        }
+                    }
+
+                    Type symbol = new Type(Type.TypeEnum.Method, objType, params, returnType);
+                    scope.addSymbolMethod(methodName, symbol);
+//                    System.out.println(objType + " - " + methodName + " returns " + returnType);
                 }
-                else
-                    System.out.println("No matches");
+//                else
+//                    System.out.println("No matches");
             }
         }
         catch (FileNotFoundException e)
         {
             System.err.println(e.initCause(e.getCause()));
+
         }
     }
 
@@ -49,14 +58,25 @@ public class FileReader {
     {
         Type returnType;
 
-        //TODO: Benytte java 1.7 i stedet, og have string switches?
+        //TODO: Add more datatypes
 
-        if(str.equals("String"))
-            returnType = new Type(Type.TypeEnum.String);
-        else if(str.equals("Integer"))
-            returnType = new Type(Type.TypeEnum.Integer);
-        else
-            returnType = new Type(Type.TypeEnum.Error);
+        switch (str)
+        {
+            case "Boolean":
+                returnType = new Type(Type.TypeEnum.Boolean);
+                break;
+            case "Integer":
+                returnType = new Type(Type.TypeEnum.Integer);
+                break;
+            case "Decimal":
+                returnType = new Type(Type.TypeEnum.Decimal);
+                break;
+            case "String":
+                returnType = new Type(Type.TypeEnum.String);
+                break;
+            default:
+                returnType = new Type(Type.TypeEnum.Error);
+       }
 
         return returnType;
     }

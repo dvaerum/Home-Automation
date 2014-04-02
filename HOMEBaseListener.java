@@ -315,19 +315,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNewline(@NotNull HOMEParser.NewlineContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNewline(@NotNull HOMEParser.NewlineContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -335,19 +322,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -374,6 +348,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -5,22 +5,23 @@ grammar HOME;
 program : global block EOF ;
 
 global
-    : declaration* newline+ global
-    | assign* newline+ global
+    : declaration* Newline+ global
+    | assign* Newline+ global
     |
     ;
 
 block
     : function moreFunctions
-    | newline*
+    | Newline*
     ;
 
 moreFunctions
-    : newline+ block
-    | newline*
+    : Newline+ block
+    | Newline*
     ;
+
 function
-    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
+    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) Newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
@@ -46,11 +47,11 @@ declarationParameterList
 //------------------Statement---------------------
 
 stmts
-    : stmt newline+ stmts
-    | newline*
+    : stmt Newline+ stmts
+    | Newline*
     ;
 
-newline : '\r'? '\n' | '\r';
+Newline : '\r'? '\n' | '\r';
 
 stmt
     : declaration
@@ -80,7 +81,7 @@ assign
     ;
 //---------------If statement-------------
 ifStmt
-    : 'if' LPAREN expression RPAREN newline+
+    : 'if' LPAREN expression RPAREN Newline+
         stmts
         elseIfStmt*
         elseStmt?
@@ -88,12 +89,12 @@ ifStmt
     ;
 
 elseIfStmt
-    : 'elseif' LPAREN expression RPAREN newline+
+    : 'elseif' LPAREN expression RPAREN Newline+
         stmts
     ;
 
 elseStmt
-    : 'else' newline+
+    : 'else' Newline+
     stmts?
     ;
 //---------------Loops-------------
@@ -103,13 +104,13 @@ loop
     ;
 
 loopWhileOrUntil
-    :   'repeat' ('while'|'until') LPAREN expression RPAREN newline+
+    :   'repeat' ('while'|'until') LPAREN expression RPAREN Newline+
         stmts
         'endrepeat'
     ;
 
 loopForeach
-    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN newline+
+    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN Newline+
         stmts
        'endrepeat'
     ;
@@ -119,8 +120,13 @@ funcCall
     ;
 
 variableMethodCall
-    : identifierOrListIndex DOT funcCall
+    : identifierOrListIndex DOT funcCall (DOT funcCall)*
     ;
+
+//variableMethodCall
+//    : identifierOrListIndex DOT
+//    ;
+
 
 returnFunction
     : 'return' expression? // TODO change when identifierOrListIndex can be digits
@@ -319,7 +325,7 @@ COMMENT
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> skip
+    :   '//' ~[Newline]* -> skip
     ;
 
 //TODO: FIX INT VS DECIMAL ERROR

@@ -1,3 +1,4 @@
+import com.sun.xml.internal.ws.util.StringUtils;
 import org.antlr.v4.runtime.DiagnosticErrorListener;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -39,15 +40,28 @@ public class CustomErrorListener extends DiagnosticErrorListener {
     }
 
     private Boolean _captureDiagnostics;
+    private String[] _file;
 
-    public CustomErrorListener(Boolean captureDiagnosticWarnings) {
+    public CustomErrorListener(Boolean captureDiagnosticWarnings, String file) {
         _captureDiagnostics = captureDiagnosticWarnings;
+        _file = file.split("\n");
     }
 
     @Override
     public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
-        _errorMessages.add(String.format("line %d:%d %s at: %s", line, charPositionInLine, msg, offendingSymbol));
+        //_errorMessages.add(String.format("line %d:%d %s at: %s", line, charPositionInLine, msg, offendingSymbol));
         //_errorMessages.add(String.format("line %d:%d %s at: %s", line, charPositionInLine, msg, offendingSymbol.toString()));
+        String temp = String.format("line %d:%d:", line, charPositionInLine);
+
+        _errorMessages.add(String.format("%s %s",
+                           msg.replace("\\n",""),
+                           offendingSymbol.toString()));
+        _errorMessages.add(String.format("%s %s", temp, _file[line - 1]));
+        if (charPositionInLine > 0) {
+            _errorMessages.add(String.format("%1$" + temp.length() + "s" + "  " + "%2$" + charPositionInLine + "s\n", " ", "^"));
+        } else {
+            _errorMessages.add(String.format("%1$" + temp.length() + "s ^\n", " "));
+        }
     }
 
     @Override
@@ -70,4 +84,6 @@ public class CustomErrorListener extends DiagnosticErrorListener {
             _warningMessages.add(String.format("reportContextSensitivity d=%s, input='%s'", getDecisionDescription(recognizer, dfa), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex))));
         }
     }
+
+
 }

@@ -10,11 +10,11 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     SymbolTable scope = Main.scope;
 
     //TODO: Determind if newline shall be removed or not
-    @Override
+    /*@Override
     public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
     {
         return new Type(Type.TypeEnum.Nothing);
-    }
+    }*/
 
     @Override
     public Type visitBlock(@NotNull HOMEParser.BlockContext ctx)
@@ -45,7 +45,16 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     public Type visitFunction(@NotNull HOMEParser.FunctionContext ctx)
     {
         Type returnType;
-        Type returns = visitType(ctx.type());
+        //If the function returns some identifier
+        Type returns;
+        if(ctx.type() != null)
+            returns = visitType(ctx.type());
+        //or the function returns nothing
+        else if(ctx.getChild(4).getText().equals("Nothing"))
+            returns = new Type(Type.TypeEnum.Nothing);
+        else //otherwise return error if other unexpected type
+            returns = new Type(Type.TypeEnum.Error);
+
         String funcName = ctx.getChild(1).getText();
 
         //Gets the types of the parameters
@@ -61,7 +70,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         return returnType;
     }
-    
+
     @Override
     public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
     {

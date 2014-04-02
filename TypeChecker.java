@@ -1,6 +1,7 @@
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jacob on 13-03-14.
@@ -53,6 +54,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 ctx.removeLastChild();
             }
         }
+        else if(ctx.stmt().variableMethodCall() != null)
+            returnType = visitVariableMethodCall(ctx.stmt().variableMethodCall());
         else if(ctx.stmt().incDec() != null)
         {
             returnType = visitIncDec(ctx.stmt().incDec());
@@ -129,7 +132,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType != null && !stmtsType.equals(Type.TypeEnum.Error))
+        if(stmtsType != null && !stmtsType.equals(Type.TypeEnum.Error) && !returnType.equals(Type.TypeEnum.Nothing))
         {
 
             if(forkReturnStack.closed())
@@ -150,7 +153,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx)
     {
-        Type returnType = new Type(Type.TypeEnum.Nothing);
+        Type returnType;
         String funcName = ctx.identifierOrListIndex().getText();
 
         ArrayList<Type> paramList = (ArrayList<Type>)visitFuncParameters(ctx.funcParameters()).value;
@@ -174,15 +177,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitFuncParameters(@NotNull HOMEParser.FuncParametersContext ctx)
     {
         Type returnType = new Type(Type.TypeEnum.Nothing, new ArrayList<Type>());
-        ArrayList<Type> genericList = new ArrayList<Type>();
+        ArrayList<Type> genericList = new ArrayList<>();
 
         for(HOMEParser.ExpressionContext currCtx : ctx.expression())
         {
-            //literal
-            if(currCtx.literal() != null)
-                genericList.add(visitLiteral(currCtx.literal()));
-            else    //variable
-                genericList.add(new Type(scope.getSymbol(currCtx.getText()).type.typeEnum));
+            if(currCtx.expression() != null)
+                genericList.add(visitExpression(currCtx));
+
+//            //literal
+//            if(currCtx.literal() != null)
+//                genericList.add(visitLiteral(currCtx.literal()));
+//            else if(currCtx.identifierOrListIndex() != null) //variable
+//                genericList.add(new Type(scope.getSymbol(currCtx.getText()).type.typeEnum));
+//            else
+//                System.out.println("WARNING: INCORRECT FUNCTION PARAMETER!: " + currCtx.getText());
         }
 
         returnType.value = genericList;
@@ -298,9 +306,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         if (ctx.type().collectionType() != null) {
             returnType = visitType(ctx.type().collectionType().type());
+            //checks if there's a collection of variables(list)
             if (ctx.expression() != null && ctx.expression().collectionInit() != null) {
+                //foreach expression in the collections of variables...
                 for (HOMEParser.ExpressionContext expressionContext : ctx.expression().collectionInit().expression()) {
-                    Type expressionType = checkCollectionInit(expressionContext, true, returnType.typeEnum);
+                    /// ListInteger>
+                    //Type expressionType = checkCollectionInit(expressionContext, true, returnType.typeEnum);
+                    Type expressionType = visitExpression(ctx.expression());
                     if (expressionType.equals(Type.TypeEnum.Error)) {
                         return expressionType;
                     }
@@ -363,11 +375,21 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    public Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, Type.TypeEnum targetType)
+    @Override
+    public Type visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx)    {
+        if (ctx.getChild(0).equals("{"))
+        {
+            ;
+        }
+            return null;
+    }
+    /**public Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, Type.TypeEnum targetType)
     {
         Type returnType;
 
+        //If we're working with a list
         if(isList){
+
             if(ctx.collectionInit() == null){
                 return visitExpression(ctx);
             }
@@ -394,7 +416,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = new Type(Type.TypeEnum.Error, "Dictionary key must be string!");
         }
         return returnType;
-    }
+    }*/
+
+
+
 
     @Override
     public Type visitExpression(@NotNull HOMEParser.ExpressionContext ctx)
@@ -487,7 +512,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         else if(ctx.variableMethodCall() != null)
         {
-            System.out.println("Expression should not go into variableMethodCall() yet");
+            //System.out.println("Expression should not go into variableMethodCall() yet");
             returnType = visitVariableMethodCall(ctx.variableMethodCall());
         }
         else if(ctx.identifierOrListIndex() != null)
@@ -714,23 +739,70 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         return returnType;
     }
+
     // TODO: needs further checking
     @Override
     public Type visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx) {
-        Type returnType;
+        Type returnType = new Type(Type.TypeEnum.Error, "Variable method call went wrong");
+        HOMEParser.FuncCallContext currctx = ctx.funcCall().get(0);
 
+        //the name of the identifier and the name of the method.
+        String objectIdentifier = ctx.identifierOrListIndex().getText();
+        String methodName = currctx.identifierOrListIndex().getText();
+        
+        //List of types of all the parameters in the method
+        ArrayList<Type> paramList = (ArrayList<Type>)visitFuncParameters(currctx.funcParameters()).value;
+        Type identifierType=null;
+        if(scope.symbolExists(objectIdentifier))
+            identifierType = scope.getSymbol(objectIdentifier).type;
+        else
+            return new Type(Type.TypeEnum.Error, String.format("Identifier: %s hasn't been initialized yet.", objectIdentifier));
 
-        if(ctx.identifierOrListIndex() == null){
-            returnType = new Type(Type.TypeEnum.Error, "No identifier in Variable Method Call");
+        //Checks if identifierType.method exists
+        if(scope.symbolExists(methodName, identifierType.typeEnum))
+        {
+
+            //Checks if the parameters of the methods equals input parameters.
+
+            if(scope.getSymbol(methodName, identifierType.typeEnum).type.parameters.equals(paramList))
+                returnType = scope.getSymbol(methodName, identifierType.typeEnum).type.returnTypeEnum;
+            else if(scope.getSymbol(methodName,identifierType.typeEnum).type.checkParametersConvertToDecimal(paramList))
+            {
+                returnType = scope.getSymbol(methodName, identifierType.typeEnum).type.returnTypeEnum;
+            }
+            else
+                returnType = new Type(Type.TypeEnum.Error, String.format("The method \"%s\" doesn't support the parameters (wrong amount or type(s))", methodName));
         }
-        else if(ctx.funcCall() == null) {
-            returnType = new Type(Type.TypeEnum.Error, "No funcCall in Variable Method Call");
-        }
-        else if(ctx.DOT() == null) {
-            returnType = new Type(Type.TypeEnum.Error, "No DOT in Variable Method Call");
-        }
-        else {
-            returnType = visitFuncCall(ctx.funcCall());
+        else
+            returnType = new Type(Type.TypeEnum.Error, String.format("The object %s doesn't implement the method %s", objectIdentifier, methodName));
+
+        //If there are more methods after the initial method: Example: x.somemethod(4,6).toString()
+        if(ctx.funcCall().size() > 1)
+        {
+            HOMEParser.FuncCallContext nextMethodCall;
+            //Starts at the method after the initial method.
+            for (int i = 1; i < ctx.funcCall().size(); i++) {
+
+                nextMethodCall = ctx.funcCall().get(i);
+                methodName = nextMethodCall.identifierOrListIndex().getText();
+
+                if(scope.symbolExists(methodName, returnType.typeEnum))
+                {                    
+                   paramList = (ArrayList<Type>)visitFuncParameters(nextMethodCall.funcParameters()).value;
+   
+                    if(scope.getSymbol( methodName, returnType.typeEnum).type.parameters.equals(paramList))
+                        returnType = scope.getSymbol( methodName, returnType.typeEnum).type.returnTypeEnum;
+                    else if(scope.getSymbol(methodName,identifierType.typeEnum).type.checkParametersConvertToDecimal(paramList))
+                    {
+                        returnType = scope.getSymbol( methodName, returnType.typeEnum).type.returnTypeEnum;
+                    }
+                    else
+                        returnType = new Type(Type.TypeEnum.Error, String.format("The method \"%s\" doesn't support the parameters (wrong amount/type)", nextMethodCall.getText()));
+                }
+                else
+                    returnType = new Type(Type.TypeEnum.Error, String.format("%s doesn't implement the method %s", returnType, nextMethodCall.getText()));
+
+            }
         }
         return returnType;
     }
@@ -738,16 +810,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     //TODO: [lav prioritet] del visitExpression op, sÃƒÂ¥ det er mere overskueligt.
     //TODO: Collections
     //TODO: Foreach (Vent til collection)
-    //TODO: Insert new grammar(DONE)
-    //TODO: Kill Hello-names!
     //TODO: function calls in expressions(seems done)
     //TODO: Man kan saette et element ind pa liste uden curly brackets
     //TODO: Indeksering(Done for lister, dictionary ikke tjekket)
-    //TODO: Metodekald
-    ///TODO: Klasser
+    //TODO: Klasser
+    //TODO: Lav bedre error message til metodekald, nÃ¥r en variabel ikke er blevet deklareret[Vent pÃ¥ Dennis' listener]
     //TODO: Beslut: passing by references vs value
     // ------- NEW GRAMMAR -------
-    //TODO: i++
     //TODO: Whitespaces
     //TODO: int i = -2
 }

@@ -16,41 +16,55 @@ public class Main {
 
     public static SymbolTable scope = new SymbolTable();
 
-    public static void main(String[] args) throws IOException {
-        HOMELexer lexer = new HOMELexer(new ANTLRFileStream("Input"));
-        HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
+    public static void main(String[] args) throws IOException
+    {
+ //       try{
+            ANTLRFileStream stream = new ANTLRFileStream("Input");
+            HOMELexer lexer = new HOMELexer(stream);
+            HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
 
-        //Custom error handler
-        CustomErrorListener errorListener = new CustomErrorListener(false);
-        parser.addErrorListener(errorListener);
 
-        ParseTree tree = parser.program();
+            // Removes Antlr4 own error output in terminal
+            // http://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
+            parser.removeErrorListeners();
 
-        FileReader fileR = new FileReader();
-        fileR.loadMethods();
+            // Custom error handler format output print
+            // http://stackoverflow.com/questions/22325445/how-to-grab-antlr4-error-output
+            CustomErrorListener errorListener = new CustomErrorListener(false, stream.toString());
+            parser.addErrorListener(errorListener);
 
-        ArrayList<Type> paramTypes = new ArrayList<Type>();
-        Type symbol = new Type(Type.TypeEnum.Function, paramTypes, new Type(Type.TypeEnum.String));
-        scope.addSymbol("toString", symbol);
+            ParseTree tree = parser.program();
 
-        FirstRun firstVisit = new FirstRun();
-        Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext)tree.getChild(1));
-        if(returnType.equals(Type.TypeEnum.Error))
+            System.out.println("---------------------------------- Error Messages ----------------------------------");
+            for (String s : errorListener.ErrorMessages()) {
+                System.out.println(s);
+            }
+            System.out.print("\n");
+
+            FileReader fileR = new FileReader();
+            fileR.loadMethods();
+
+            FirstRun firstVisit = new FirstRun();
+
+            /* Virker ikke når der er parser fejl
+             *
+            Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext)tree.getChild(1));
+            if(returnType.equals(Type.TypeEnum.Error))
+            {
+                System.out.println(String.format("Error: %s", returnType.value));
+            }
+            else
+            {
+                TypeChecker visitor = new TypeChecker();
+                visitor.visit(tree);
+            }
+            */
+        /*
+        }catch(Exception e)
         {
-            System.out.println(String.format("Error: %s", returnType.value));
+            e.printStackTrace();
+            //System.err.println(e.initCause(e.getCause()));
         }
-        else
-        {
-            TypeChecker visitor = new TypeChecker();
-            visitor.visit(tree);
-        }
-
-
-        System.out.println("Error Message:");
-        for (String s : errorListener.ErrorMessages()) {
-            System.out.printf(s);
-        }
-
-        //System.err.println(e.initCause(e.getCause()));
+        */
     }
 }

@@ -1,0 +1,5 @@
+function Setup() returns Nothing
+   Boolean x = (true AND false) OR ( true AND true)
+   Boolean q = false
+   x = q+true
+endfunction

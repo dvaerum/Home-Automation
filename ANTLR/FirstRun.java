@@ -13,6 +13,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     @Override
     public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
     {
+
         return new Type(Type.TypeEnum.Nothing);
     }
 
@@ -40,7 +41,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         //TODO: Check if returning false positives
         //Checks if "setup" function has been found
-        if(!scope.symbolExists("Setup"))
+        if(!scope.symbolExistsFunction("Setup"))
         {
             returnType = new Type(Type.TypeEnum.Error, "No \"Setup\" function found, please provide one.");
         }
@@ -75,7 +76,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
                 return new Type(Type.TypeEnum.Error, "Function \"Setup\" can't return anything but nothing");
 
         //adds function + parameter types to symbol table.
-        if(!scope.addSymbol(funcName, symbol))
+        if(!scope.addSymbolFunction(funcName, symbol))
             returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d",
                                                                        funcName, ctx.getStart().getLine()));
         else

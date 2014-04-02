@@ -7,7 +7,39 @@ import java.util.List;
  */
 public class Type {
     public enum TypeEnum {
-        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method
+        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method, ListListOrDictionary, Anything;
+    }
+
+    public boolean isSubTypeOf(Type t)
+    {
+        // If t is a ListListOrDictionary, then return true if this is a List<List<Type>> or Dictionary<Type>
+        if ( ((this.typeParameters.size() > 0 && t.typeParameters.size() > 0 && t.typeEnum == TypeEnum.ListListOrDictionary) &&
+                ((this.typeParameters.get(0).typeParameters.size() > 0 && this.typeEnum == TypeEnum.List && this.typeParameters.get(0).typeEnum == TypeEnum.List &&
+                        this.typeParameters.get(0).typeParameters.get(0).typeEnum == t.typeParameters.get(0).typeEnum) ||
+                        (this.typeEnum == TypeEnum.Dictionary && this.typeParameters.get(0).typeEnum == t.typeParameters.get(0).typeEnum))))
+            return true;
+            // For dealing with empty list initializers (for example: List<Integer> = {})
+        else if (t.typeEnum == TypeEnum.List && t.typeParameters.size() > 0 && t.typeParameters.get(0).typeEnum == TypeEnum.Anything && (this.typeEnum == TypeEnum.Dictionary || this.typeEnum == TypeEnum.List))
+            return true;
+        else if (t.typeEnum == TypeEnum.Anything)
+            return true;
+        if (this.typeEnum == t.typeEnum)
+        {
+            // Check if typeParameters are a subtype as well.
+            if (this.typeParameters.size() == t.typeParameters.size())
+            {
+                for(int i = 0; i < typeParameters.size(); i++)
+                {
+                    if (!(this.typeParameters.get(i).isSubTypeOf(t.typeParameters.get(i))))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public ArrayList<Type> toList()
@@ -37,6 +69,14 @@ public class Type {
         return this.typeEnum == t;
     }
 
+    public boolean compatibleWith(Type t)
+    {
+        if (this.isSubTypeOf(t))
+        {
+            return true;
+        }
+        return equals(t);
+    }
 
     @Override
     public boolean equals(Object o) {

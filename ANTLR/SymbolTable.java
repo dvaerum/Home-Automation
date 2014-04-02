@@ -59,9 +59,13 @@ public class SymbolTable
 
     public Boolean addSymbolMethod(String symbol, Type type)
     {
-        return addSymbol(symbol + type.objectType.toString(), type);
+        return addSymbol(symbol + "#" + type.objectType.toString(), type);
     }
 
+    public Boolean addSymbolFunction(String symbol, Type type)
+    {
+        return addSymbol(symbol + "#function", type);
+    }
 
     public Boolean symbolExists(String symbol)
     {
@@ -75,7 +79,12 @@ public class SymbolTable
 
     public Boolean symbolExists(String symbol, Type.TypeEnum objectType)
     {
-        return symbolExists(symbol + objectType.toString());
+        return symbolExists(symbol + "#" + objectType.toString());
+    }
+
+    public Boolean symbolExistsFunction(String symbol)
+    {
+        return symbolExists(symbol + "#function");
     }
 
     public SymbolInfo getSymbol(String symbol)
@@ -85,6 +94,12 @@ public class SymbolTable
 
     public SymbolInfo getSymbol(String symbol, Type.TypeEnum objectType)
     {
-        return table.get(symbol + objectType.toString());
+        return table.get(symbol + "#" + objectType.toString());
     }
+
+    public SymbolInfo getSymbolFunction(String symbol)
+    {
+        return table.get(symbol + "#function");
+    }
+
 }

@@ -97,7 +97,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 returnType = new Type(Type.TypeEnum.Error, String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
             }
             else
-                returnType = new Type((scope.getSymbol(symbol).type.typeEnum));
+                returnType = scope.getSymbol(symbol).type;
         }
         return returnType;
     }
@@ -162,10 +162,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         {
             returnType = new Type(Type.TypeEnum.Error, "\"Setup\" function can't be called.");
         }
-        else if(scope.symbolExists(funcName))
+        else if(scope.symbolExistsFunction(funcName))
         {
-            if(scope.getSymbol(funcName).type.parameters.equals(paramList))
-                returnType = scope.getSymbol(funcName).type.returnTypeEnum;
+            if(scope.getSymbolFunction(funcName).type.parameters.equals(paramList))
+                returnType = scope.getSymbolFunction(funcName).type.returnTypeEnum;
                 //returnType = new Type(Type.TypeEnum.Nothing);
             else
                 returnType = new Type(Type.TypeEnum.Error, String.format("Function parameters doesn't match target function " +
@@ -229,11 +229,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 expressionType = visitExpression(ctx.expression());
             }
 
-            Type functionType = new Type(scope.getSymbol(currentFunction).type.returnTypeEnum.typeEnum);
+            Type functionType = scope.getSymbol(currentFunction).type.returnTypeEnum;
 
             if(expressionType.equals(Type.TypeEnum.Error))
                 return expressionType;
-            if(functionType.equals(expressionType)){
+            if(functionType.compatibleWith(expressionType)){
                 returnType = new Type(functionType.typeEnum);
                 forkReturnStack.addReturn();
             }
@@ -268,9 +268,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             //Check for bracket "[" list[2] = 34
             // a = 2
             if(ctx.identifierOrListIndex().getChildCount()>1 && ctx.identifierOrListIndex().getChild(1).getText().equals("["))
-                LHSType = new Type(scope.getSymbol(identifier).type.typeParameters.get(0).typeEnum);
+                LHSType = scope.getSymbol(identifier).type.typeParameters.get(0);
             else
-                LHSType = new Type(scope.getSymbol(identifier).type.typeEnum);
+                LHSType = scope.getSymbol(identifier).type;
         }
         else
         {
@@ -283,7 +283,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(expression.equals(Type.TypeEnum.Error))
             return expression;
 
-        if(LHSType.equals(expression))
+        if(LHSType.compatibleWith(expression))
         {
             returnType = new Type(LHSType.typeEnum, expression.value);
         }
@@ -294,7 +294,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         else
         {
-            returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types. Expected %s, got %s", LHSType.typeEnum, expression.typeEnum));
+            returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types. Expected %s, got %s", LHSType, expression));
         }
 
         return returnType;
@@ -308,7 +308,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Type returnType;
 
-        if (ctx.type().collectionType() != null) {
+        /*if (ctx.type().collectionType() != null) {
             returnType = visitType(ctx.type().collectionType().type());
             //checks if there's a collection of variables(list)
             if (ctx.expression() != null && ctx.expression().collectionInit() != null) {
@@ -344,7 +344,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", ctx.getChild(1).getText()));
             }
             return returnType;
-        }
+        }*/
 
         Type type = visitType(ctx.type());
         String identifier = ctx.getChild(1).getText();
@@ -359,12 +359,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         }
 
-        if(!scope.addSymbol(identifier, type.typeEnum))
+        if(!scope.addSymbol(identifier, type))
             return new Type(Type.TypeEnum.Error, String.format("Can't declare symbol. %s already exists!", identifier));
 
 
         //if "integer i", return no value back. If "Integer i = 3" return value
-        if(expression == null || type.equals(expression))
+        if(expression == null || type.compatibleWith(expression))
         {
             returnType = new Type(type.typeEnum, expression == null ? "" : expression.value);
         }
@@ -374,19 +374,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = new Type(Type.TypeEnum.Decimal, expression.value);
         }
         else
-            returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types. Expected %s, got %s", type.typeEnum, expression.typeEnum));
+            returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types. Expected %s, got %s", type, expression));
 
         return returnType;
     }
 
-    @Override
-    public Type visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx)    {
-        if (ctx.getChild(0).equals("{"))
-        {
-            ;
-        }
-            return null;
-    }
     /**public Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, Type.TypeEnum targetType)
     {
         Type returnType;
@@ -421,8 +413,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         return returnType;
     }*/
-
-
 
 
     @Override
@@ -481,7 +471,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     //If AND or OR is used, check that both sides are boolean, else throw an error
                    if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Type.TypeEnum.Boolean) && r1.equals(r2)))
                         returnType = new Type(Type.TypeEnum.Error, String.format("AND/OR can't be used with other types than boolean"));
-                    //If comparison is used, and be othsides are not numbers, throw an error
+                    //If comparison is used, and be othsides are not numbers, throow an error
                    else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.equals(Type.TypeEnum.Integer) || r1.equals(Type.TypeEnum.Decimal) || (r1.equals(Type.TypeEnum.Decimal) && r2.equals(Type.TypeEnum.Integer))) && r1.equals(r2)))
                         returnType = new Type(Type.TypeEnum.Error, String.format("Comparison can only be used with integers and decimals"));
                    //Else accept the expression
@@ -515,7 +505,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 }
                 else
                 {
-                    returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types %s and %s", r1.typeEnum, r2.typeEnum));
+                    returnType = new Type(Type.TypeEnum.Error, String.format("Incompatible types %s and %s", r1, r2));
                 }
             }
         }
@@ -530,7 +520,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         else if(ctx.collectionInit()!= null)
         {
-            System.out.println("Expression should not go into collectionInit()");
+            //System.out.println("Expression should not go into collectionInit()");
+            returnType = visitCollectionInit(ctx.collectionInit());
         }
         else if(ctx.variableMethodCall() != null)
         {
@@ -542,6 +533,88 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = visitIdentifierOrListIndex(ctx.identifierOrListIndex());
         }
         return returnType;
+    }
+
+    @Override
+    public Type visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx)
+    {
+        Type outerType = new Type(Type.TypeEnum.List);
+        Type containedType = null;
+        Type previousContained = null;
+        boolean notDictionary = true;
+
+        if (ctx.expression().size() > 0)
+        {
+            containedType = visitExpression(ctx.expression(0));
+
+            // Check if initializer is a Dictionary
+            for(HOMEParser.ExpressionContext expr : ctx.expression())
+            {
+                if(expr.collectionInit() != null && expr.collectionInit().expression().size() == 2)
+                {
+                    Type first = visitExpression(expr.collectionInit().expression(0));
+                    Type second = visitExpression(expr.collectionInit().expression(1));
+                    if (first.equals(Type.TypeEnum.String))
+                    {
+                        if (second.equals(Type.TypeEnum.String))
+                        {
+                            // Type is Dictionary<String> or List<List<String>>
+                            outerType = new Type(Type.TypeEnum.ListListOrDictionary);
+                        }
+                        else
+                        {
+                            // Type is Dictionary<Type>
+                            outerType = new Type(Type.TypeEnum.Dictionary);
+                        }
+                        containedType = second;
+                        if (previousContained != null && !previousContained.equals(containedType))
+                        {
+                            // Error, different types.
+                            return new Type(Type.TypeEnum.Error, "Invalid collection initializer");
+                        }
+                        previousContained = second;
+                        notDictionary = false;
+                    }
+                    else
+                    {
+                        // First value in inner collectionInitializer is not String, therefore this collectionInitializer can't be a Dictionary.
+                        notDictionary = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    // Inner collectionInitializer does not have 2 values or doesn't exist, therefore this collectionInitializer can't be a Dictionary.
+                    notDictionary = true;
+                    break;
+                }
+            }
+
+            if (notDictionary)
+            {
+                // Collection is List
+                outerType = new Type(Type.TypeEnum.List);
+                containedType = visitExpression(ctx.expression(0));
+                previousContained = containedType;
+                for(HOMEParser.ExpressionContext expr : ctx.expression())
+                {
+                    Type exprType = visitExpression(expr);
+                    if (containedType.equals(Type.TypeEnum.Anything))
+                    {
+                        containedType = exprType;
+                    }
+                    if (!previousContained.compatibleWith(exprType) && !exprType.compatibleWith(previousContained) || exprType.typeEnum == Type.TypeEnum.Error)
+                        return new Type(Type.TypeEnum.Error, "Invalid collection initializer");
+                    previousContained = exprType;
+                }
+            }
+        }
+        else
+        {
+            containedType = new Type(Type.TypeEnum.Anything);
+        }
+
+        return new Type(outerType.typeEnum, containedType.toList());
     }
 
     @Override
@@ -560,6 +633,22 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = new Type(Type.TypeEnum.String, value);
 
         return returnType;
+    }
+
+    @Override
+    public Type visitType(@NotNull HOMEParser.TypeContext ctx)
+    {
+        if (ctx.collectionType() != null)
+            return visitCollectionType(ctx.collectionType());
+        return visitPrimitiveType(ctx.primitiveType());
+    }
+
+    @Override
+    public Type visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx)
+    {
+        Type.TypeEnum outerType = Type.TypeEnum.valueOf(ctx.getText().split("<")[0]);
+        Type innerType = visitType(ctx.type());
+        return new Type(outerType, innerType.toList());
     }
 
     @Override
@@ -741,21 +830,24 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = new Type(Type.TypeEnum.Error, "No identifier to increment / decrement?");
         } else 
         {
-            if(scope.getSymbol(ctx.identifierOrListIndex().getText()) == null)
+            //Check if symbol is null
+            if(scope.getSymbol(ctx.identifierOrListIndex().Identifier().getText()) == null)
             {
                 returnType = new Type(Type.TypeEnum.Error, "Only declared variables can be incremented / decremented");
             }
-            else if(scope.getSymbol(ctx.identifierOrListIndex().getText()).type.typeEnum == Type.TypeEnum.Integer)
+            //Check if symbol is of type integer or decimal
+            else if(scope.getSymbol(ctx.identifierOrListIndex().Identifier().getText()).type.typeEnum == Type.TypeEnum.Integer)
             {
                 returnType = new Type(Type.TypeEnum.Integer);
             }
-            else if(scope.getSymbol(ctx.identifierOrListIndex().getText()).type.typeEnum == Type.TypeEnum.Decimal)
+            else if(scope.getSymbol(ctx.identifierOrListIndex().Identifier().getText()).type.typeEnum == Type.TypeEnum.Decimal)
             {
                 returnType = new Type(Type.TypeEnum.Decimal);
             }
+            //Else say incement or decrement can't be done on other types
             else
             {
-                returnType = new Type(Type.TypeEnum.Error, "Error while either incrementing or decrementing");
+                returnType = new Type(Type.TypeEnum.Error, "Increment or decrement can't be used on other types than Integer or Decimal");
             }
         }
 
@@ -836,6 +928,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     //TODO: Lav bedre error message til metodekald, nÃ¥r en variabel ikke er blevet deklareret[Vent pÃ¥ Dennis' listener]
     //TODO: Beslut: passing by references vs value
     //TODO: Methods on collection[venter pÃ¥ Frederik]
+    //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
+    //TODO: Boolean x = 3=={4}
+    //TODO: String hash.... hash() works?!
+    //TODO: List<Integer> faef = {1, 2, 3}
+    //TODO: List<Decimal> l = {1,2,3} doesn't work.
+    //List<Integer> adfadf = {4, 5 }
+    //faef = adfadf
     // ------- NEW GRAMMAR -------
     //TODO: int i = -2
 

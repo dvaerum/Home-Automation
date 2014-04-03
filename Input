@@ -1,7 +1,7 @@
 Integer test = 1+1
-Integer tester = 1;
+Integer tester = 2
 
 function setup() returns Nothing
-    Integer dennis_er_nederen
+    Integer  dennis_er_nederen
 endfunction
 

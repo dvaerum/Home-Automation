@@ -20,12 +20,13 @@ import javax.tools.Diagnostic;
 public class CustomErrorListener extends DiagnosticErrorListener {
 
     private ArrayList<String> _errorMessages = new ArrayList<String>();
+    private ArrayList<String> _warningMessages = new ArrayList<String>();
+    private Boolean _captureDiagnostics;
+    private String[] _file;
 
     public List<String> ErrorMessages() {
         return _errorMessages;
     }
-
-    private ArrayList<String> _warningMessages = new ArrayList<String>();
 
     public List<String> WarningMessages() {
         return _warningMessages;
@@ -39,9 +40,6 @@ public class CustomErrorListener extends DiagnosticErrorListener {
         return _warningMessages.size() > 0;
     }
 
-    private Boolean _captureDiagnostics;
-    private String[] _file;
-
     public CustomErrorListener(Boolean captureDiagnosticWarnings, String file) {
         _captureDiagnostics = captureDiagnosticWarnings;
         _file = file.split("\n");
@@ -49,14 +47,16 @@ public class CustomErrorListener extends DiagnosticErrorListener {
 
     @Override
     public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
-        //_errorMessages.add(String.format("line %d:%d %s at: %s", line, charPositionInLine, msg, offendingSymbol));
-        //_errorMessages.add(String.format("line %d:%d %s at: %s", line, charPositionInLine, msg, offendingSymbol.toString()));
-        String temp = String.format("line %d:%d:", line, charPositionInLine);
+//        System.out.println(String.format("%s", recognizer));
 
+        String temp = String.format("line %d,%d:", line, charPositionInLine);
         _errorMessages.add(String.format("%s %s",
                            msg.replace("\\n",""),
-                           offendingSymbol.toString()));
+                           //offendingSymbol.toString()));
+                           ""));
         _errorMessages.add(String.format("%s %s", temp, _file[line - 1]));
+
+        // The pointer (^) in the error msg
         if (charPositionInLine > 0) {
             _errorMessages.add(String.format("%1$" + temp.length() + "s" + "  " + "%2$" + charPositionInLine + "s\n", " ", "^"));
         } else {

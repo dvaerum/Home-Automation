@@ -1,4 +1,5 @@
 //import org.antlr.runtime.*;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -16,35 +17,47 @@ public class Main {
 
     public static SymbolTable scope = new SymbolTable();
 
-    public static void main(String[] args) throws IOException
-    {
- //       try{
-            ANTLRFileStream stream = new ANTLRFileStream("Input");
-            HOMELexer lexer = new HOMELexer(stream);
-            HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
+    public static void main(String[] args) throws IOException {
+        //       try{
+        ANTLRFileStream stream = new ANTLRFileStream("Input");
+        HOMELexer lexer = new HOMELexer(stream);
+        HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
 
+        // Custom error handler format output print
+        // http://stackoverflow.com/questions/22325445/how-to-grab-antlr4-error-output
+        CustomErrorListener errorListener = new CustomErrorListener(false, stream.toString());
 
-            // Removes Antlr4 own error output in terminal
-            // http://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
-            parser.removeErrorListeners();
+        // Removes Antlr4 own error output in terminal
+        // http://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
+        lexer.removeErrorListeners();
+        parser.removeErrorListeners();
 
-            // Custom error handler format output print
-            // http://stackoverflow.com/questions/22325445/how-to-grab-antlr4-error-output
-            CustomErrorListener errorListener = new CustomErrorListener(false, stream.toString());
-            parser.addErrorListener(errorListener);
+        //add the errors of the parser to errorListener
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
 
-            ParseTree tree = parser.program();
+        ParseTree tree = parser.program();
 
-            System.out.println("---------------------------------- Error Messages ----------------------------------");
-            for (String s : errorListener.ErrorMessages()) {
+        if (errorListener.HasErrors()) {
+            System.out.println( "---------------------------------- Errors Messages ----------------------------------");
+            for (int i = 0; i < 3; i++) {
+                System.out.println(errorListener.ErrorMessages().get(i));
+            }
+        }
+
+        if (errorListener.HasWarnings()) {
+            System.out.println( "--------------------------------- Warnings Messages ---------------------------------");
+            for (String s : errorListener.WarningMessages()) {
                 System.out.println(s);
             }
-            System.out.print("\n");
+        }
+//HACKED!!
+//Info: Hacker captured in a deadlock
 
-            FileReader fileR = new FileReader();
-            fileR.loadMethods();
+        FileReader fileR = new FileReader();
+        fileR.loadMethods();
 
-            FirstRun firstVisit = new FirstRun();
+        FirstRun firstVisit = new FirstRun();
 
             /* Virker ikke når der er parser fejl
              *

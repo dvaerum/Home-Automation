@@ -2,24 +2,24 @@
 
 function Setup() returns Nothing
 
-   //Boolean x = (true AND false) OR ( true AND true)
-   //Boolean q = false
+   Boolean x = (true AND false) OR ( true AND true)
+   Boolean q = false
     // x = q+true
 
-    //List<Integer> li = {2, 3, 3, 4}
-    //List<List<Integer>> s = { {}, {2, 3} }
-    //List<List<String>> es = { {"herp", "derp"}, {"Merp", "Erp"} }
-    //Dictionary<String> dic = { {"lol", "derp"},  {"lol2", "derp2"} }
-    //List<List<List<String>>> d = { { {"derp", "erp", "lerp"}, {"lol"} } }
-    //Dictionary<Dictionary<Integer>> dd = { {"s", { {"s", 1} } }, {"s2", { {"f" , 2} } } }
-    //List<Integer> sgsd = {}
-    //List<Dictionary<String>> fsdfsd = { {} }
-    //Dictionary<String> fgrer = { {"1", "l"} }
-    //Dictionary<Dictionary<String>> gklg = { {"l" ,{ {"lol", "derp"} } } }
-    //List<Dictionary<List<String>>> sdalllll = { { {"string", {"lol", "lol2"}} }  }
-    //List<String> sll = {"lol"}
-    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop = { { { { {2, 3}, {1,2} } } } }
-    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop4 = { { { { {} } } } }
+    List<Integer> li = {2, 3, 3, 4}
+    List<List<Integer>> s = { {}, {2, 3} }
+    List<List<String>> es = { {"herp", "derp"}, {"Merp", "Erp"} }
+    Dictionary<String> dic = { {"lol", "derp"},  {"lol2", "derp2"} }
+    List<List<List<String>>> d = { { {"derp", "erp", "lerp"}, {"lol"} } }
+    Dictionary<Dictionary<Integer>> dd = { {"s", { {"s", 1} } }, {"s2", { {"f" , 2} } } }
+    List<Integer> sgsd = {}
+    List<Dictionary<String>> fsdfsd = { {} }
+    Dictionary<String> fgrer = { {"1", "l"} }
+    Dictionary<Dictionary<String>> gklg = { {"l" ,{ {"lol", "derp"} } } }
+    List<Dictionary<List<String>>> sdalllll = { { {"string", {"lol", "lol2"}} }  }
+    List<String> sll = {"lol"}
+    List<List<List<List<List<Integer>>>>> omgWhenWillItStop = { { { { {2, 3}, {1,2} } } } }
+    List<List<List<List<List<Integer>>>>> omgWhenWillItStop4 = { { { { {} } } } }
 
     // Bad
     //List<Integer> sad = {2, 2, 2, {}}
@@ -46,8 +46,8 @@ function Setup() returns Nothing
      Dictionary<Integer> sdef = { {"lol", 5} }
      //adfadf = faef
      //Decimal n = faef[0]
-       sdef["lol"] = 2
-     faef[3]++
+      sdef["lol"] = 2
+     //faef[3]++
      String soeren_jensen = "PC-MasterRace"
      Decimal the_d = 2.0
      //soeren_jensen++

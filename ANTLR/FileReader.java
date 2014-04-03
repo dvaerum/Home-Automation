@@ -2,6 +2,7 @@ import org.stringtemplate.v4.compiler.STParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FileReader {
                         }
                     }
 
-                    Type symbol = new Type(Type.TypeEnum.Method, objType, params, returnType);
+                    Type symbol = new Type("Method", objType, params, returnType);
                     scope.addSymbolMethod(methodName, symbol);
 //                    System.out.println(objType + " - " + methodName + " returns " + returnType);
                 }
@@ -58,7 +59,7 @@ public class FileReader {
         }
     }
 
-    public void loadStandardClasses()
+    public void loadStandardClasses() throws IOException
     {
         List<String> expectedClasses = Arrays.asList("Input", "Integer", "Output");
 
@@ -87,52 +88,64 @@ public class FileReader {
         }
     }
 
-    void readClassDef(String fullPath) throws FileNotFoundException
+    void readClassDef(String fullPath) throws IOException
     {
         Scanner sc = new Scanner(new File(fullPath));
-        String str /*= readFileToString(new File(fullPath))*/;
+        String str = org.apache.commons.io.FileUtils.readFileToString(new File(fullPath));
         //Reads
 
-        Pattern ptrn = Pattern.compile("class\\s*([a-zA-Z0-9_]+)\\n*\\t*fields\\s*((?:[\\w]+\\s+\\w+\\n*\\t*)*)\\n*\\t*endfields\\n*\\t*constructor\\s*([A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\n*\\t*endconstructor\\n*\\t*methods\\n*\\t*((?:(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\n*\\t*)*)\\n*\\t*endmethods\\n*\\t*endclass", Pattern.MULTILINE);
+        Pattern methodPtrn = Pattern.compile("([a-zA-Z0-9_]+)\\(((?:\\w(?:, )?)*)\\) > (\\w+)");
 
-        while(sc.hasNextLine())
+        Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z0-9_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(\\-\\s[A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\sendconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)\\sendmethods\\sendclass");
+        str = str.replaceAll("\\s+", " ");
+        str = str.replaceAll("[\\n|\\r]]", "");
+        Matcher mtchr = classPtrn.matcher(str);
+
+        System.out.println(mtchr.matches());
+
+        if(mtchr.matches())
         {
-            str = sc.nextLine();
-            Matcher mtchr = ptrn.matcher(str);
+            String className = mtchr.group(1);
+            String fields = mtchr.group(2);
+            String constrName = mtchr.group(3);
+            String constrArgs = mtchr.group(4);
+            String methods = mtchr.group(5);
 
-            if(mtchr.matches())
+            String[] methodList = methods.split("-");
+
+            for(int i = 1; i <= methodList.length-1;  i++)
             {
-                System.out.println(mtchr.toString());
+                Matcher methodMtchr = methodPtrn.matcher(methodList[i].trim());
+                if(methodMtchr.matches())
+                {
+                    String methodName = methodMtchr.group(1);
+                    String[] args = methodMtchr.group(2).replaceAll("\\s", "").split(",");
+                    ArrayList<Type> params = new ArrayList<>();
+                    Type returnType = String2Type(methodMtchr.group(3));
+
+                    if(!args[0].equals(""))
+                    {
+                        for(String strParam : args)
+                        {
+                            params.add(String2Type(strParam));
+                        }
+                    }
+
+                    Type objType = new Type("ObjectType");
+                    Type symbol = new Type("Method", objType, className, params, returnType);
+                    scope.addSymbolMethod(methodName, symbol);
+                }
             }
+
+            System.out.println(String.format("Name: %s\nFields: %s\nContsr: %s\nArgs: %s\nMethods: %s", className, fields, constrName, constrArgs, methods));
         }
+
     }
 
 
-public Type String2Type(String str)
+    public Type String2Type(String str)
     {
-        Type returnType;
-
-        //TODO: Add more datatypes
-
-        switch (str)
-        {
-            case "Boolean":
-                returnType = new Type(Type.TypeEnum.Boolean);
-                break;
-            case "Integer":
-                returnType = new Type(Type.TypeEnum.Integer);
-                break;
-            case "Decimal":
-                returnType = new Type(Type.TypeEnum.Decimal);
-                break;
-            case "String":
-                returnType = new Type(Type.TypeEnum.String);
-                break;
-            default:
-                returnType = new Type(Type.TypeEnum.Error);
-       }
-
-        return returnType;
+       return new Type(str);
     }
 }
 

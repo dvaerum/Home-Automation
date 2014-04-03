@@ -14,20 +14,20 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
     {
 
-        return new Type(Type.TypeEnum.Nothing);
+        return new Type("Nothing");
     }
 
     @Override
     public Type visitBlock(@NotNull HOMEParser.BlockContext ctx)
     {
-        Type returnType = new Type(Type.TypeEnum.Nothing);
+        Type returnType = new Type("Nothing");
         Type blockType;
 
         //Checks if function already exist
         if(ctx.function() != null)
         {
             returnType = visitFunction(ctx.function());
-            if(returnType.equals(Type.TypeEnum.Error))
+            if(returnType.equals("Error"))
                 return returnType;
         }
 
@@ -35,7 +35,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         if(ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
         {
             blockType = visitBlock(ctx.moreFunctions().block());
-            if(!blockType.equals((Type.TypeEnum.Nothing)))
+            if(!blockType.equals(("Nothing")))
                 returnType = blockType;
         }
 
@@ -43,7 +43,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         //Checks if "setup" function has been found
         if(!scope.symbolExistsFunction("Setup"))
         {
-            returnType = new Type(Type.TypeEnum.Error, "No \"Setup\" function found, please provide one.");
+            returnType = new Type("Error", "No \"Setup\" function found, please provide one.");
         }
 
         return returnType;
@@ -59,28 +59,28 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             returns = visitType(ctx.type());
         //or the function returns nothing
         else if(ctx.getChild(4).getText().equals("Nothing"))
-            returns = new Type(Type.TypeEnum.Nothing);
+            returns = new Type("Nothing");
         else //otherwise return error if other unexpected type
-            returns = new Type(Type.TypeEnum.Error);
+            returns = new Type("Error");
 
         String funcName = ctx.getChild(1).getText();
 
         //Gets the types of the parameters
         ArrayList<Type> paramTypes = (ArrayList<Type>)visitDeclarationParameters(ctx.declarationParameters()).value;
-        Type symbol = new Type(Type.TypeEnum.Function, paramTypes, returns);
+        Type symbol = new Type("Function", paramTypes, returns);
 
         if(funcName.equals("Setup"))
             if(paramTypes.size() > 0)
-                return new Type(Type.TypeEnum.Error, "Function \"Setup\" doesn't accept any parameters, please remove these.");
-            else if(!returns.equals(Type.TypeEnum.Nothing))
-                return new Type(Type.TypeEnum.Error, "Function \"Setup\" can't return anything but nothing");
+                return new Type("Error", "Function \"Setup\" doesn't accept any parameters, please remove these.");
+            else if(!returns.equals("Nothing"))
+                return new Type("Error", "Function \"Setup\" can't return anything but nothing");
 
         //adds function + parameter types to symbol table.
         if(!scope.addSymbolFunction(funcName, symbol))
-            returnType = new Type(Type.TypeEnum.Error, String.format("Function %s is duplicated at line %d",
+            returnType = new Type("Error", String.format("Function %s is duplicated at line %d",
                                                                        funcName, ctx.getStart().getLine()));
         else
-            returnType = new Type(Type.TypeEnum.Nothing, String.format("Function %s inserted", funcName));
+            returnType = new Type("Nothing", String.format("Function %s inserted", funcName));
 
         return returnType;
     }
@@ -88,12 +88,12 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     @Override
     public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
     {
-        Type returnType = new Type(Type.TypeEnum.Nothing, new ArrayList<Type>());
+        Type returnType = new Type("Nothing", new ArrayList<Type>());
         ArrayList<Type> genericList = new ArrayList<>();
 
         for(HOMEParser.DeclarationContext currCtx : ctx.declaration())
         {
-            genericList.add(new Type(visitType(currCtx.type()).typeEnum));
+            genericList.add(new Type(visitType(currCtx.type()).primaryType));
         }
 
         returnType.value = genericList;
@@ -112,7 +112,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     public Type visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx)
     {
 
-        Type.TypeEnum outerType = Type.TypeEnum.valueOf(ctx.getText().split("<")[0]);
+        String outerType = ctx.getText().split("<")[0];
         Type innerType = visitType(ctx.type());
         return new Type(outerType, innerType.toList());
     }
@@ -124,22 +124,22 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         switch (Type.TypeEnum.valueOf(ctx.getText())){
             case Integer:
-                returnType = new Type(Type.TypeEnum.Integer);
+                returnType = new Type("Integer");
                 break;
             case Decimal:
-                returnType = new Type(Type.TypeEnum.Decimal);
+                returnType = new Type("Decimal");
                 break;
             case Boolean:
-                returnType = new Type(Type.TypeEnum.Boolean);
+                returnType = new Type("Boolean");
                 break;
             case String:
-                returnType = new Type(Type.TypeEnum.String);
+                returnType = new Type("String");
                 break;
             case Nothing:
-                returnType = new Type(Type.TypeEnum.Nothing);
+                returnType = new Type("Nothing");
                 break;
             default:
-                returnType = new Type(Type.TypeEnum.Error, "Unknown primitive type");
+                returnType = new Type("Error", "Unknown primitive type");
                 break;
         }
         return returnType;

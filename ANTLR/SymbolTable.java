@@ -39,7 +39,7 @@ public class SymbolTable
         currentScope--;
     }
 
-    public Boolean addSymbol(String symbol, Type.TypeEnum type)
+    public Boolean addSymbol(String symbol, String type)
     {
         return addSymbol(symbol, new Type(type));
     }
@@ -59,7 +59,7 @@ public class SymbolTable
 
     public Boolean addSymbolMethod(String symbol, Type type)
     {
-        return addSymbol(symbol + "#" + type.objectType.toString(), type);
+        return addSymbol(symbol + "#" + type.classType.toString(), type);
     }
 
     public Boolean addSymbolFunction(String symbol, Type type)
@@ -77,9 +77,9 @@ public class SymbolTable
         return false;
     }
 
-    public Boolean symbolExists(String symbol, Type.TypeEnum objectType)
+    public Boolean symbolExists(String symbol, Type type)
     {
-        return symbolExists(symbol + "#" + objectType.toString());
+        return symbolExists(symbol + "#" + type.classType.toString());
     }
 
     public Boolean symbolExistsFunction(String symbol)
@@ -92,9 +92,9 @@ public class SymbolTable
         return table.get(symbol);
     }
 
-    public SymbolInfo getSymbol(String symbol, Type.TypeEnum objectType)
+    public SymbolInfo getSymbol(String symbol, Type type)
     {
-        return table.get(symbol + "#" + objectType.toString());
+       return table.get(symbol + "#" + type.classType.toString());
     }
 
     public SymbolInfo getSymbolFunction(String symbol)

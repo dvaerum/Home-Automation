@@ -9,11 +9,7 @@ class Input
     endconstructor
 
     methods
-        - toString() > String
-        - ultraLol() > Integer
+        - toString(Integer, Decimal) > String
+        - ultraLol(Integer) > Integer
     endmethods
 endclass
-
-class ([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor
-class ([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\s*([a-z_]\w*)\(((?:\w(?:, )?)*)\) > (\w+)\n*\t*endmethods
-/class\s*([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\n*\t*((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\n*\t*)*)\n*\t*endmethods\n*\t*endclass/gm

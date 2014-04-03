@@ -7,23 +7,23 @@ import java.util.List;
  */
 public class Type {
     public enum TypeEnum {
-        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method, ListListOrDictionary, Anything;
+        Integer, Decimal, Boolean, String, Integer2Decimal, Function, Error, Nothing, List, Dictionary, Method, ListListOrDictionary, Anything, ObjectType;
     }
 
     public boolean isSubTypeOf(Type t)
     {
         // If t is a ListListOrDictionary, then return true if this is a List<List<Type>> or Dictionary<Type>
-        if ( ((this.typeParameters.size() > 0 && t.typeParameters.size() > 0 && t.typeEnum == TypeEnum.ListListOrDictionary) &&
-                ((this.typeParameters.get(0).typeParameters.size() > 0 && this.typeEnum == TypeEnum.List && this.typeParameters.get(0).typeEnum == TypeEnum.List &&
-                        this.typeParameters.get(0).typeParameters.get(0).typeEnum == t.typeParameters.get(0).typeEnum) ||
-                        (this.typeEnum == TypeEnum.Dictionary && this.typeParameters.get(0).typeEnum == t.typeParameters.get(0).typeEnum))))
+        if ( ((this.typeParameters.size() > 0 && t.typeParameters.size() > 0 && t.primaryType.equals("ListListOrDictionary")) &&
+                ((this.typeParameters.get(0).typeParameters.size() > 0 && this.primaryType.equals("List") && this.typeParameters.get(0).primaryType.equals("List") &&
+                        this.typeParameters.get(0).typeParameters.get(0).primaryType.equals(t.typeParameters.get(0).primaryType)) ||
+                        (this.primaryType.equals("Dictionary") && this.typeParameters.get(0).primaryType.equals(t.typeParameters.get(0).primaryType)))))
             return true;
             // For dealing with empty list initializers (for example: List<Integer> = {})
-        else if (t.typeEnum == TypeEnum.List && t.typeParameters.size() > 0 && t.typeParameters.get(0).typeEnum == TypeEnum.Anything && (this.typeEnum == TypeEnum.Dictionary || this.typeEnum == TypeEnum.List))
+        else if (t.primaryType.equals("List") && t.typeParameters.size() > 0 && t.typeParameters.get(0).primaryType.equals("Anything") && (this.primaryType.equals("Dictionary") || this.primaryType.equals("List")))
             return true;
-        else if (t.typeEnum == TypeEnum.Anything)
+        else if (t.primaryType.equals("Anything"))
             return true;
-        if (this.typeEnum == t.typeEnum)
+        if (this.primaryType.equals(t.primaryType))
         {
             // Check if typeParameters are a subtype as well.
             if (this.typeParameters.size() == t.typeParameters.size())
@@ -56,7 +56,8 @@ public class Type {
     ArrayList<Type> typeParameters = new ArrayList<Type>();
     Type objectType;
 
-    final TypeEnum typeEnum;
+    String classType;
+    String primaryType;
     Object value;
 
     // Integer i = 2
@@ -64,9 +65,9 @@ public class Type {
     // Dictionary<Integer> ints = {{"Test",2},{"Three",3}}
 
 
-    public boolean equals(TypeEnum t)
+    public boolean equals(String t)
     {
-        return this.typeEnum == t;
+        return this.primaryType.equals(t);
     }
 
     public boolean compatibleWith(Type t)
@@ -89,7 +90,7 @@ public class Type {
         if (parameters != null ? !parameters.equals(type.parameters) : type.parameters != null) return false;
         if (returnTypeEnum != null ? !returnTypeEnum.equals(type.returnTypeEnum) : type.returnTypeEnum != null)
             return false;
-        if (typeEnum != type.typeEnum) return false;
+        if (primaryType != type.primaryType) return false;
         if (typeParameters != null ? !typeParameters.equals(type.typeParameters) : type.typeParameters != null)
             return false;
 
@@ -108,7 +109,7 @@ public class Type {
             Type methodParam = parameters.get(i);
             if(!methodParam.equals(inputParam))
             {
-                if(methodParam.equals(Type.TypeEnum.Decimal) && inputParam.equals(Type.TypeEnum.Integer))
+                if(methodParam.equals("Decimal") && inputParam.equals("Integer"))
                 {
 
                 }
@@ -126,36 +127,44 @@ public class Type {
         result = 31 * result + (returnTypeEnum != null ? returnTypeEnum.hashCode() : 0);
         result = 31 * result + (typeParameters != null ? typeParameters.hashCode() : 0);
         result = 31 * result + (objectType != null ? objectType.hashCode() : 0);
-        result = 31 * result + (typeEnum != null ? typeEnum.hashCode() : 0);
+        result = 31 * result + (primaryType != null ? primaryType.hashCode() : 0);
         return result;
     }
 
-    public Type(TypeEnum typeEnum) {
-        this.typeEnum = typeEnum;
+    public Type(String primaryType) {
+        this.primaryType = primaryType;
         this.value = null;
     }
 
-    public Type(TypeEnum typeEnum, ArrayList<Type> parameters, Type returnTypeEnum) {
-        this.typeEnum = typeEnum;
+    public Type(String primaryType, ArrayList<Type> parameters, Type returnTypeEnum) {
+        this.primaryType = primaryType;
         this.parameters = parameters;
         this.returnTypeEnum = returnTypeEnum;
     }
 
-    public Type(TypeEnum typeEnum, Type objectType, ArrayList<Type> parameters, Type returnTypeEnum) {
-        this.typeEnum = typeEnum;
+    public Type(String primaryType, Type objectType, ArrayList<Type> parameters, Type returnTypeEnum) {
+        this.primaryType = primaryType;
         this.objectType = objectType;
         this.parameters = parameters;
         this.returnTypeEnum = returnTypeEnum;
     }
 
-    public Type(TypeEnum typeEnum, ArrayList<Type> typeParameters) {
-        this.typeEnum = typeEnum;
+    public Type(String primaryType, Type objectType, String classType, ArrayList<Type> parameters, Type returnTypeEnum) {
+        this.primaryType = primaryType;
+        this.objectType = objectType;
+        this.parameters = parameters;
+        this.returnTypeEnum = returnTypeEnum;
+        this.classType = classType;
+    }
+
+    public Type(String primaryType, ArrayList<Type> typeParameters) {
+        this.primaryType = primaryType;
         this.typeParameters = typeParameters;
     }
 
-    public Type(TypeEnum typeEnum, Object value)
+    public Type(String primaryType, Object value)
     {
-        this.typeEnum = typeEnum;
+        this.primaryType = primaryType;
         this.value = value;
     }
 
@@ -163,7 +172,7 @@ public class Type {
     public String toString()
     {
         String s;
-        s = typeEnum.toString();
+        s = primaryType.toString();
         if (typeParameters.size() > 0)
         {
             s += "<" + typeParameters.get(0).toString() + ">";

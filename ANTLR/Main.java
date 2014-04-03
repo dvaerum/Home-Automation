@@ -37,7 +37,7 @@ public class Main
             }
  */
         FileReader fileR = new FileReader();
-        fileR.loadMethods();
+//        fileR.loadMethods();
         fileR.loadStandardClasses();
 
         FirstRun firstVisit = new FirstRun();

@@ -38,6 +38,7 @@ public class Main
  */
         FileReader fileR = new FileReader();
         fileR.loadMethods();
+        fileR.loadStandardClasses();
 
         FirstRun firstVisit = new FirstRun();
         Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext) tree.getChild(1));

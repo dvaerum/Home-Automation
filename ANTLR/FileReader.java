@@ -1,10 +1,14 @@
+import org.stringtemplate.v4.compiler.STParser;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Created by Jacob on 26-03-14.
@@ -54,7 +58,57 @@ public class FileReader {
         }
     }
 
-    public Type String2Type(String str)
+    public void loadStandardClasses()
+    {
+        List<String> expectedClasses = Arrays.asList("Input", "Integer", "Output");
+
+        File standardDir = new File("classes" + File.separator + "standard-classes");
+
+        for(String importclass : expectedClasses)
+        {
+            File classfile = new File(standardDir + File.separator + importclass + ".txt");
+
+            if(! classfile.exists() && !classfile.isDirectory() )
+            {
+                System.out.println("epic fail! " + importclass + " fejler!");
+            }
+            else //read file if no problems
+            {
+                try
+                {
+                    readClassDef(standardDir + File.separator + importclass + ".def");
+                }
+                catch (FileNotFoundException e)
+                {
+                    System.err.println(e.initCause(e.getCause()));
+
+                }
+            }
+        }
+    }
+
+    void readClassDef(String fullPath) throws FileNotFoundException
+    {
+        Scanner sc = new Scanner(new File(fullPath));
+        String str /*= readFileToString(new File(fullPath))*/;
+        //Reads
+
+        Pattern ptrn = Pattern.compile("class\\s*([a-zA-Z0-9_]+)\\n*\\t*fields\\s*((?:[\\w]+\\s+\\w+\\n*\\t*)*)\\n*\\t*endfields\\n*\\t*constructor\\s*([A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\n*\\t*endconstructor\\n*\\t*methods\\n*\\t*((?:(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\n*\\t*)*)\\n*\\t*endmethods\\n*\\t*endclass", Pattern.MULTILINE);
+
+        while(sc.hasNextLine())
+        {
+            str = sc.nextLine();
+            Matcher mtchr = ptrn.matcher(str);
+
+            if(mtchr.matches())
+            {
+                System.out.println(mtchr.toString());
+            }
+        }
+    }
+
+
+public Type String2Type(String str)
     {
         Type returnType;
 
@@ -81,3 +135,4 @@ public class FileReader {
         return returnType;
     }
 }
+

@@ -846,7 +846,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
             //Else say incement or decrement can't be done on other types
             else
-            {
+                    {
                 returnType = new Type(Type.TypeEnum.Error, "Increment or decrement can't be used on other types than Integer or Decimal");
             }
         }
@@ -935,6 +935,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     //TODO: List<Decimal> l = {1,2,3} doesn't work.
     //List<Integer> adfadf = {4, 5 }
     //faef = adfadf
+    //TODO: Remove method loading, and load as whole class instead
+    //TODO: Make a "use" statement
     // ------- NEW GRAMMAR -------
     //TODO: int i = -2
 

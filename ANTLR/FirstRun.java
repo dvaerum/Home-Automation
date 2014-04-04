@@ -117,6 +117,8 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         return new Type(outerType, innerType.toList());
     }
 
+
+
     @Override
     public Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
     {

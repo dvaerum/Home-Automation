@@ -42,7 +42,7 @@ public class Main
 
         FirstRun firstVisit = new FirstRun();
         Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext) tree.getChild(1));
-        if (returnType.equals(Type.TypeEnum.Error))
+        if (returnType.equals("Error"))
         {
             System.out.println(String.format("Error: %s", returnType.value));
         }

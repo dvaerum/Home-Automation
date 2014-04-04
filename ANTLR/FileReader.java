@@ -1,5 +1,3 @@
-import org.stringtemplate.v4.compiler.STParser;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +7,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Created by Jacob on 26-03-14.
@@ -91,7 +88,14 @@ public class FileReader {
     void readClassDef(String fullPath) throws IOException
     {
         Scanner sc = new Scanner(new File(fullPath));
-        String str = org.apache.commons.io.FileUtils.readFileToString(new File(fullPath));
+        String str = null;
+        if(!new Scanner(new File(fullPath)).useDelimiter("\\Z").hasNext())
+        {
+            System.out.println("Warning: Class reader failed");
+            return;
+        }
+        str = new Scanner(new File(fullPath)).useDelimiter("\\Z").next();
+
         //Reads
 
         Pattern methodPtrn = Pattern.compile("([a-zA-Z0-9_]+)\\(((?:\\w(?:, )?)*)\\) > (\\w+)");
@@ -100,8 +104,6 @@ public class FileReader {
         str = str.replaceAll("\\s+", " ");
         str = str.replaceAll("[\\n|\\r]]", "");
         Matcher mtchr = classPtrn.matcher(str);
-
-        System.out.println(mtchr.matches());
 
         if(mtchr.matches())
         {
@@ -138,6 +140,10 @@ public class FileReader {
             }
 
             System.out.println(String.format("Name: %s\nFields: %s\nContsr: %s\nArgs: %s\nMethods: %s", className, fields, constrName, constrArgs, methods));
+        }
+        else
+        {
+            System.out.println(String.format("The file at path \"%s\" isn't recognized", fullPath));
         }
 
     }

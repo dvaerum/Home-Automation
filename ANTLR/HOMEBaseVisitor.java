@@ -65,14 +65,6 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitConstructClass(@NotNull HOMEParser.ConstructClassContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitType(@NotNull HOMEParser.TypeContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -106,14 +98,6 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitLoop(@NotNull HOMEParser.LoopContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

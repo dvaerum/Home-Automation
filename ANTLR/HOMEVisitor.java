@@ -53,13 +53,6 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitBlock(@NotNull HOMEParser.BlockContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HOMEParser#constructClass}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstructClass(@NotNull HOMEParser.ConstructClassContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link HOMEParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -93,13 +86,6 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLoop(@NotNull HOMEParser.LoopContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#constructClassPort}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#ifStmt}.

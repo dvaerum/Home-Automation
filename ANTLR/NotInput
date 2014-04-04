@@ -1,4 +1,22 @@
+function lol() returns Nothing
+    Integer los
+    myClass lelelelelelel
 
+endfunction
+
+
+function Setup() returns Nothing
+
+endfunction
+
+
+
+
+
+
+
+
+/*
 
 function Setup() returns Nothing
 
@@ -40,8 +58,8 @@ function Setup() returns Nothing
      //Boolean afaefaggaerg = 3=="lol"  //fejler ikke
      //String hash = "hej"
      //hash()
-     Integer lkkk
      List<Integer> faef = {1, 2, 3}
+    // myClass lol
      //List<Decimal> adfadf = {1, 2}
      Dictionary<Integer> sdef = { {"lol", 5} }
      //adfadf = faef
@@ -54,11 +72,6 @@ function Setup() returns Nothing
 endfunction
 
 
-
-
-
-
-/*
 function hej() returns String
     String sf
     return hej()
@@ -79,9 +92,22 @@ endfunction
 
 function testtt() returns Nothing
     Boolean n
-    repeat until(n = true)
+    repeat until(n == true)
 
     endrepeat
     Integer x
+endfunction
+
+
+function Setup() returns Nothing
+
+endfunction
+
+function test1() returns Nothing
+
+endfunction
+
+function test1() returns Nothing
+
 endfunction
 */

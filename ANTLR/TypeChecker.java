@@ -639,6 +639,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         if (ctx.collectionType() != null)
             return visitCollectionType(ctx.collectionType());
+        if(ctx.classes() != null)
+            return visitClasses(ctx.classes());
         return visitPrimitiveType(ctx.primitiveType());
     }
 
@@ -653,28 +655,23 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
     @Override
+    public Type visitClasses(@NotNull HOMEParser.ClassesContext ctx)
+    {
+        String className = ctx.getText();
+
+        if (scope.symbolExistsClass(className))
+        {
+            return new Type(className);
+        }
+        
+        return null;
+    }
+    
+    @Override
     public Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
     {
         Type returnType;
-
-        switch (Type.TypeEnum.valueOf(ctx.getText())){
-            case Integer:
-                returnType = new Type("Integer");
-                break;
-            case Decimal:
-                returnType = new Type("Decimal");
-                break;
-            case Boolean:
-                returnType = new Type("Boolean");
-                break;
-            case String:
-                returnType = new Type("String");
-                break;
-            default:
-                returnType = new Type("Error", "Unknown primitive type");
-                break;
-        }
-        return returnType;
+        return returnType = new Type(ctx.getText());
     }
 
 

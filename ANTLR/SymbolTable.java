@@ -67,6 +67,11 @@ public class SymbolTable
         return addSymbol(symbol + "#function", type);
     }
 
+    public Boolean addSymbolClass(String symbol, Type type)
+    {
+        return addSymbol(symbol + "#class", type);
+    }
+
     public Boolean symbolExists(String symbol)
     {
         if (table.containsKey(symbol))
@@ -87,6 +92,12 @@ public class SymbolTable
         return symbolExists(symbol + "#function");
     }
 
+    public Boolean symbolExistsClass(String symbol)
+    {
+        return symbolExists(symbol + "#class");
+    }
+
+
     public SymbolInfo getSymbol(String symbol)
     {
         return table.get(symbol);
@@ -100,6 +111,11 @@ public class SymbolTable
     public SymbolInfo getSymbolFunction(String symbol)
     {
         return table.get(symbol + "#function");
+    }
+
+    public SymbolInfo getSymbolClass(String symbol)
+    {
+        return table.get(symbol + "#class");
     }
 
 }

@@ -25,7 +25,7 @@ public class Main {
 
         // Custom error handler format output print
         // http://stackoverflow.com/questions/22325445/how-to-grab-antlr4-error-output
-        CustomErrorListener errorListener = new CustomErrorListener(false, stream.toString());
+        CustomErrorListener errorListener = new CustomErrorListener(true, stream.toString());
 
         // Removes Antlr4 own error output in terminal
         // http://stackoverflow.com/questions/18132078/handling-errors-in-antlr4

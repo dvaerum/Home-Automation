@@ -52,8 +52,8 @@ public class CustomErrorListener extends DiagnosticErrorListener {
         String temp = String.format("line %d,%d:", line, charPositionInLine);
         _errorMessages.add(String.format("%s %s",
                            msg.replace("\\n",""),
-                           //offendingSymbol.toString()));
-                           ""));
+                           offendingSymbol.toString()));
+                           //""));
         _errorMessages.add(String.format("%s %s", temp, _file[line - 1]));
 
         // The pointer (^) in the error msg
@@ -67,21 +67,21 @@ public class CustomErrorListener extends DiagnosticErrorListener {
     @Override
     public void reportAmbiguity(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex, int stopIndex, boolean exact, @Nullable BitSet ambigAlts, @NotNull ATNConfigSet configs) {
         if (_captureDiagnostics) {
-            _warningMessages.add(String.format("reportAmbiguity d=%s: ambigAlts=%s, input='%s'", getDecisionDescription(recognizer, dfa), getConflictingAlts(ambigAlts, configs), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex))));
+            _warningMessages.add(String.format("reportAmbiguity d=%s: ambigAlts=%s, input='%s'", getDecisionDescription(recognizer, dfa), getConflictingAlts(ambigAlts, configs), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex)).replace("\n", "\\n")));
         }
     }
 
     @Override
     public void reportAttemptingFullContext(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex, int stopIndex, @Nullable BitSet conflictingAlts, @NotNull ATNConfigSet configs) {
         if (_captureDiagnostics) {
-            _warningMessages.add(String.format("reportAttemptingFullContext d=%s, input='%s'", getDecisionDescription(recognizer, dfa), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex))));
+            _warningMessages.add(String.format("reportAttemptingFullContext d=%s, input='%s'", getDecisionDescription(recognizer, dfa), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex)).replace("\n", "\\n")));
         }
     }
 
     @Override
     public void reportContextSensitivity(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex, int stopIndex, int prediction, @NotNull ATNConfigSet configs) {
         if (_captureDiagnostics) {
-            _warningMessages.add(String.format("reportContextSensitivity d=%s, input='%s'", getDecisionDescription(recognizer, dfa), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex))));
+            _warningMessages.add(String.format("reportContextSensitivity d=%s, input='%s'", getDecisionDescription(recognizer, dfa), ((TokenStream) recognizer.getInputStream()).getText(Interval.of(startIndex, stopIndex)).replace("\n", "\\n")));
         }
     }
 

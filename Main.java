@@ -37,6 +37,9 @@ public class Main {
         parser.addErrorListener(errorListener);
 
         ParseTree tree = parser.program();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        CustomBaseListener customBaseListener = new CustomBaseListener();
+        walker.walk(customBaseListener, tree);
 
         if (errorListener.HasErrors()) {
             System.out.println( "---------------------------------- Errors Messages ----------------------------------");

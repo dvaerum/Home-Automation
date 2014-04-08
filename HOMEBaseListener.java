@@ -94,19 +94,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstructClass(@NotNull HOMEParser.ConstructClassContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConstructClass(@NotNull HOMEParser.ConstructClassContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterType(@NotNull HOMEParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -166,19 +153,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLoop(@NotNull HOMEParser.LoopContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -309,6 +283,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNewline(@NotNull HOMEParser.NewlineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewline(@NotNull HOMEParser.NewlineContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

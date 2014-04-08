@@ -5,27 +5,25 @@ grammar HOME;
 program : global block EOF ;
 
 global
-    : declaration* Newline+ global
-    | assign* Newline+ global
+    : declaration newline+ global
+    | assign newline+ global
     |
     ;
 
 block
     : function moreFunctions
-    | Newline*
-    ;
-
-moreFunctions
-    : Newline+ block
-    | Newline*
     ;
 
 function
-    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) Newline+ //TODO: Add composite data-types
+    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
-
+	
+moreFunctions
+    : newline+ block
+    | newline*
+	;
 //---------------End test terminals----------------
 
 //-----------------Parameters----------------
@@ -47,11 +45,9 @@ declarationParameterList
 //------------------Statement---------------------
 
 stmts
-    : stmt Newline+ stmts
-    | Newline*
+    : stmt newline+ stmts
+    | 
     ;
-
-Newline : '\r'? '\n' | '\r';
 
 stmt
     : declaration
@@ -81,7 +77,7 @@ assign
     ;
 //---------------If statement-------------
 ifStmt
-    : 'if' LPAREN expression RPAREN Newline+
+    : 'if' LPAREN expression RPAREN newline+
         stmts
         elseIfStmt*
         elseStmt?
@@ -89,12 +85,12 @@ ifStmt
     ;
 
 elseIfStmt
-    : 'elseif' LPAREN expression RPAREN Newline+
+    : 'elseif' LPAREN expression RPAREN newline+
         stmts
     ;
 
 elseStmt
-    : 'else' Newline+
+    : 'else' newline+
     stmts?
     ;
 //---------------Loops-------------
@@ -104,13 +100,13 @@ loop
     ;
 
 loopWhileOrUntil
-    :   'repeat' ('while'|'until') LPAREN expression RPAREN Newline+
+    :   'repeat' ('while'|'until') LPAREN expression RPAREN newline+
         stmts
         'endrepeat'
     ;
 
 loopForeach
-    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN Newline+
+    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN newline+
         stmts
        'endrepeat'
     ;
@@ -156,18 +152,9 @@ expression
     | funcCall
     | literal
     | collectionInit
-    | constructClass
     | variableMethodCall
     | identifierOrListIndex
     | LPAREN expression RPAREN
-    ;
-
-constructClass
-    : classes LPAREN ( (expression? (',' expression)*) |  constructClassPort  ) RPAREN // Todo doesn't work with the keyword 'PORT' yet followed by Digits
-    ;
-
-constructClassPort
-    : port IntegerLiteral
     ;
 
 //-------------Variable types-------------
@@ -177,7 +164,12 @@ literal
     | IntegerLiteral
     | StringLiteral
     ;
-
+	
+booleanLiteral
+    : 'false'
+    | 'true'
+    ;
+	
 IntegerLiteral
     : Digits
     ;
@@ -186,11 +178,6 @@ DecimalLiteral
     : (Digits DOT Digits)
     | (Digits DOT)
     | (DOT Digits)
-    ;
-
-booleanLiteral
-    : 'false'
-    | 'true'
     ;
 
 StringLiteral
@@ -245,11 +232,9 @@ collectionType
     : 'List' '<' type '>'
     | 'Dictionary' '<' type '>'
     ;
-// TODO remove, classes should be dynamically inserted at a later stage.
+
 classes
-    : 'Output'
-    | 'Input'
-    | 'Time'
+    : Identifier
     ;
 
 // Characters
@@ -272,7 +257,7 @@ BANG            : '!';
 //TILDE           : '~';
 //QUESTION        : '?';
 //COLON           : ':';
-//SEMICOLON       : ';';
+SEMICOLON       : ';';
 
 //Logical operators
 logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
@@ -325,7 +310,9 @@ COMMENT
     ;
 
 LINE_COMMENT
-    :   '//' ~[Newline]* -> skip
+    :   '//' ~[\r\n]* -> skip
     ;
 
+newline : '\r'? '\n' ;//| '\r';
+	
 //TODO: FIX INT VS DECIMAL ERROR

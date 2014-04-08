@@ -74,17 +74,6 @@ public interface HOMEListener extends ParseTreeListener {
 	void exitBlock(@NotNull HOMEParser.BlockContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link HOMEParser#constructClass}.
-	 * @param ctx the parse tree
-	 */
-	void enterConstructClass(@NotNull HOMEParser.ConstructClassContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#constructClass}.
-	 * @param ctx the parse tree
-	 */
-	void exitConstructClass(@NotNull HOMEParser.ConstructClassContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link HOMEParser#type}.
 	 * @param ctx the parse tree
 	 */
@@ -138,17 +127,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLoop(@NotNull HOMEParser.LoopContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#constructClassPort}.
-	 * @param ctx the parse tree
-	 */
-	void enterConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#constructClassPort}.
-	 * @param ctx the parse tree
-	 */
-	void exitConstructClassPort(@NotNull HOMEParser.ConstructClassPortContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#ifStmt}.
@@ -259,6 +237,17 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#newline}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewline(@NotNull HOMEParser.NewlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#newline}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewline(@NotNull HOMEParser.NewlineContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#primitiveType}.

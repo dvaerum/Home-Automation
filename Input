@@ -1,7 +1,11 @@
-Integer test = 1+1
+Decimal test = 1 + 1.0
 Integer tester = 2
 
 function setup() returns Nothing
     Integer  dennis_er_nederen
+endfunction
+
+function setup() returns Integer
+    return 7
 endfunction
 

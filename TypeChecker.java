@@ -1,11 +1,14 @@
+/*
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by Jacob on 13-03-14.
- */
+ *//*
+
 public class TypeChecker extends HOMEBaseVisitor<Type>
 {
     SymbolTable scope = Main.scope;
@@ -383,7 +386,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
             return null;
     }
-    /**public Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, Type.TypeEnum targetType)
+    */
+/**public Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, Type.TypeEnum targetType)
     {
         Type returnType;
 
@@ -416,7 +420,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = new Type(Type.TypeEnum.Error, "Dictionary key must be string!");
         }
         return returnType;
-    }*/
+    }*//*
+
 
 
 
@@ -434,7 +439,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             //1 expr = expression in parenteses
             if(ctx.expression().size() == 1)
             {
-                /*
+                */
+/*
                 // Move to collectionInit
                 //Goes down in tree until there are more than one tree
                 HOMEParser.ExpressionContext currCtx = ctx.expression(0);
@@ -454,7 +460,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 {
                     return returnType = visitLiteral(currCtx.literal());
                 }
-                */
+                *//*
+
                 return returnType = visitExpression(ctx.expression().get(0));
             }
             else //else two expressions
@@ -502,10 +509,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         {
             returnType = visitFuncCall(ctx.funcCall());
         }
-        else if(ctx.literal() != null)
+*/
+/*        else if(ctx.literal() != null)
         {
             returnType = visitLiteral(ctx.literal());
-        }
+        }*//*
+
         else if(ctx.collectionInit()!= null)
         {
             System.out.println("Expression should not go into collectionInit()");
@@ -659,7 +668,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    public Type visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx)
+*/
+/*    public Type visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx)
     {
         scope.openScope();
 
@@ -667,7 +677,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Type returnType = visitExpression(ctx.expression());
 
-        if(ctx.expression() != null && ctx.expression().literal() != null && ctx.expression().literal().booleanLiteral() != null)
+        if(ctx.expression() != null && ctx.expression().int2dec() != null && ctx.expression().literal().booleanLiteral() != null)
             returnType = new Type(Type.TypeEnum.Error, "Illegal loop expression booleanLiteral");
         else if(!returnType.equals(Type.TypeEnum.Boolean))
             returnType = new Type(Type.TypeEnum.Error, String.format("Loop expressions should be of type Boolean - got %s", returnType.typeEnum));
@@ -677,7 +687,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         scope.closeScope();
         return returnType;
-    }
+    }*//*
+
 
     public Type visitLoopForeach(@NotNull HOMEParser.LoopForeachContext ctx)
     {
@@ -819,4 +830,4 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     // ------- NEW GRAMMAR -------
     //TODO: Whitespaces
     //TODO: int i = -2
-}
+}*/

@@ -1,2 +1,2 @@
-java -jar ./jar/antlr-4.2-complete.jar HOME.g4 -visitor
+java -jar ./jar/antlr-4.2-complete.jar ./Grammar/HOME.g4 -visitor
 exit

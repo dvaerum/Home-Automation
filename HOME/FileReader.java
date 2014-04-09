@@ -158,8 +158,10 @@ public class FileReader {
 
             try
             {
-                classObject = new Type(className, fields, constrName, constrArgs, methods);
-                symbolTable.types.getSymbol(className).type = classObject;
+//                classObject.Update(className, fields, constrName, constrArgs, methods);
+
+                symbolTable.types.getSymbol(className).Update(className, fields, constrName, constrArgs, methods);
+//                symbolObject.Update(className, fields, constrName, constrArgs, methods);
             }
             catch (Exception e)
             {

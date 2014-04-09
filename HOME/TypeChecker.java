@@ -4,15 +4,16 @@ import HOME.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Jacob on 13-03-14.
  */
 public class TypeChecker extends HOMEBaseVisitor<Type>
 {
-    /*String currentFunction = "";
+    String currentFunction = "";
     ForkReturnStack forkReturnStack = new ForkReturnStack();
-    SymbolTable scope = new SymbolTable();
 
     @Override
     public Type visitStmts(@NotNull HOMEParser.StmtsContext ctx)
@@ -49,7 +50,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         {
             returnType = visitReturnFunction((ctx.stmt().returnFunction()));
             if(returnType == null)
-                returnType = new Type("Error", String.format("Missing return statement at function: %s", currentFunction));
+                returnType = new ErrorType( String.format("Missing return statement at function: %s", currentFunction));
             else if(ctx.stmts().getChildCount() > 0)
             {
                 System.out.println(String.format("Warning line %d: Reached unreachable code!", ctx.getStart().getLine()));
@@ -63,9 +64,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = visitIncDec(ctx.stmt().incDec());
         }
 
-        if(returnType.equals("Error"))
+        if(returnType instanceof ErrorType)
         {
-            System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType.value));
+            System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType.toString()));
             return returnType;
         }
 
@@ -79,27 +80,30 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx)
     {
         Type returnType;
+        //TODO: Collections!
+        /*
         if(ctx.getChildCount()> 1 && ctx.getChild(1).getText().equals("["))
         {
             String symbol = ctx.getChild(0).getText();
             if(Main.symbolTable.variables.symbolExists(symbol))
             {
-                // returnType = new ErrorType(String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
+                returnType = new ErrorType(String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
             }
             else
             {
-                returnType = scope.getSymbol(symbol).type.typeParameters.get(0);
+                returnType = Main.symbolTable.variables.getSymbol(symbol)....... //scope.getSymbol(symbol).type.typeParameters.get(0);
             }
         }
         else
+        */
         {
             String symbol = ctx.getChild(0).getText();
-            if(!scope.symbolExists(symbol))
+            if(!Main.symbolTable.variables.symbolExists(symbol))
             {
-                returnType = new Type("Error", String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
+                returnType = new ErrorType(String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
             }
             else
-                returnType = scope.getSymbol(symbol).type;
+                returnType = Main.symbolTable.variables.getSymbol(symbol).type;
         }
         return returnType;
     }
@@ -116,10 +120,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.type() != null)
             returnType = visitType(ctx.type());
         else
-            returnType = new Type("Nothing");
+            returnType = Main.nothing;
 
 //        scope.addSymbol(name, returnType);
-        scope.openScope();
+        Main.symbolTable.openScope();
 
         //Initializes stack for counting returns
         forkReturnStack.newStack();
@@ -134,7 +138,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType != null && !stmtsType.equals("Error") && !returnType.equals("Nothing"))
+        if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
 
             if(forkReturnStack.closed())
@@ -148,10 +152,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         forkReturnStack.dispose();
 
-        scope.closeScope();
+        Main.symbolTable.closeScope();
         return returnType;
     }
-
+/*
     @Override
     public Type visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx)
     {
@@ -203,20 +207,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-
+*/
     @Override
     public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
     {
-        Type returnType = new Type("Nothing");
+        Type returnType = Main.nothing;
 
         for(HOMEParser.DeclarationContext currCtx : ctx.declaration())
         {
-            scope.addSymbol(currCtx.identifierOrListIndex().getText(), new Type(visitType(currCtx.type()).primaryType));
+            Main.symbolTable.variables.addSymbol(currCtx.identifierOrListIndex().getText(), visitType(currCtx.type()));
         }
 
         return returnType;
     }
-
+/*
 
     @Override
     public Type visitReturnFunction(@NotNull HOMEParser.ReturnFunctionContext ctx)
@@ -252,51 +256,54 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         return returnType;
     }
-
+    */
     @Override
     public Type visitAssign(@NotNull HOMEParser.AssignContext ctx)
     {
         String identifier;
         Type LHSType = null;
         Type returnType;
+        /*
         if(ctx.identifierOrListIndex() != null)
         {
             identifier = ctx.identifierOrListIndex().getChild(0).getText();
 
             //Sees if Collection exists
-            if(!scope.symbolExists(identifier))
-                return new Type("Error", String.format("Assign to unknown identifier : %s", identifier));
+            if(!Main.symbolTable.variables.symbolExists(identifier))
+                return new ErrorType( String.format("Assign to unknown identifier : %s", identifier));
 
             //Check for bracket "[" list[2] = 34
             // a = 2
+            //TODO: Wait for collections to work again
+
             if(ctx.identifierOrListIndex().getChildCount()>1 && ctx.identifierOrListIndex().getChild(1).getText().equals("["))
-                LHSType = scope.getSymbol(identifier).type.typeParameters.get(0);
+                LHSType = Main.symbolTable.variables.getSymbol(identifier)......       //scope.getSymbol(identifier).type.typeParameters.get(0);
             else
                 LHSType = scope.getSymbol(identifier).type;
         }
-        else
+        else*/
         {
             identifier = ctx.getChild(0).getText();
-            if(!scope.symbolExists(identifier))
-                return new Type("Error", String.format("Assign to unknown identifier : %s", identifier));
+            if(!Main.symbolTable.variables.symbolExists(identifier))     //!scope.symbolExists(identifier)
+                return new ErrorType( String.format("Assign to unknown identifier : %s", identifier));
         }
 
         Type expression = visitExpression(ctx.expression());
-        if(expression.equals("Error"))
+        if(expression instanceof ErrorType)
             return expression;
 
-        if(LHSType.compatibleWith(expression))
+        if(LHSType.equals(expression))      //LHSType.compatibleWith(expression)
         {
-            returnType = new Type(LHSType.primaryType, expression.value);
+            returnType = LHSType;
         }
-        else if(LHSType.equals("Decimal") && expression.equals("Integer"))
+        else if(LHSType.equals(Main.decimal) && expression.equals(Main.integer))
         {
             System.out.println("\tInteger should be converted");
-            returnType = new Type(LHSType.primaryType, expression.value);
+            returnType = LHSType;
         }
         else
         {
-            returnType = new Type("Error", String.format("Incompatible types. Expected %s, got %s", LHSType, expression));
+            returnType = new ErrorType(String.format("Incompatible types. Expected %s, got %s", LHSType, expression));
         }
 
         return returnType;
@@ -309,7 +316,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         System.out.println("enter declaration....");
 
         Type returnType;
-
+        //TODO: Collections......
         /*if (ctx.type().collectionType() != null) {
             returnType = visitType(ctx.type().collectionType().type());
             //checks if there's a collection of variables(list)
@@ -348,42 +355,43 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return returnType;
         }*/
 
-        /*Type type = visitType(ctx.type());
+        Type type = visitType(ctx.type());
         String identifier = ctx.getChild(1).getText();
         Type expression = null;
 
-        if(type.equals("Error"))
+        if(type instanceof ErrorType)
             return type;
 
         //if expression found: integer i = something
         if(ctx.expression() != null)
         {
             expression = visitExpression(ctx.expression());
-            if(expression.equals("Error"))
+            if(expression instanceof ErrorType)
                 return expression;
 
         }
 
-        if(!scope.addSymbol(identifier, type))
-            return new Type("Error", String.format("Can't declare symbol. %s already exists!", identifier));
+        if(!Main.symbolTable.variables.addSymbol(identifier, type))
+            return new ErrorType(String.format("Can't declare symbol. %s already exists!", identifier));
 
 
         //if "integer i", return no value back. If "Integer i = 3" return value
-        if(expression == null || type.compatibleWith(expression))
+        if(expression == null || type.equals(expression))       //type.compatibleWith(expression)
         {
-            returnType = new Type(type.primaryType, expression == null ? "" : expression.value);
+            returnType = type;
         }
-        else if(type.equals("Decimal") && expression.equals("Integer"))
+        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
         {
             System.out.println("\t Integer should be converted!");
-            returnType = new Type("Decimal", expression.value);
+            returnType = Main.decimal;
         }
         else
-            returnType = new Type("Error", String.format("Incompatible types. Expected %s, got %s", type, expression));
+            returnType = new ErrorType(String.format("Incompatible types. Expected %s, got %s", type, expression));
 
         return returnType;
     }
 
+    /*
     /**public HOME.Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, HOME.Type.TypeEnum targetType)
      {
      HOME.Type returnType;
@@ -420,10 +428,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
      }*/
 
 
-    /*@Override
+    @Override
     public Type visitExpression(@NotNull HOMEParser.ExpressionContext ctx)
     {
-        Type returnType = new Type("Error", "Unknown expression");
+        Type returnType = new ErrorType("Unknown expression");
         //Check the expression consists of additional expressiffons.
 
         if(ctx.expression().size() > 0)
@@ -438,12 +446,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 if(ctx.getChild(0).getText().equals("+") || ctx.getChild(0).getText().equals("-"))
                 {
                     //unary + or - can only be in front of integer and decimal
-                    if(! (returnType.equals("Integer") || returnType.equals("Decimal")) )
+                    if(! (returnType.equals(Main.integer) || returnType.equals(Main.decimal)) )
                     {
-                        returnType = new Type("Error", String.format("unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()));
+                        returnType = new ErrorType(String.format("unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()));
                     }
                 }
                 /*
+                //TODO: Look at when collections are ready again.
                 // Move to collectionInit
                 //Goes down in tree until there are more than one tree
                 HOMEParser.ExpressionContext currCtx = ctx.expression(0);
@@ -464,53 +473,53 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     return returnType = visitLiteral(currCtx.literal());
                 }
                 */
-                /*return returnType;
+                return returnType;
             }
             else //else two expressions
             {
                 r1 = visitExpression(ctx.expression(0));
                 operator = ctx.getChild(1).getText();
                 r2 = visitExpression(ctx.expression(1));
-                if(HOME.Type.isBooleanOperator(operator))
+                if(isBooleanOperator(operator))
                 {
                     //If AND or OR is used, check that both sides are boolean, else throw an error
-                    if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals("Boolean") && r1.equals(r2)))
-                        returnType = new Type("Error", String.format("AND/OR can't be used with other types than boolean"));
+                    if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
+                        returnType = new ErrorType(String.format("AND/OR can't be used with other types than boolean"));
                         //If comparison is used, and be othsides are not numbers, throow an error
-                    else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.equals("Integer") || r1.equals("Decimal") || (r1.equals("Decimal") && r2.equals("Integer"))) && r1.equals(r2)))
-                        returnType = new Type("Error", String.format("Comparison can only be used with integers and decimals"));
+                    else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.equals(Main.integer) || r1.equals(Main.decimal) || (r1.equals(Main.decimal) && r2.equals(Main.integer))) && r1.equals(r2)))
+                        returnType = new ErrorType(String.format("Comparison can only be used with integers and decimals"));
                         //Else accept the expression
                     else
-                        returnType = new Type("Boolean", r1.value + operator + r2.value);
+                        returnType = Main.bool;
                 }
                 // Check for a single literal
                 //Check if type is equal
                 //TODO: Add more types
                 else if(r1.equals(r2))
                 {
-                    if(r1.equals("Boolean"))
-                        returnType = new Type("Error", "Can't use this operator with Booleans");
-                    else if(r1.equals("String") && !operator.equals("+"))
-                        returnType = new Type("Error", "String can only be concatinated with \"+\", no other operations allowed");
+                    if(r1.equals(Main.bool))
+                        returnType = new ErrorType("Can't use this operator with Booleans");
+                    else if(r1.equals(Main.string) && !operator.equals("+"))
+                        returnType = new ErrorType("String can only be concatinated with \"+\", no other operations allowed");
                     else
-                        returnType = new Type(r1.primaryType, r1.value + operator + r2.value);
+                        returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
                 }
                 //Check if it is possible to convert from Int to Dec
-                else if((r1.equals("Integer") && r2.equals("Decimal")) || (r1.equals("Decimal") && r2.equals("Integer")))
+                else if((r1.equals(Main.integer) && r2.equals(Main.decimal)) || (r1.equals(Main.decimal) && r2.equals(Main.integer)))
                 {
                     System.out.println("\t Integer should be converted");
-                    returnType = new Type("Decimal", r1.value + operator + r2.value);
+                    returnType = Main.decimal;
                 }
                 //Check if one of the two results gives an error
-                else if(r1.primaryType.equals("Error")){
+                else if(r1 instanceof ErrorType){
                     returnType = r1;
                 }
-                else if(r2.primaryType.equals("Error")){
+                else if(r2 instanceof ErrorType){
                     returnType = r2;
                 }
                 else
                 {
-                    returnType = new Type("Error", String.format("Incompatible types %s and %s", r1, r2));
+                    returnType = new ErrorType(String.format("Incompatible types %s and %s", r1, r2));
                 }
             }
         }
@@ -539,7 +548,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         return returnType;
     }
-
+/*
     @Override
     public Type visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx)
     {
@@ -921,6 +930,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         return returnType;
     }*/
+
+
+
+
+    List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
+
+
+    boolean isBooleanOperator(String str)
+    {
+        return BooleanOperator.contains(str);
+    }
+
+
+
 
     //TODO: Methods on functioncalls
     //TODO: Collections[ Frederik ]

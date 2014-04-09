@@ -30,8 +30,9 @@ public class Type
         this.name = name;
     }
 
-    public Type(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
     {
+        this.isFinal = true;
         //Add classname into name field
         this.name = name;
 
@@ -42,7 +43,7 @@ public class Type
         for(String singleField : fieldNames)
         {
             String[] field = singleField.trim().split(" ");
-            this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0]).type));
+            this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
         }
 
         //--------------Constructor parsing---------------------
@@ -56,7 +57,7 @@ public class Type
             for(String paramStr : constrParamsStr)
             {
                 if(Main.symbolTable.types.symbolExists(paramStr))
-                    constrParams.add(Main.symbolTable.types.getSymbol(paramStr).type);
+                    constrParams.add(Main.symbolTable.types.getSymbol(paramStr));
                 else
                     throw new Exception(String.format("Class %s didn't exist!", paramStr));
             }
@@ -88,7 +89,7 @@ public class Type
                 if(!Main.symbolTable.types.symbolExists(returnTypeString))
                     throw new Exception(String.format("Class %s didn't exist!", returnTypeString));
                 else
-                    returnType = Main.symbolTable.types.getSymbol(returnTypeString).type;
+                    returnType = Main.symbolTable.types.getSymbol(returnTypeString);
 
                 //Get method parameters
                 List<Type> methodParams = new ArrayList<>();
@@ -98,7 +99,7 @@ public class Type
                     if(!Main.symbolTable.types.symbolExists(paramType))
                         throw new Exception(String.format("Class %s didn't exist!", paramType));
                     else
-                        methodParams.add(Main.symbolTable.types.getSymbol(paramType).type);
+                        methodParams.add(Main.symbolTable.types.getSymbol(paramType));
                 }
 
                 //Add the current method to the type's method list
@@ -117,10 +118,8 @@ public class Type
         this.methods = methods;
     }
 
-
-
-    public boolean equals(Type secondType)
-    {
-        return false;
+    @Override
+    public String toString() {
+        return name;
     }
 }

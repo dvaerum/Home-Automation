@@ -7,9 +7,9 @@ package SymbolTableNew; /**
  */
 public class SymbolTableNew
 {
-    public SymbolSubTable functions = new SymbolSubTable();
-    public SymbolSubTable types = new SymbolSubTable();
-    public SymbolSubTable variables = new SymbolSubTable();
+    public FunctionTable functions = new FunctionTable();
+    public TypeTable types = new TypeTable();
+    public VariableTable variables = new VariableTable();
 
     public void openScope()
     {

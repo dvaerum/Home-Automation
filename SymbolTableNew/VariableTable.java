@@ -2,7 +2,7 @@ package SymbolTableNew; /**
  * Created by Frederik on 09-04-2014.
  */
 
-import java.util.ArrayDeque;
+import java.lang.Boolean;import java.lang.RuntimeException;import java.lang.String;import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import HOME.Type.*;
@@ -10,7 +10,7 @@ import HOME.Type.*;
 /**
  * Created by Frederik on 13-03-14.
  */
-public class SymbolSubTable
+public class VariableTable
 {
     HashMap<String, Deque<SymbolInfo>> table = new HashMap<String, Deque<SymbolInfo>>();
 

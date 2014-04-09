@@ -18,6 +18,11 @@ public class Main
 
     public static Type nothing = new Type("Nothing");
 
+    public static Type integer;
+    public static Type decimal;
+    public static Type bool;
+    public static Type string;
+
     public static void main(String[] args) throws IOException
     {
         System.out.println("\n-----------------------------Loader-----------------------\n");
@@ -41,6 +46,12 @@ public class Main
 //        fileR.loadMethods();
         fileR.loadClassPrototypes();
         fileR.loadStandardClasses();
+
+        integer = symbolTable.types.getSymbol("Integer");
+        decimal = symbolTable.types.getSymbol("Decimal");
+        bool = symbolTable.types.getSymbol("Boolean");
+        string = symbolTable.types.getSymbol("String");
+
 
         System.out.println("\n-----------------------------FirstRun-----------------------\n");
         FirstRun firstVisit = new FirstRun();

@@ -1,10 +1,5 @@
 function Setup() returns Nothing
-    Integer hahaha
-    //Decimal hahahahahah
-    Inputx fsd
-    //fsd = Inputx(3, 3)
-    //fsd.x = 3
-    fsd.ultraLol(34)
+    Integer x = true  //<-- Husk det nu for dælen
 endfunction
 
 /*function Setup() returns Nothing

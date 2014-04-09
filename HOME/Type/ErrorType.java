@@ -12,4 +12,9 @@ public class ErrorType extends Type
         this.name = "Error";
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }

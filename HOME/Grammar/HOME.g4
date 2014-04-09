@@ -1,11 +1,5 @@
-
 // Define
 grammar HOME;
-
-@header {
-package HOME.Grammar;
-}
-
 
 //---------------Test terminals----------------
 program : global block EOF ;

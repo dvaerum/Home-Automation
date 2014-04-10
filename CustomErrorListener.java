@@ -51,9 +51,9 @@ public class CustomErrorListener extends DiagnosticErrorListener {
 
         String temp = String.format("line %d,%d:", line, charPositionInLine);
         _errorMessages.add(String.format("%s %s",
-                           msg.replace("\\n",""),
-                           offendingSymbol.toString()));
-                           //""));
+                                         msg.replace("\\n", ""),
+                                         (offendingSymbol == null) ? "" : offendingSymbol.toString()));
+
         _errorMessages.add(String.format("%s %s", temp, _file[line - 1]));
 
         // The pointer (^) in the error msg

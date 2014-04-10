@@ -270,7 +270,7 @@ BANG            : '!';
 //TILDE           : '~';
 //QUESTION        : '?';
 //COLON           : ':';
-SEMICOLON       : ';';
+//SEMICOLON       : ';';
 
 //Logical operators
 logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');

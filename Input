@@ -1,5 +1,5 @@
 Decimal test = 1 + 1.0
-Integer tester = 2
+Integer tester =
 
 function setup() returns Nothing
     Integer  dennis_er_nederen

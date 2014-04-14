@@ -1,0 +1,12 @@
+class Decimal
+    fields
+    endfields
+
+    constructor
+        - Decimal()
+    endconstructor
+
+    methods
+        - toString(Integer, Decimal) > String
+    endmethods
+endclass

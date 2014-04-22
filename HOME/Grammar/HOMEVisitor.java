@@ -42,6 +42,13 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitAssign(@NotNull HOMEParser.AssignContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HOMEParser#dictionaryLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HOMEParser#stmts}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -103,6 +110,20 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClasses(@NotNull HOMEParser.ClassesContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#dictionaryEntry}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#listLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#declaration}.
@@ -243,13 +264,6 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#collectionInit}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#literal}.

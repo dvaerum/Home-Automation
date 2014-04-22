@@ -1,8 +1,11 @@
 // Define
 grammar HOME;
 
+@header {
+package HOME.Grammar;
+}
 //---------------Test terminals----------------
-program : global block EOF ;
+program : newline* global block EOF ;
 
 global
     : declaration newline+ global
@@ -69,11 +72,11 @@ incDec
 
 //---------------Declaration---------------
 declaration
-    : type identifierOrListIndex (AnyAssign expression)?
+    : type identifierOrListIndex ((AnyAssign|ASSIGN) expression)?
     ;
 //---------------Assignment---------------
 assign
-    : identifierOrListIndex AnyAssign expression
+    : identifierOrListIndex (AnyAssign|ASSIGN) expression
     ;
 //---------------If statement-------------
 ifStmt
@@ -151,18 +154,32 @@ expression
     | expression logicalOperator expression
     | funcCall
     | literal
-    | collectionInit
+//    | collectionInit
     | variableMethodCall
     | identifierOrListIndex
     | LPAREN expression RPAREN
     ;
 
+
 //-------------Variable types-------------
 literal
-    : booleanLiteral
+    : listLiteral
+    | dictionaryLiteral
+    | booleanLiteral
     | DecimalLiteral
     | IntegerLiteral
     | StringLiteral
+    ;
+
+listLiteral
+    : '{' (expression (',' expression)*)? '}'
+    ;
+
+dictionaryLiteral
+    : '{' (dictionaryEntry (',' dictionaryEntry)*)? '}'
+    ;
+dictionaryEntry
+    : expression ASSIGN expression
     ;
 
 booleanLiteral
@@ -204,10 +221,6 @@ Digit
     : [0-9]
     ;
 
-collectionInit
-    : '{' (expression (',' expression)*)? '}'
-    ;
-
 // The Null Literal
 NullLiteral
     :   'null'
@@ -216,9 +229,9 @@ NullLiteral
 // Primitive types
 
 type
+    //: primitiveType
     : collectionType
     | classes
-    //| primitiveType
     ;
 
 //primitiveType
@@ -286,13 +299,13 @@ CARET           : '^';
 LPAREN          : '(';
 RPAREN          : ')';
 
-AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN|ASSIGN) ;
-
+AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN) ;
 ASSIGN          : '=';
 ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';
 MUL_ASSIGN      : '*=';
 DIV_ASSIGN      : '/=';
+
 //AND_ASSIGN      : '&=';
 //OR_ASSIGN       : '|=';
 //XOR_ASSIGN      : '^=';

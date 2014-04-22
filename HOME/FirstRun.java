@@ -10,8 +10,6 @@ import java.util.ArrayList;
  */
 public class FirstRun extends HOMEBaseVisitor<Type> {
 
-    SymbolTableOLD scope = Main.scope;
-
     //TODO: Determine if newline shall be removed or not
     @Override
     public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
@@ -60,7 +58,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         if(ctx.type() != null)
             returns = visitType(ctx.type());
             //or the function returns nothing
-        else if(ctx.getChild(4).getText().equals(Main.nothing))
+        else if(ctx.nothing() != null)
             returns = Main.nothing;
         else //otherwise return error if other unexpected type
             returns = new ErrorType("Error");
@@ -74,7 +72,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         if(funcName.equals("Setup"))
             if(paramTypes.size() > 0)
                 return new ErrorType("Function \"Setup\" doesn't accept any parameters, please remove these.");
-            else if(!returns.equals("Nothing"))
+            else if(!returns.equals(Main.nothing))
                 return new ErrorType("Function \"Setup\" can't return anything but nothing");
 
         //adds function + parameter types to symbol table.
@@ -118,21 +116,38 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         if (Main.symbolTable.types.symbolExists(className))
         {
-            return new Type(className);
+            return Main.symbolTable.types.getSymbol(className);
         }
 
         return new ErrorType("Undefined Class");
     }
 
-    /*@Override
+    @Override
     public Type visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx)
     {
-
-        String outerType = ctx.getText().split("<")[0];
+        String primaryTypeText = ctx.getText().split("<")[0];
         Type innerType = visitType(ctx.type());
-        return new Type(outerType, innerType.toList());
+        String typeName = primaryTypeText + "<" + innerType.name + ">";
+        Type t = null;
+
+        if (primaryTypeText.equals("List"))
+            t = Main.list;
+        else if (primaryTypeText.equals("Dictionary"))
+            t = Main.dictionary;
+        else
+            return new ErrorType("Invalid collection Type");
+
+        if (Main.symbolTable.types.symbolExists(typeName))
+            return Main.symbolTable.types.getSymbol(typeName);
+        else
+        {
+            t = new CollectionType(typeName, t, innerType);
+            Main.symbolTable.types.addSymbol(typeName, t);
+        }
+
+        return t;
     }
-*/
+
 //    @Override
 //    public HOME.Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
 //    {

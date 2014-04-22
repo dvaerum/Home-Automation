@@ -55,6 +55,17 @@ public interface HOMEListener extends ParseTreeListener {
 	void exitAssign(@NotNull HOMEParser.AssignContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HOMEParser#dictionaryLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#dictionaryLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HOMEParser#stmts}.
 	 * @param ctx the parse tree
 	 */
@@ -152,6 +163,28 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClasses(@NotNull HOMEParser.ClassesContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#dictionaryEntry}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#dictionaryEntry}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#listLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterListLiteral(@NotNull HOMEParser.ListLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#listLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#declaration}.
@@ -372,17 +405,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#collectionInit}.
-	 * @param ctx the parse tree
-	 */
-	void enterCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#collectionInit}.
-	 * @param ctx the parse tree
-	 */
-	void exitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#literal}.

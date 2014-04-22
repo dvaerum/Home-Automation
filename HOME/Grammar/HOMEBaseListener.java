@@ -71,6 +71,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStmts(@NotNull HOMEParser.StmtsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -182,6 +195,32 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClasses(@NotNull HOMEParser.ClassesContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListLiteral(@NotNull HOMEParser.ListLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -442,19 +481,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

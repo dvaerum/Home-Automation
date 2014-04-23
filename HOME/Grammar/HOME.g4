@@ -141,7 +141,7 @@ Identifier
 
 identifierOrListIndex
     : Identifier
-    | Identifier '[' expression ']'
+    | identifierOrListIndex '[' expression ']'
     ;
 
 //---------------Expression---------------

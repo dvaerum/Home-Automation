@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class CollectionType extends Type
 {
-    Type primaryType;
-    Type innerType;
+    public Type primaryType;
+    public Type innerType;
 
     public CollectionType(String name, Type primaryType, Type innerType)
     {
@@ -28,12 +28,13 @@ public class CollectionType extends Type
         }
 
     }
+
     @Override
     public boolean isSubtypeOf(Type otherType)
     {
-        if (otherType instanceof CollectionType)
+        if (otherType instanceof CollectionType &&  ((CollectionType)otherType).primaryType.equals(primaryType))
             return this.innerType.isSubtypeOf(((CollectionType) otherType).innerType);
-        return this.innerType.isSubtypeOf(otherType);
+        return false;
     }
 
     // Returns a copy of the specified function where all 'generic'-types have been replaced with innerType

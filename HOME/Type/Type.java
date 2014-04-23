@@ -170,6 +170,10 @@ public class Type
             if(otherType.equals(Main.decimal))
                 return true;
         }
+        else if(this.equals(Main.anything))
+            return true;
+
+
         return this.equals(otherType);
     }
 

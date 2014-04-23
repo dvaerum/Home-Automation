@@ -81,24 +81,33 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx)
     {
         Type returnType;
-        //TODO: Collections!
-        /*
+        String symbol = ctx.getChild(0).getText();
+
         if(ctx.getChildCount()> 1 && ctx.getChild(1).getText().equals("["))
         {
-            String symbol = ctx.getChild(0).getText();
-            if(Main.symbolTable.variables.symbolExists(symbol))
+            Type t = Main.symbolTable.variables.getSymbol(symbol).type;
+            Type indexType = visitExpression(ctx.expression());
+
+            // Check if collection, else return error
+            if (t instanceof CollectionType)
             {
-                returnType = new ErrorType(String.format("Unknown identifier. Symbol %s doesn't exist in the current context", symbol));
+                //Check if index is of type Integer if list, or of type String if dictionary
+                if(((CollectionType)t).primaryType.equals(Main.list) && !indexType.equals(Main.integer))
+                {
+                    return new ErrorType("Index of List must be of type Integer, got " + indexType + ".");
+                }
+                else if(((CollectionType)t).primaryType.equals(Main.dictionary) && !indexType.equals(Main.string))
+                {
+                    return new ErrorType("Index of Dictionary must be of type String, got " + indexType + ".");
+                }
+                else
+                    returnType = ((CollectionType)t).innerType;
             }
             else
-            {
-                returnType = Main.symbolTable.variables.getSymbol(symbol)....... //scope.getSymbol(symbol).type.typeParameters.get(0);
-            }
+                return new ErrorType(String.format("Expected collection type, but \"%s\" is of type %s.", symbol, t));
         }
         else
-        */
         {
-            String symbol = ctx.getChild(0).getText();
             if(!Main.symbolTable.variables.symbolExists(symbol))
             {
                 returnType = new ErrorType(String.format("Unknown identifier. Symbol \"%s\" doesn't exist in the current context", symbol));
@@ -302,13 +311,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
             //Check for bracket "[" list[2] = 34
             // a = 2
-            //TODO: Wait for collections to work again
+            if(ctx.identifierOrListIndex().getChildCount()>1)
+                LHSType = visitIdentifierOrListIndex(ctx.identifierOrListIndex());
+            if (LHSType instanceof ErrorType)
+                return LHSType;
 
-            if(ctx.identifierOrListIndex().getChildCount()>1 && ctx.identifierOrListIndex().getChild(1).getText().equals("["))
-                ;
-                //LHSType = Main.symbolTable.variables.getSymbol(identifier)......       //scope.getSymbol(identifier).type.typeParameters.get(0);
-            else
-                LHSType = Main.symbolTable.variables.getSymbol(identifier).type;
         }
         else
         {
@@ -403,16 +410,16 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
 
         //if "integer i", return no value back. If "Integer i = 3" return value
-        if(expression == null || type.isSubtypeOf(expression))       //type.compatibleWith(expression)
+        if(expression == null || expression.isSubtypeOf(type))       //type.compatibleWith(expression)
         {
             returnType = type;
         }
-        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
-        {
-            System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
-            //System.out.println("\t Integer should be converted!");
-            returnType = Main.decimal;
-        }
+//        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
+//        {
+//            System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
+//            //System.out.println("\t Integer should be converted!");
+//            returnType = Main.decimal;
+//        }
         else
             returnType = new ErrorType(String.format("Incompatible types. Expected %s, got %s", type, expression));
 
@@ -460,7 +467,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitExpression(@NotNull HOMEParser.ExpressionContext ctx)
     {
         Type returnType = new ErrorType("Unknown expression");
-        //Check the expression consists of additional expressiffons.
+        //Check the expression consists of additional expressions.
 
         if(ctx.expression().size() > 0)
         {
@@ -479,28 +486,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                         returnType = new ErrorType(String.format("unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()));
                     }
                 }
-                /*
-                //TODO: Look at when collections are ready again.
-                // Move to collectionInit
-                //Goes down in tree until there are more than one tree
-                HOMEParser.ExpressionContext currCtx = ctx.expression(0);
-                while(currCtx.expression().size() == 1 && currCtx.getChild(0).getText().equals(("(")))
-                {
-                    currCtx = currCtx.expression(0);
-                }
 
-                if(currCtx.expression().size() == 2)
-                {
-                    r1 = visitExpression(currCtx.expression(0));
-                    operator = currCtx.getChild(1).getText();
-                    r2 = visitExpression(currCtx.expression(1));
-                    //                visitExpression(ctx.expression(0)); // Integer i = -test()
-                }
-                else
-                {
-                    return returnType = visitLiteral(currCtx.literal());
-                }
-                */
                 return returnType;
             }
             else //else two expressions
@@ -688,15 +674,14 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx)
     {
-        Type primaryType = Main.list;
-        Type innerType = null;
+        Type innerType;
 
         if (ctx.expression().size() == 0)
         {
+            return getCollectionType("List", Main.anything);
             // return something that can be anything
         }
         innerType = visitExpression(ctx.expression(0));
-        Type previous = innerType;
 
         Type current;
         for(HOMEParser.ExpressionContext expr : ctx.expression())
@@ -706,15 +691,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             {
                 innerType = current;
             }
-            if (!current.isSubtypeOf(innerType))
+            else if (!current.isSubtypeOf(innerType))
             {
                 // Invalid literal.
+                return new ErrorType("Invalid List literal, types do not match");
             }
-            previous = current;
-
         }
-
-        return null;
+        return getCollectionType("List" + "<" + innerType.name + ">", innerType);
     }
 
     @Override
@@ -1045,7 +1028,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     //TODO: Beslut: passing by references vs value
     //TODO: Methods on collection[venter pÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃƒÂ¥ Frederik]
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
-    //TODO: Boolean x = 3=={4}
+    //TODO: Tilføj konvertingsnoder ved int til decimal i IsSubtypeOf().
     //List<Integer> adfadf = {4, 5 }
     //faef = adfadf
     //TODO: Make a "using/import/include" statement

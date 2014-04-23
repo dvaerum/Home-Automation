@@ -2,11 +2,12 @@ package HOME.CodeGene;
 
 import HOME.Grammar.HOMEBaseVisitor;
 import HOME.Grammar.HOMEParser;
+import com.sun.org.apache.xpath.internal.operations.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.*;
-import java.math.BigDecimal;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +18,66 @@ import java.util.Scanner;
  */
 public class ByteCodeVisitor extends HOMEBaseVisitor {
 
+    class Function {
+        private String _begin;
+        public Statements stmts;
+        private String _return;
+        private String _end;
+
+        public Function (String _begin, String _end) {
+            this._begin = _begin;
+            this._return = "";
+            this._end = _end;
+        }
+
+        public Function (String _begin, String _return, String _end) {
+            this._begin = _begin;
+            this._return = _return;
+            this._end = _end;
+        }
+
+        public void build() {
+            Write(this._begin);
+            stmts.build();
+            Write(String.format("return %s", this._return));
+            Write(this._end);
+        }
+    }
+
+    class Statements {
+        private int limit;
+        private ArrayList<String> statements;
+
+        public Statements() {
+            this.statements = new ArrayList<String>();
+            this.limit = 0;
+        }
+
+        public Statements(int limit) {
+            this.statements = new ArrayList<String>();
+            this.limit = limit;
+        }
+
+        public void addStatement(String statement) {
+            this.statements.add(statement);
+        }
+
+        public void addStatement(String statement, int limit) {
+            this.statements.add(statement);
+            this.limit += limit;
+        }
+
+        public void build() {
+            Write(String.format(".limit stack %d", this.limit));
+            for (String statement : statements) {
+                Write(statement);
+            }
+        }
+    }
+
     private Map<String, String> refTable = new HashMap<String, String>();
     private ArrayList<String> fields = new ArrayList<String>();
-    private ArrayList<String> setup = new ArrayList<String>();
+    Function setup;
 
     private FileOutputStream newClass;
 
@@ -51,7 +109,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 //                aload_0
 //        invokenonvirtual java/lang/Object/<init>()V
 //        return
-//        .end method
+//        ._end method
 
     }
 
@@ -59,6 +117,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         for (String field : fields) {
             Write(field);
         }
+
+        Write("");
+
+        setup.build();
     }
 
     @Override
@@ -68,12 +130,24 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
     @Override
     public Object visitFunction(@NotNull HOMEParser.FunctionContext ctx) {
-        // .method public static main([Ljava/lang/String;)V
-        setup.add(".method public static main([Ljava/lang/String;)V");
+        this.setup = new Function(".method public static main([Ljava/lang/String;)V",
+                                  ".end method");
+        setup.stmts = new Statements(1);
 
-        setup.add(".end method");
-        // .end method
-       return super.visitFunction(ctx);
+        visitStmts(ctx.stmts(), setup.stmts);
+
+        return super.visitFunction(ctx);
+    }
+
+    public void visitStmts(@NotNull HOMEParser.StmtsContext ctx, Statements _stmts ) {
+        if (ctx.stmts() != null){
+            visitStmt(ctx.stmt(), _stmts);
+            visitStmts(ctx.stmts(), _stmts);
+        }
+    }
+
+    public void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements _stmts) {
+        _stmts.addStatement("    " + ctx.getText(), 1);
     }
 
     @Override
@@ -113,7 +187,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         fields.add(declaration);
     }
 
-    private void Write(String out) {
+    protected void Write(String out) {
         try {
             newClass.write(
                     out.concat(System.getProperty("line.separator")).getBytes()

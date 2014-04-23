@@ -1,2 +1,7 @@
 Integer i = 2
 
+function Setup() returns Nothing
+    i = 3
+    i = 5
+    Decimal = 2.3
+endfunction

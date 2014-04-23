@@ -1,7 +1,6 @@
 package HOME;
 import HOME.Grammar.*;
 import HOME.Type.*;
-import javafx.beans.binding.StringBinding;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
@@ -194,8 +193,15 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         else if(Main.symbolTable.functions.symbolExists(funcName))
         {
-            if(Type.isListSubtypeOfList(paramList, Main.symbolTable.functions.getSymbol(funcName).parameters))
+            List<Type> expectedParameters = Main.symbolTable.functions.getSymbol(funcName).parameters;
+            if(Type.isListSubtypeOfList(paramList, expectedParameters))
+            {
+                for(int i=0; i < paramList.size(); i++)
+                {
+                    addConversionNode(expectedParameters.get(i), paramList.get(i), ctx.funcParameters().expression(i));
+                }
                 returnType = Main.symbolTable.functions.getSymbol(funcName).returnType;
+            }
                 //returnType = new HOME.Type("Nothing");
             else
                 returnType = new ErrorType(String.format("Function parameters doesn't match target function " +
@@ -282,10 +288,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
             else if(expressionType.isSubtypeOf(functionType))
             {
-                if(expressionType.equals(Main.integer) && functionType.equals(Main.decimal))
-                {
-                    convertIntNodeToDec(ctx.expression());
-                }
+                addConversionNode(functionType, expressionType, ctx.expression());
                 returnType = functionType;
                 forkReturnStack.addReturn();
             }
@@ -312,10 +315,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         if(expression.isSubtypeOf(LHSType))      //LHSType.compatibleWith(expression)
         {
-            if(LHSType.equals(Main.decimal) && expression.equals(Main.integer))
-            {
-                convertIntNodeToDec(ctx.expression());
-            }
+            addConversionNode(LHSType, expression, ctx.expression());
             returnType = LHSType;
         }
         else
@@ -393,10 +393,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         //if "integer i", return no value back. If "Integer i = 3" return value
         if(expression == null || expression.isSubtypeOf(type))       //type.compatibleWith(expression)
         {
-            if(expression != null && type.equals(Main.decimal) && expression.equals(Main.integer))
-            {
-                convertIntNodeToDec(ctx.expression());
-            }
+            if (expression != null)
+                addConversionNode(type, expression, ctx.expression());
             returnType = type;
         }
 //        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
@@ -480,8 +478,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 operator = ctx.getChild(1).getText();
                 r2 = visitExpression(ctx.expression(1));
 
-                if(r1 instanceof ErrorType)
+                if (r1 instanceof ErrorType)
                     return r1;
+                else if (r2 instanceof ErrorType)
+                    return r2;
 
                 if(isBooleanOperator(operator))
                 {
@@ -512,20 +512,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 //Check if it is possible to convert from Int to Dec
                 else if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
                 {
-                    convertIntNodeToDec(ctx.expression(0));
+                    addIntToDecNode(ctx.expression(0));
                     returnType = Main.decimal;
                 }
                 else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
                 {
-                    convertIntNodeToDec(ctx.expression(1));
+                    addIntToDecNode(ctx.expression(1));
                     returnType = Main.decimal;
-                }
-                //Check if one of the two results gives an error
-                else if(r1 instanceof ErrorType){
-                    returnType = r1;
-                }
-                else if(r2 instanceof ErrorType){
-                    returnType = r2;
                 }
                 else
                 {
@@ -690,7 +683,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             for(HOMEParser.ExpressionContext expr : ctx.expression())
             {
                 if(visitExpression(expr).equals(Main.integer))
-                    convertIntNodeToDec(expr);
+                    addIntToDecNode(expr);
             }
         }
         return getCollectionType("List" + "<" + innerType.name + ">", innerType);
@@ -732,7 +725,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             for(HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
             {
                 if(visitExpression(entry.expression(1)).equals(Main.integer))
-                    convertIntNodeToDec(entry.expression(1));
+                    addIntToDecNode(entry.expression(1));
             }
         }
         return getCollectionType("Dictionary" + "<" + innerType.name + ">", innerType);
@@ -1014,7 +1007,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         //Check if the parameters inserted are compatible with the formal parameters
         if(Type.isListSubtypeOfList(paramList, method.parameters))
+        {
+            for (int i = 0; i < paramList.size(); i++)
+            {
+                addConversionNode(method.parameters.get(i), paramList.get(i), currctx.funcParameters().expression(i));
+            }
             returnType = method.returnType;
+        }
         else
             returnType = new ErrorType(String.format("The method \"%s\" doesn't support the parameters (wrong amount or type(s))", methodName));
 
@@ -1049,7 +1048,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    void convertIntNodeToDec(HOMEParser.ExpressionContext ctx)
+    void addIntToDecNode(HOMEParser.ExpressionContext ctx)
     {
         System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
         if(ctx.int2dec() == null)
@@ -1058,31 +1057,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             System.out.println("DEBUG: Attempt to add conversion node multiple times.");
     }
 
-    public boolean OmgWtf(Type t1, Type t2, HOMEParser.ExpressionContext expr)
+    public boolean addConversionNode(Type expectedType, Type exprType, HOMEParser.ExpressionContext expr)
     {
-        if (t1.equals(Main.decimal) && t2.equals(Main.integer))
+        if (expectedType.equals(Main.decimal) && exprType.equals(Main.integer))
         {
-            convertIntNodeToDec(expr);
+            addIntToDecNode(expr);
             return true;
         }
-        if (t1 instanceof CollectionType && t2 instanceof CollectionType)
+        else if (expectedType instanceof CollectionType && exprType instanceof CollectionType)
         {
-            if (((CollectionType) t1).innerType.equals(Main.decimal) && ((CollectionType) t2).innerType.equals(Main.integer))
+            if (((CollectionType) expectedType).getInnermostType().equals(Main.decimal) && ((CollectionType) exprType).getInnermostType().equals(Main.integer))
             {
-                if (((CollectionType) t1).primaryType.equals(((CollectionType) t2).primaryType))
-                {
-                    convertIntNodeToDec(expr);
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-            {
-                return OmgWtf(((CollectionType) t1).innerType, ((CollectionType) t2).innerType, expr);
+                addIntToDecNode(expr);
             }
         }
-
         return false;
     }
 
@@ -1095,7 +1083,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return BooleanOperator.contains(str);
     }
 
-
+    //TODO: Fix multidimensional indexing (list[2][3])
     //TODO: Fields pÃ¥ klasser.
     //TODO: Beslut: passing by references vs value
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing

@@ -3,6 +3,7 @@ class Integer
     endfields
 
     constructor
+        - Integer()
     endconstructor
 
     methods

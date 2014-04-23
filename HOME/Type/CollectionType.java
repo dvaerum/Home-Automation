@@ -29,6 +29,13 @@ public class CollectionType extends Type
 
     }
 
+    public Type getInnermostType()
+    {
+        if (innerType instanceof CollectionType)
+            return ((CollectionType) innerType).getInnermostType();
+        return innerType;
+    }
+
     @Override
     public boolean isSubtypeOf(Type otherType)
     {

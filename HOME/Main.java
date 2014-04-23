@@ -68,6 +68,12 @@ public class Main
             TypeChecker visitor = new TypeChecker();
             visitor.visit(tree);
         }
+
+//==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
+        //HOMEParser.BlockContext lol = (HOMEParser.BlockContext) tree.getChild(1);
+        //lol.inspect(parser);
+//=================================================================================
+
         /*
         }catch(Exception e)
         {

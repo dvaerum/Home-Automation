@@ -1,6 +1,114 @@
 function Setup() returns Nothing
+   Boolean x = (true AND false) OR ( true AND true)
+   Boolean q = false
+   //x = q+true                             <--- Giving operator error
 
-    Integer i = 3
-    List<Integer> list
-    list[2.7] = list[2]
+
+   List<Integer> li = {2, 3, 3, 4}
+   List<List<Integer>> s = { {}, {2, 3} }
+   List<List<String>> es = { {"herp", "derp"}, {"Merp", "Erp"} }
+   Dictionary<String> dic = { "lol" = "derp", "lol2" = "derp2" }
+   List<List<List<String>>> d = { { {"derp", "erp", "lerp"}, {"lol"} } }
+   Dictionary<Dictionary<Integer>> dd = { "s" = { "s" = 1 } , "s2" = { "f" = 2 } }
+   List<Integer> sgsd = {}
+   List<Dictionary<String>> fsdfsd = { {} }
+   Dictionary<String> fgrer = { "1" = "l" }
+   Dictionary<Dictionary<String>> gklg = { "l" = {"lol" = "derp"} }
+   List<Dictionary<List<String>>> sdalllll = { { "string" = {"lol", "lol2"} }  }
+   List<String> sll = {"lol"}
+   List<List<List<List<List<Integer>>>>> omgWhenWillItStop = { { { { {2, 3}, {1,2} } } } }
+   List<List<List<List<List<Integer>>>>> omgWhenWillItStop4 = { { { { {} } } } }
+   List<Integer> lie = {}
+   Dictionary<Integer> die = {}
+
+    // Bad
+    //List<Integer> sad = {2, 2, 2, {}}
+    //List<Dictionary<String>> aaa = { { {} }, {} }
+    //Dictionary<Dictionary<String>> gklsag = { {"l" = {"lol", "derp", "nerp"}  } }
+    //List<Integer> aaaaaaaaa = { { {} } }
+    //List<List<Integer>> dsssssssss = {2,2,2,2}
+    //List<Dictionary<List<String>>> sdallfg = { { {"string" = { "lol" = "lol2", "lol" = "lol" } } }  }
+    //List<String> saall = {"lol", {}}
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop2 = { { { { {2, 3}, {{2}} } } } }
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop3 = { { { { { {} } } } } }
+    //List<List<Integer>> x ={ { { } } }
+
+     List<Integer> sadferrr
+     List<String> afiirgnrek
+     //sadferrr = afiirgnrek                <-- Bad can't convert String to Integer
+     //List<Boolean> aiawefja = { 3=={4} }  <-- Bad invalid list literal
+     //Boolean afaefaggaerg = 3=="lol"      <-- Can't use equals on different types
+     String hash = "hej"
+     //hash()                               <-- Hash() isn't defined
+     Integer lkkk
+     List<Integer> faef = {1, 2, 3}
+     List<Decimal> adfadf = {1, 2}
+     Dictionary<Integer> sdef = { "lol" = 5 }
+     adfadf = faef
+     //faef = adfadf                        <-- Expected List<Integer>, got List<Decimal>
+     //Decimal n = faef[0]                  <-- Warning: Should be converted
+     sdef["lol"] = 2
+     //faef[3]++                            <-- Not happy, nullpointer
+     String soeren_jensen = "PC-MasterRace"
+     Decimal the_d = 2.0
+     //soeren_jensen++                      <-- Don't work on Strings
 endfunction
+
+function hej() returns String
+    String sf
+    return hej()
+endfunction
+
+function hejz() returns Dictionary<String>
+    return {"lol2" = "lol3", "lol" = "lol2", "lolll" = "afd" }
+endfunction
+
+function not() returns Nothing
+    not2()
+    return
+endfunction
+
+function not2() returns Nothing
+    //return hej()                            <-- Expected return-statement of type Nothing got String
+endfunction
+
+function testtt() returns Nothing
+    Boolean n
+    //repeat until(n = true)                  <-- = mismatched
+
+    //endrepeat
+    Integer x
+endfunction
+
+
+
+
+
+
+    /*
+    function hej() returns String
+        String sf
+        return hej()
+    endfunction
+
+    function hejz() returns Dictionary<String>
+        return {{"lol2", "lol3"}, {"lol", "lol2"}, {"lolll", "afd" } }
+    endfunction
+
+    function not() returns Nothing
+        not2()
+        return
+    endfunction
+
+    function not2() returns Nothing
+        //return hej()
+    endfunction
+
+    function testtt() returns Nothing
+        Boolean n
+        repeat until(n = true)
+
+        endrepeat
+        Integer x
+    endfunction
+    */

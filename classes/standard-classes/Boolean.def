@@ -1,0 +1,12 @@
+class Boolean
+    fields
+    endfields
+
+    constructor
+        - Boolean()
+    endconstructor
+
+    methods
+        - toString() > String
+    endmethods
+endclass

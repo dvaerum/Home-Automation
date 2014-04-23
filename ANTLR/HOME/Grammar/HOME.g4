@@ -7,7 +7,7 @@ package HOME.Grammar;
 
 
 //---------------Test terminals----------------
-program : global block EOF ;
+program : global block? EOF ; // Remove '?' this is only for testing purposes
 
 global
     : declaration newline+ global
@@ -278,6 +278,8 @@ GE              : '>=';
 //Numerical operations
 INC             : '++';
 DEC             : '--';
+NOUSE1          : '-+';
+NOUSE2          : '+-';
 ADD             : '+';
 SUB             : '-';
 MUL             : '*';

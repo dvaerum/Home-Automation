@@ -1,4 +1,4 @@
-// Generated from ./HOME.g4 by ANTLR 4.2
+// Generated from /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/Grammar/HOME.g4 by ANTLR 4.x
 
 package HOME.Grammar;
 
@@ -23,9 +23,10 @@ public class HOMEParser extends Parser {
 		T__4=25, T__3=26, T__2=27, T__1=28, T__0=29, Identifier=30, IntegerLiteral=31, 
 		DecimalLiteral=32, StringLiteral=33, NullLiteral=34, DOT=35, BANG=36, 
 		SEMICOLON=37, NOTEQUAL=38, EQUAL=39, GT=40, LT=41, LE=42, GE=43, INC=44, 
-		DEC=45, ADD=46, SUB=47, MUL=48, DIV=49, MOD=50, BITAND=51, BITOR=52, CARET=53, 
-		LPAREN=54, RPAREN=55, AnyAssign=56, ASSIGN=57, ADD_ASSIGN=58, SUB_ASSIGN=59, 
-		MUL_ASSIGN=60, DIV_ASSIGN=61, MOD_ASSIGN=62, WS=63, COMMENT=64, LINE_COMMENT=65;
+		DEC=45, NOUSE1=46, NOUSE2=47, ADD=48, SUB=49, MUL=50, DIV=51, MOD=52, 
+		BITAND=53, BITOR=54, CARET=55, LPAREN=56, RPAREN=57, AnyAssign=58, ASSIGN=59, 
+		ADD_ASSIGN=60, SUB_ASSIGN=61, MUL_ASSIGN=62, DIV_ASSIGN=63, MOD_ASSIGN=64, 
+		WS=65, COMMENT=66, LINE_COMMENT=67;
 	public static final String[] tokenNames = {
 		"<INVALID>", "']'", "'in'", "'endif'", "','", "'Dictionary'", "'\n'", 
 		"'['", "'endfunction'", "'while'", "'\r'", "'if'", "'List'", "'false'", 
@@ -33,9 +34,9 @@ public class HOMEParser extends Parser {
 		"'AND'", "'endrepeat'", "'Nothing'", "'function'", "'return'", "'repeat'", 
 		"'returns'", "'foreach'", "Identifier", "IntegerLiteral", "DecimalLiteral", 
 		"StringLiteral", "'null'", "'.'", "'!'", "';'", "'!='", "'=='", "'>'", 
-		"'<'", "'<='", "'>='", "'++'", "'--'", "'+'", "'-'", "'*'", "'/'", "'%'", 
-		"'&'", "'|'", "'^'", "'('", "')'", "AnyAssign", "'='", "'+='", "'-='", 
-		"'*='", "'/='", "'%='", "WS", "COMMENT", "LINE_COMMENT"
+		"'<'", "'<='", "'>='", "'++'", "'--'", "'-+'", "'+-'", "'+'", "'-'", "'*'", 
+		"'/'", "'%'", "'&'", "'|'", "'^'", "'('", "')'", "AnyAssign", "'='", "'+='", 
+		"'-='", "'*='", "'/='", "'%='", "WS", "COMMENT", "LINE_COMMENT"
 	};
 	public static final int
 		RULE_program = 0, RULE_global = 1, RULE_block = 2, RULE_function = 3, 
@@ -180,7 +181,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(76); declaration();
-				setState(78);
+				setState(78); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -189,7 +190,7 @@ public class HOMEParser extends Parser {
 					setState(77); newline();
 					}
 					}
-					setState(80);
+					setState(80); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -201,7 +202,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(84); assign();
-				setState(86);
+				setState(86); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -210,7 +211,7 @@ public class HOMEParser extends Parser {
 					setState(85); newline();
 					}
 					}
-					setState(88);
+					setState(88); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -352,7 +353,7 @@ public class HOMEParser extends Parser {
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(107);
+			setState(107); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -361,7 +362,7 @@ public class HOMEParser extends Parser {
 				setState(106); newline();
 				}
 				}
-				setState(109);
+				setState(109); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -419,7 +420,7 @@ public class HOMEParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(115);
+				setState(115); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -428,7 +429,7 @@ public class HOMEParser extends Parser {
 					setState(114); newline();
 					}
 					}
-					setState(117);
+					setState(117); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -720,7 +721,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(163); stmt();
-				setState(165);
+				setState(165); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -729,7 +730,7 @@ public class HOMEParser extends Parser {
 					setState(164); newline();
 					}
 					}
-					setState(167);
+					setState(167); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -1101,7 +1102,7 @@ public class HOMEParser extends Parser {
 			setState(203); match(LPAREN);
 			setState(204); expression(0);
 			setState(205); match(RPAREN);
-			setState(207);
+			setState(207); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1110,7 +1111,7 @@ public class HOMEParser extends Parser {
 				setState(206); newline();
 				}
 				}
-				setState(209);
+				setState(209); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1195,7 +1196,7 @@ public class HOMEParser extends Parser {
 			setState(224); match(LPAREN);
 			setState(225); expression(0);
 			setState(226); match(RPAREN);
-			setState(228);
+			setState(228); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1204,7 +1205,7 @@ public class HOMEParser extends Parser {
 				setState(227); newline();
 				}
 				}
-				setState(230);
+				setState(230); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1259,7 +1260,7 @@ public class HOMEParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(234); match(18);
-			setState(236);
+			setState(236); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1268,7 +1269,7 @@ public class HOMEParser extends Parser {
 				setState(235); newline();
 				}
 				}
-				setState(238);
+				setState(238); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1402,7 +1403,7 @@ public class HOMEParser extends Parser {
 			setState(249); match(LPAREN);
 			setState(250); expression(0);
 			setState(251); match(RPAREN);
-			setState(253);
+			setState(253); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1411,7 +1412,7 @@ public class HOMEParser extends Parser {
 				setState(252); newline();
 				}
 				}
-				setState(255);
+				setState(255); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1485,7 +1486,7 @@ public class HOMEParser extends Parser {
 			setState(265); match(2);
 			setState(266); identifierOrListIndex();
 			setState(267); match(RPAREN);
-			setState(269);
+			setState(269); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1494,7 +1495,7 @@ public class HOMEParser extends Parser {
 				setState(268); newline();
 				}
 				}
-				setState(271);
+				setState(271); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1606,7 +1607,7 @@ public class HOMEParser extends Parser {
 			setState(286);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,28,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
@@ -1954,7 +1955,7 @@ public class HOMEParser extends Parser {
 			setState(336);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,35,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -2573,7 +2574,7 @@ public class HOMEParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3C\u0188\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3E\u0188\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2605,7 +2606,7 @@ public class HOMEParser extends Parser {
 		"\36\3\37\3\37\3\37\3\37\3\37\3\37\3\37\3\37\3\37\3\37\5\37\u0179\n\37"+
 		"\3 \3 \3!\3!\3\"\3\"\3#\3#\3$\5$\u0184\n$\3$\3$\3$\2\3\62%\2\4\6\b\n\f"+
 		"\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDF\2\7\4\2\13\13"+
-		"\20\20\3\2\60\61\3\2\62\64\4\2\17\17\26\26\5\2\23\23\30\30(-\u019d\2H"+
+		"\20\20\3\2\62\63\3\2\64\66\4\2\17\17\26\26\5\2\23\23\30\30(-\u019d\2H"+
 		"\3\2\2\2\4_\3\2\2\2\6a\3\2\2\2\bd\3\2\2\2\n\u0081\3\2\2\2\f\u0083\3\2"+
 		"\2\2\16\u0090\3\2\2\2\20\u009d\3\2\2\2\22\u00ae\3\2\2\2\24\u00b8\3\2\2"+
 		"\2\26\u00c0\3\2\2\2\30\u00c2\3\2\2\2\32\u00c8\3\2\2\2\34\u00cc\3\2\2\2"+
@@ -2624,15 +2625,15 @@ public class HOMEParser extends Parser {
 		"\2\2tv\5F$\2ut\3\2\2\2vw\3\2\2\2wu\3\2\2\2wx\3\2\2\2xy\3\2\2\2yz\5\6\4"+
 		"\2z\u0082\3\2\2\2{}\5F$\2|{\3\2\2\2}\u0080\3\2\2\2~|\3\2\2\2~\177\3\2"+
 		"\2\2\177\u0082\3\2\2\2\u0080~\3\2\2\2\u0081u\3\2\2\2\u0081~\3\2\2\2\u0082"+
-		"\13\3\2\2\2\u0083\u008c\78\2\2\u0084\u0089\5\62\32\2\u0085\u0086\7\6\2"+
+		"\13\3\2\2\2\u0083\u008c\7:\2\2\u0084\u0089\5\62\32\2\u0085\u0086\7\6\2"+
 		"\2\u0086\u0088\5\62\32\2\u0087\u0085\3\2\2\2\u0088\u008b\3\2\2\2\u0089"+
 		"\u0087\3\2\2\2\u0089\u008a\3\2\2\2\u008a\u008d\3\2\2\2\u008b\u0089\3\2"+
 		"\2\2\u008c\u0084\3\2\2\2\u008c\u008d\3\2\2\2\u008d\u008e\3\2\2\2\u008e"+
-		"\u008f\79\2\2\u008f\r\3\2\2\2\u0090\u0099\78\2\2\u0091\u0096\5\30\r\2"+
+		"\u008f\7;\2\2\u008f\r\3\2\2\2\u0090\u0099\7:\2\2\u0091\u0096\5\30\r\2"+
 		"\u0092\u0093\7\6\2\2\u0093\u0095\5\30\r\2\u0094\u0092\3\2\2\2\u0095\u0098"+
 		"\3\2\2\2\u0096\u0094\3\2\2\2\u0096\u0097\3\2\2\2\u0097\u009a\3\2\2\2\u0098"+
 		"\u0096\3\2\2\2\u0099\u0091\3\2\2\2\u0099\u009a\3\2\2\2\u009a\u009b\3\2"+
-		"\2\2\u009b\u009c\79\2\2\u009c\17\3\2\2\2\u009d\u00a2\5\30\r\2\u009e\u009f"+
+		"\2\2\u009b\u009c\7;\2\2\u009c\17\3\2\2\2\u009d\u00a2\5\30\r\2\u009e\u009f"+
 		"\7\6\2\2\u009f\u00a1\5\30\r\2\u00a0\u009e\3\2\2\2\u00a1\u00a4\3\2\2\2"+
 		"\u00a2\u00a0\3\2\2\2\u00a2\u00a3\3\2\2\2\u00a3\21\3\2\2\2\u00a4\u00a2"+
 		"\3\2\2\2\u00a5\u00a7\5\24\13\2\u00a6\u00a8\5F$\2\u00a7\u00a6\3\2\2\2\u00a8"+
@@ -2646,30 +2647,30 @@ public class HOMEParser extends Parser {
 		"\2\2\u00b8\u00b7\3\2\2\2\u00b9\25\3\2\2\2\u00ba\u00bb\5\60\31\2\u00bb"+
 		"\u00bc\7.\2\2\u00bc\u00c1\3\2\2\2\u00bd\u00be\5\60\31\2\u00be\u00bf\7"+
 		"/\2\2\u00bf\u00c1\3\2\2\2\u00c0\u00ba\3\2\2\2\u00c0\u00bd\3\2\2\2\u00c1"+
-		"\27\3\2\2\2\u00c2\u00c3\5:\36\2\u00c3\u00c6\5\60\31\2\u00c4\u00c5\7:\2"+
+		"\27\3\2\2\2\u00c2\u00c3\5:\36\2\u00c3\u00c6\5\60\31\2\u00c4\u00c5\7<\2"+
 		"\2\u00c5\u00c7\5\62\32\2\u00c6\u00c4\3\2\2\2\u00c6\u00c7\3\2\2\2\u00c7"+
-		"\31\3\2\2\2\u00c8\u00c9\5\60\31\2\u00c9\u00ca\7:\2\2\u00ca\u00cb\5\62"+
-		"\32\2\u00cb\33\3\2\2\2\u00cc\u00cd\7\r\2\2\u00cd\u00ce\78\2\2\u00ce\u00cf"+
-		"\5\62\32\2\u00cf\u00d1\79\2\2\u00d0\u00d2\5F$\2\u00d1\u00d0\3\2\2\2\u00d2"+
+		"\31\3\2\2\2\u00c8\u00c9\5\60\31\2\u00c9\u00ca\7<\2\2\u00ca\u00cb\5\62"+
+		"\32\2\u00cb\33\3\2\2\2\u00cc\u00cd\7\r\2\2\u00cd\u00ce\7:\2\2\u00ce\u00cf"+
+		"\5\62\32\2\u00cf\u00d1\7;\2\2\u00d0\u00d2\5F$\2\u00d1\u00d0\3\2\2\2\u00d2"+
 		"\u00d3\3\2\2\2\u00d3\u00d1\3\2\2\2\u00d3\u00d4\3\2\2\2\u00d4\u00d5\3\2"+
 		"\2\2\u00d5\u00d9\5\22\n\2\u00d6\u00d8\5\36\20\2\u00d7\u00d6\3\2\2\2\u00d8"+
 		"\u00db\3\2\2\2\u00d9\u00d7\3\2\2\2\u00d9\u00da\3\2\2\2\u00da\u00dd\3\2"+
 		"\2\2\u00db\u00d9\3\2\2\2\u00dc\u00de\5 \21\2\u00dd\u00dc\3\2\2\2\u00dd"+
 		"\u00de\3\2\2\2\u00de\u00df\3\2\2\2\u00df\u00e0\7\5\2\2\u00e0\35\3\2\2"+
-		"\2\u00e1\u00e2\7\27\2\2\u00e2\u00e3\78\2\2\u00e3\u00e4\5\62\32\2\u00e4"+
-		"\u00e6\79\2\2\u00e5\u00e7\5F$\2\u00e6\u00e5\3\2\2\2\u00e7\u00e8\3\2\2"+
+		"\2\u00e1\u00e2\7\27\2\2\u00e2\u00e3\7:\2\2\u00e3\u00e4\5\62\32\2\u00e4"+
+		"\u00e6\7;\2\2\u00e5\u00e7\5F$\2\u00e6\u00e5\3\2\2\2\u00e7\u00e8\3\2\2"+
 		"\2\u00e8\u00e6\3\2\2\2\u00e8\u00e9\3\2\2\2\u00e9\u00ea\3\2\2\2\u00ea\u00eb"+
 		"\5\22\n\2\u00eb\37\3\2\2\2\u00ec\u00ee\7\24\2\2\u00ed\u00ef\5F$\2\u00ee"+
 		"\u00ed\3\2\2\2\u00ef\u00f0\3\2\2\2\u00f0\u00ee\3\2\2\2\u00f0\u00f1\3\2"+
 		"\2\2\u00f1\u00f3\3\2\2\2\u00f2\u00f4\5\22\n\2\u00f3\u00f2\3\2\2\2\u00f3"+
 		"\u00f4\3\2\2\2\u00f4!\3\2\2\2\u00f5\u00f8\5$\23\2\u00f6\u00f8\5&\24\2"+
 		"\u00f7\u00f5\3\2\2\2\u00f7\u00f6\3\2\2\2\u00f8#\3\2\2\2\u00f9\u00fa\7"+
-		"\35\2\2\u00fa\u00fb\t\2\2\2\u00fb\u00fc\78\2\2\u00fc\u00fd\5\62\32\2\u00fd"+
-		"\u00ff\79\2\2\u00fe\u0100\5F$\2\u00ff\u00fe\3\2\2\2\u0100\u0101\3\2\2"+
+		"\35\2\2\u00fa\u00fb\t\2\2\2\u00fb\u00fc\7:\2\2\u00fc\u00fd\5\62\32\2\u00fd"+
+		"\u00ff\7;\2\2\u00fe\u0100\5F$\2\u00ff\u00fe\3\2\2\2\u0100\u0101\3\2\2"+
 		"\2\u0101\u00ff\3\2\2\2\u0101\u0102\3\2\2\2\u0102\u0103\3\2\2\2\u0103\u0104"+
 		"\5\22\n\2\u0104\u0105\7\31\2\2\u0105%\3\2\2\2\u0106\u0107\7\35\2\2\u0107"+
-		"\u0108\7\37\2\2\u0108\u0109\78\2\2\u0109\u010a\5:\36\2\u010a\u010b\5\60"+
-		"\31\2\u010b\u010c\7\4\2\2\u010c\u010d\5\60\31\2\u010d\u010f\79\2\2\u010e"+
+		"\u0108\7\37\2\2\u0108\u0109\7:\2\2\u0109\u010a\5:\36\2\u010a\u010b\5\60"+
+		"\31\2\u010b\u010c\7\4\2\2\u010c\u010d\5\60\31\2\u010d\u010f\7;\2\2\u010e"+
 		"\u0110\5F$\2\u010f\u010e\3\2\2\2\u0110\u0111\3\2\2\2\u0111\u010f\3\2\2"+
 		"\2\u0111\u0112\3\2\2\2\u0112\u0113\3\2\2\2\u0113\u0114\5\22\n\2\u0114"+
 		"\u0115\7\31\2\2\u0115\'\3\2\2\2\u0116\u0117\5\60\31\2\u0117\u0118\5\f"+
@@ -2685,8 +2686,8 @@ public class HOMEParser extends Parser {
 		"\u0135\7\3\2\2\u0135\u0137\3\2\2\2\u0136\u0130\3\2\2\2\u0136\u0131\3\2"+
 		"\2\2\u0137\61\3\2\2\2\u0138\u0139\b\32\1\2\u0139\u013a\t\3\2\2\u013a\u0145"+
 		"\5\62\32\n\u013b\u0145\5(\25\2\u013c\u0145\5\64\33\2\u013d\u0145\58\35"+
-		"\2\u013e\u0145\5*\26\2\u013f\u0145\5\60\31\2\u0140\u0141\78\2\2\u0141"+
-		"\u0142\5\62\32\2\u0142\u0143\79\2\2\u0143\u0145\3\2\2\2\u0144\u0138\3"+
+		"\2\u013e\u0145\5*\26\2\u013f\u0145\5\60\31\2\u0140\u0141\7:\2\2\u0141"+
+		"\u0142\5\62\32\2\u0142\u0143\7;\2\2\u0143\u0145\3\2\2\2\u0144\u0138\3"+
 		"\2\2\2\u0144\u013b\3\2\2\2\u0144\u013c\3\2\2\2\u0144\u013d\3\2\2\2\u0144"+
 		"\u013e\3\2\2\2\u0144\u013f\3\2\2\2\u0144\u0140\3\2\2\2\u0145\u0152\3\2"+
 		"\2\2\u0146\u0147\f\f\2\2\u0147\u0148\t\4\2\2\u0148\u0151\5\62\32\r\u0149"+

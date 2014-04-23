@@ -1,4 +1,4 @@
-// Generated from ./HOME.g4 by ANTLR 4.2
+// Generated from /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/out/production/HOME/Grammar/HOME.g4 by ANTLR 4.x
 
 package HOME.Grammar;
 
@@ -180,7 +180,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(76); declaration();
-				setState(78);
+				setState(78); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -189,7 +189,7 @@ public class HOMEParser extends Parser {
 					setState(77); newline();
 					}
 					}
-					setState(80);
+					setState(80); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -201,7 +201,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(84); assign();
-				setState(86);
+				setState(86); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -210,7 +210,7 @@ public class HOMEParser extends Parser {
 					setState(85); newline();
 					}
 					}
-					setState(88);
+					setState(88); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -352,7 +352,7 @@ public class HOMEParser extends Parser {
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(107);
+			setState(107); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -361,7 +361,7 @@ public class HOMEParser extends Parser {
 				setState(106); newline();
 				}
 				}
-				setState(109);
+				setState(109); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -419,7 +419,7 @@ public class HOMEParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(115);
+				setState(115); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -428,7 +428,7 @@ public class HOMEParser extends Parser {
 					setState(114); newline();
 					}
 					}
-					setState(117);
+					setState(117); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -720,7 +720,7 @@ public class HOMEParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(163); stmt();
-				setState(165);
+				setState(165); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -729,7 +729,7 @@ public class HOMEParser extends Parser {
 					setState(164); newline();
 					}
 					}
-					setState(167);
+					setState(167); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==6 || _la==10 );
@@ -1101,7 +1101,7 @@ public class HOMEParser extends Parser {
 			setState(203); match(LPAREN);
 			setState(204); expression(0);
 			setState(205); match(RPAREN);
-			setState(207);
+			setState(207); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1110,7 +1110,7 @@ public class HOMEParser extends Parser {
 				setState(206); newline();
 				}
 				}
-				setState(209);
+				setState(209); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1195,7 +1195,7 @@ public class HOMEParser extends Parser {
 			setState(224); match(LPAREN);
 			setState(225); expression(0);
 			setState(226); match(RPAREN);
-			setState(228);
+			setState(228); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1204,7 +1204,7 @@ public class HOMEParser extends Parser {
 				setState(227); newline();
 				}
 				}
-				setState(230);
+				setState(230); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1259,7 +1259,7 @@ public class HOMEParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(234); match(18);
-			setState(236);
+			setState(236); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1268,7 +1268,7 @@ public class HOMEParser extends Parser {
 				setState(235); newline();
 				}
 				}
-				setState(238);
+				setState(238); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1402,7 +1402,7 @@ public class HOMEParser extends Parser {
 			setState(249); match(LPAREN);
 			setState(250); expression(0);
 			setState(251); match(RPAREN);
-			setState(253);
+			setState(253); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1411,7 +1411,7 @@ public class HOMEParser extends Parser {
 				setState(252); newline();
 				}
 				}
-				setState(255);
+				setState(255); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1485,7 +1485,7 @@ public class HOMEParser extends Parser {
 			setState(265); match(2);
 			setState(266); identifierOrListIndex();
 			setState(267); match(RPAREN);
-			setState(269);
+			setState(269); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -1494,7 +1494,7 @@ public class HOMEParser extends Parser {
 				setState(268); newline();
 				}
 				}
-				setState(271);
+				setState(271); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==6 || _la==10 );
@@ -1606,7 +1606,7 @@ public class HOMEParser extends Parser {
 			setState(286);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,28,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
@@ -1954,7 +1954,7 @@ public class HOMEParser extends Parser {
 			setState(336);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,35,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;

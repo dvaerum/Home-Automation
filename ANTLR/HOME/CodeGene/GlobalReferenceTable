@@ -1,0 +1,4 @@
+Integer @ .field public <field-name> Ljava/lang/Integer = <value>
+String @ .field public <field-name> Ljava/lang/String = <value>
+Decimal @ .field public <field-name> Ljava/lang/Double = <value>
+Boolean @ .field public <field-name> Ljava/lang/Boolean = <value>

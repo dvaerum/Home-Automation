@@ -32,8 +32,15 @@ public class CollectionType extends Type
     @Override
     public boolean isSubtypeOf(Type otherType)
     {
-        if (otherType instanceof CollectionType &&  ((CollectionType)otherType).primaryType.equals(primaryType))
-            return this.innerType.isSubtypeOf(((CollectionType) otherType).innerType);
+        if (otherType instanceof CollectionType)
+        {
+            if (this.innerType.equals(Main.anything))
+                return true;
+            else if (((CollectionType)otherType).primaryType.equals(primaryType))
+            {
+                return this.innerType.isSubtypeOf(((CollectionType) otherType).innerType);
+            }
+        }
         return false;
     }
 

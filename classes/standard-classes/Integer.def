@@ -6,6 +6,6 @@ class Integer
     endconstructor
 
     methods
-        - toString(Integer, Decimal) > String
+        - toString() > String
     endmethods
 endclass

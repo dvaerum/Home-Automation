@@ -282,9 +282,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
             else if(expressionType.isSubtypeOf(functionType))
             {
-                System.out.println(String.format("\t(Line %d) Return Integer should be converted", ctx.getStart().getLine()));
+                if(expressionType.equals(Main.integer) && functionType.equals(Main.decimal))
+                {
+                    convertIntNodeToDec(ctx.expression());
+                }
                 returnType = functionType;
-
                 forkReturnStack.addReturn();
             }
             else
@@ -297,32 +299,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitAssign(@NotNull HOMEParser.AssignContext ctx)
     {
-        String identifier;
         Type LHSType = null;
         Type returnType;
 
-        if(ctx.identifierOrListIndex() != null)
-        {
-            identifier = ctx.identifierOrListIndex().getChild(0).getText();
-
-            //Sees if Collection exists
-            if(!Main.symbolTable.variables.symbolExists(identifier))
-                return new ErrorType( String.format("Assign to unknown identifier : %s", identifier));
-
-            //Check for bracket "[" list[2] = 34
-            // a = 2
-            if(ctx.identifierOrListIndex().getChildCount()>1)
-                LHSType = visitIdentifierOrListIndex(ctx.identifierOrListIndex());
-            if (LHSType instanceof ErrorType)
-                return LHSType;
-
-        }
-        else
-        {
-            identifier = ctx.getChild(0).getText();
-            if(!Main.symbolTable.variables.symbolExists(identifier))     //!scope.symbolExists(identifier)
-                return new ErrorType( String.format("Assign to unknown identifier : %s", identifier));
-        }
+        LHSType = visitIdentifierOrListIndex(ctx.identifierOrListIndex());
+        if (LHSType instanceof ErrorType)
+            return LHSType;
 
         Type expression = visitExpression(ctx.expression());
         if(expression instanceof ErrorType)
@@ -330,11 +312,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         if(expression.isSubtypeOf(LHSType))      //LHSType.compatibleWith(expression)
         {
-            returnType = LHSType;
-        }
-        else if(LHSType.equals(Main.decimal) && expression.equals(Main.integer))
-        {
-            System.out.println(String.format("\t(Assign)(Line %d) Integer should be converted", ctx.getStart().getLine()));
+            if(LHSType.equals(Main.decimal) && expression.equals(Main.integer))
+            {
+                convertIntNodeToDec(ctx.expression());
+            }
             returnType = LHSType;
         }
         else
@@ -412,6 +393,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         //if "integer i", return no value back. If "Integer i = 3" return value
         if(expression == null || expression.isSubtypeOf(type))       //type.compatibleWith(expression)
         {
+            if(expression != null && type.equals(Main.decimal) && expression.equals(Main.integer))
+            {
+                convertIntNodeToDec(ctx.expression());
+            }
             returnType = type;
         }
 //        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
@@ -503,7 +488,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     //If AND or OR is used, check that both sides are boolean, else throw an error
                     if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
                         returnType = new ErrorType(String.format("AND/OR can't be used with other types than boolean"));
-                        //If comparison is used, and be othsides are not numbers, throow an error
+                        //If comparison is used, and both sides are not numbers, throw an error
                     else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1)) && (r1.equals(Main.integer) || r1.equals(Main.decimal))))
                         returnType = new ErrorType(String.format("Comparison can only be used with integers and decimals"));
                         //check if both sides of expression is boolean
@@ -515,20 +500,24 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 }
                 // Check for a single literal
                 //Check if type is equal
-                //TODO: Add more types
                 else if(r1.equals(r2))
                 {
                     if(r1.equals(Main.bool))
                         returnType = new ErrorType("Can't use this operator with Booleans");
                     else if(r1.equals(Main.string) && !operator.equals("+"))
-                        returnType = new ErrorType("String can only be concatinated with \"+\", no other operations allowed");
+                        returnType = new ErrorType("String can only be concatenated with \"+\", no other operations allowed");
                     else
                         returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
                 }
                 //Check if it is possible to convert from Int to Dec
-                else if((r1.equals(Main.integer) && r2.equals(Main.decimal)) || (r1.equals(Main.decimal) && r2.equals(Main.integer)))
+                else if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
                 {
-                    System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
+                    convertIntNodeToDec(ctx.expression(0));
+                    returnType = Main.decimal;
+                }
+                else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
+                {
+                    convertIntNodeToDec(ctx.expression(1));
                     returnType = Main.decimal;
                 }
                 //Check if one of the two results gives an error
@@ -670,7 +659,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    //TODO: Produces null-pointer, if { } are empty, needs to use Nothing or Anything
     @Override
     public Type visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx)
     {
@@ -697,7 +685,57 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return new ErrorType("Invalid List literal, types do not match");
             }
         }
+        if(innerType.equals(Main.decimal))
+        {
+            for(HOMEParser.ExpressionContext expr : ctx.expression())
+            {
+                if(visitExpression(expr).equals(Main.integer))
+                    convertIntNodeToDec(expr);
+            }
+        }
         return getCollectionType("List" + "<" + innerType.name + ">", innerType);
+    }
+
+    public Type visitDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx)
+    {
+        Type innerType;
+
+        if (ctx.dictionaryEntry().size() == 0)
+        {
+            // empty literal, meaning this can be any type of collection
+            return getCollectionType("List", Main.anything);
+        }
+        innerType = visitExpression(ctx.dictionaryEntry(0).expression(1));
+
+        Type current;
+        for(HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
+        {
+            Type keyType = visitExpression(entry.expression(0));
+            if (keyType instanceof ErrorType)
+                return keyType;
+            else if(!keyType.equals(Main.string))
+                return new ErrorType("Invalid Dictionary literal, key must be of type String.");
+            current = visitExpression(entry.expression(1));
+            if (innerType.isSubtypeOf(current))
+            {
+                innerType = current;
+            }
+            else if (!current.isSubtypeOf(innerType))
+            {
+                // Invalid literal.
+                return new ErrorType("Invalid Dictionary literal, types do not match.");
+            }
+
+        }
+        if(innerType.equals(Main.decimal))
+        {
+            for(HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
+            {
+                if(visitExpression(entry.expression(1)).equals(Main.integer))
+                    convertIntNodeToDec(entry.expression(1));
+            }
+        }
+        return getCollectionType("Dictionary" + "<" + innerType.name + ">", innerType);
     }
 
     @Override
@@ -1011,7 +1049,42 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
+    void convertIntNodeToDec(HOMEParser.ExpressionContext ctx)
+    {
+        System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
+        if(ctx.int2dec() == null)
+            ctx.addChild(new HOMEParser.Int2decContext(ctx, ctx.invokingState));
+        else
+            System.out.println("DEBUG: Attempt to add conversion node multiple times.");
+    }
 
+    public boolean OmgWtf(Type t1, Type t2, HOMEParser.ExpressionContext expr)
+    {
+        if (t1.equals(Main.decimal) && t2.equals(Main.integer))
+        {
+            convertIntNodeToDec(expr);
+            return true;
+        }
+        if (t1 instanceof CollectionType && t2 instanceof CollectionType)
+        {
+            if (((CollectionType) t1).innerType.equals(Main.decimal) && ((CollectionType) t2).innerType.equals(Main.integer))
+            {
+                if (((CollectionType) t1).primaryType.equals(((CollectionType) t2).primaryType))
+                {
+                    convertIntNodeToDec(expr);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+            {
+                return OmgWtf(((CollectionType) t1).innerType, ((CollectionType) t2).innerType, expr);
+            }
+        }
+
+        return false;
+    }
 
 
     List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
@@ -1024,16 +1097,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
 
     //TODO: Fields pÃ¥ klasser.
-    //TODO: Indeksering(Done for lister, dictionary ikke tjekket.v  Vent pÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃƒÂ¥ collection)
     //TODO: Beslut: passing by references vs value
-    //TODO: Methods on collection[venter pÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃƒÂ¥ Frederik]
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
     //TODO: Tilføj konvertingsnoder ved int til decimal i IsSubtypeOf().
-    //List<Integer> adfadf = {4, 5 }
-    //faef = adfadf
-    //TODO: Make a "using/import/include" statement
     // ------- NEW GRAMMAR -------
-    //TODO: int i = -2
 
     // --------- Til 2. iteration --------
     //TODO: [lav prioritet]del visitExpression op, sÃƒÆ’Ã†â€™Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ãƒâ€šÃ‚Â¥ det er mere overskueligt.

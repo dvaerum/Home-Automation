@@ -4,6 +4,7 @@ grammar HOME;
 @header {
 package HOME.Grammar;
 }
+
 //---------------Test terminals----------------
 program : newline* global block EOF ;
 
@@ -154,6 +155,7 @@ expression
     | expression logicalOperator expression
     | funcCall
     | literal
+    | int2dec
 //    | collectionInit
     | variableMethodCall
     | identifierOrListIndex
@@ -180,6 +182,10 @@ dictionaryLiteral
     ;
 dictionaryEntry
     : expression ASSIGN expression
+    ;
+
+int2dec
+    : IntegerLiteral
     ;
 
 booleanLiteral
@@ -299,7 +305,7 @@ CARET           : '^';
 LPAREN          : '(';
 RPAREN          : ')';
 
-AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN) ;
+AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN|MOD_ASSIGN) ;
 ASSIGN          : '=';
 ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';

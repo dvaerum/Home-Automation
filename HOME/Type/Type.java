@@ -1,6 +1,7 @@
 package HOME.Type;
 
 import HOME.*;
+import HOME.Grammar.HOMEParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;

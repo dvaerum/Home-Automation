@@ -48,6 +48,10 @@ public class Main
         list.methods.add(new Function("add", nothing, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
         list.methods.add(new Function("lol", integer, new ArrayList<Type>()));
+        dictionary = new Type("Dictionary");
+        dictionary.methods.add(new Function("add", nothing, new ArrayList<Type>(Arrays.asList(string, generic))));
+        dictionary.methods.add(new Function("remove", nothing, string.toList()));
+        dictionary.methods.add(new Function("lol", integer, new ArrayList<Type>()));
         //TODO: Allow collections as parameters/return types. Also, constructors/fields don't work for collections atm.
 
         //System.out.println("\n-----------------------------FirstRun-----------------------\n");

@@ -1,7 +1,14 @@
-Integer i = 2
-
+String s = "Hej"
+Integer a = 70000
+Integer b = 30000
+Integer c = 500
+Integer d = -100
 function Setup() returns Nothing
-    i = 3
-    i = 5
-    Decimal = 2.3
+    Integer tester = 4
+    if(a==b)
+    endif
+endfunction
+
+function test(Integer x, List<Integer> y) returns Nothing
+
 endfunction

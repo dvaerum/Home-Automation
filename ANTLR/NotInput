@@ -61,7 +61,7 @@ function Setup() returns Nothing
 
     Input TestingObj2 = Input(34, 53.5)
     //LOOK HERE, HOW TO HANDLE THIS!!!!!?!?!?!?!?!?!?!?!?!?!?!?!?!?!
-    String resultString = TestingObj2.toString(2,4.5).toString(3)
+    //String resultString = TestingObj2.toString(2,4.  5).toString(3)
     //String resultString = TestingObj2.ultraLol(calc()).toString()
 endfunction
 

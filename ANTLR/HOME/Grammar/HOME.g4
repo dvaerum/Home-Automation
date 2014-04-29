@@ -5,9 +5,7 @@ grammar HOME;
 package HOME.Grammar;
 }
 
-
-//---------------Test terminals----------------
-program : global block? EOF ; // Remove '?' this is only for testing purposes
+program : newline* global block EOF ;
 
 global
     : declaration newline+ global
@@ -20,7 +18,7 @@ block
     ;
 
 function
-    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
+    : 'function' identifier declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
@@ -33,16 +31,8 @@ moreFunctions
 
 //-----------------Parameters----------------
 
-funcParameters
-    : LPAREN (expression (',' expression)*)? RPAREN
-    ;
-
 declarationParameters
     : LPAREN (declaration (',' declaration)*)? RPAREN
-    ;
-
-declarationParameterList
-    : declaration (',' declaration)*
     ;
 
 //----------------End Parameters------------------
@@ -66,19 +56,19 @@ stmt
     ;
 
 incDec
-    : identifierOrListIndex INC
-    | identifierOrListIndex DEC
+    : (identifier|listIndex|field) INC
+    | (identifier|listIndex|field) DEC
     ;
 
 //--------------End Statements-----------------
 
 //---------------Declaration---------------
 declaration
-    : type identifierOrListIndex (AnyAssign expression)?
+    : type identifier ((AnyAssign|ASSIGN) expression)?
     ;
 //---------------Assignment---------------
 assign
-    : identifierOrListIndex AnyAssign expression
+    : (identifier|listIndex|field) (AnyAssign|ASSIGN) expression
     ;
 //---------------If statement-------------
 ifStmt
@@ -96,7 +86,7 @@ elseIfStmt
 
 elseStmt
     : 'else' newline+
-    stmts?
+    stmts
     ;
 //---------------Loops-------------
 loop
@@ -111,40 +101,44 @@ loopWhileOrUntil
     ;
 
 loopForeach
-    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN newline+
+    :  'repeat' 'foreach' LPAREN type identifier 'in' (identifier|listIndex|field) RPAREN newline+
         stmts
        'endrepeat'
     ;
 
 funcCall
-    :  identifierOrListIndex funcParameters
+    :  identifier funcParameters
+    ;
+
+funcParameters
+    : LPAREN (expression (',' expression)*)? RPAREN
     ;
 
 variableMethodCall
-    : identifierOrListIndex DOT funcCall (DOT funcCall)*
+    : identifier DOT funcCall
     ;
-
-//variableMethodCall
-//    : identifierOrListIndex DOT
-//    ;
-
 
 returnFunction
     : 'return' expression? // TODO change when identifierOrListIndex can be digits
     ;
 
-condition
-    : (identifierOrListIndex|literal) logicalOperator (identifierOrListIndex|literal)
+identifier
+    : IdentifierExact
     ;
 
-Identifier
+listIndex
+    : IdentifierExact ('[' expression ']')+
+    ;
+
+field
+    : identifier DOT IdentifierExact
+    ;
+
+IdentifierExact
     : Letter LetterOrDigit*
     ;
 
-identifierOrListIndex
-    : Identifier
-    | Identifier '[' expression ']'
-    ;
+
 
 //---------------Expression---------------
 
@@ -156,18 +150,38 @@ expression
     | expression logicalOperator expression
     | funcCall
     | literal
-    | collectionInit
+    | int2dec
+//    | collectionInit
     | variableMethodCall
-    | identifierOrListIndex
+    | identifier|listIndex|field
     | LPAREN expression RPAREN
     ;
 
+
 //-------------Variable types-------------
 literal
-    : booleanLiteral
+    : listLiteral
+    | dictionaryLiteral
+    | booleanLiteral
     | DecimalLiteral
     | IntegerLiteral
     | StringLiteral
+    ;
+
+listLiteral
+    : '{' (expression (',' expression)*)? '}'
+    ;
+
+dictionaryLiteral
+    : '{' (dictionaryEntry (',' dictionaryEntry)*)? '}'
+    ;
+
+dictionaryEntry
+    : expression ASSIGN expression
+    ;
+
+int2dec
+    : IntegerLiteral
     ;
 
 booleanLiteral
@@ -209,10 +223,6 @@ Digit
     : [0-9]
     ;
 
-collectionInit
-    : '{' (expression (',' expression)*)? '}'
-    ;
-
 // The Null Literal
 NullLiteral
     :   'null'
@@ -223,15 +233,7 @@ NullLiteral
 type
     : collectionType
     | classes
-    //| primitiveType
     ;
-
-//primitiveType
-//    : 'Decimal'
-//    | 'Integer'
-//    | 'Boolean'
-//    | 'String'
-//    ;
 
 collectionType
     : 'List' '<' type '>'
@@ -239,11 +241,10 @@ collectionType
     ;
 
 classes
-    : Identifier
+    : IdentifierExact
     ;
 
 // Characters
-port            : 'PORT';
 nothing         : 'Nothing';
 DOT             : '.';
 fragment
@@ -278,32 +279,32 @@ GE              : '>=';
 //Numerical operations
 INC             : '++';
 DEC             : '--';
-NOUSE1          : '-+';
-NOUSE2          : '+-';
+NOUSE1          : '+-';
+NOUSE2          : '-+';
 ADD             : '+';
 SUB             : '-';
 MUL             : '*';
 DIV             : '/';
 MOD             : '%';
-BITAND          : '&';
-BITOR           : '|';
-CARET           : '^';
+//BITAND          : '&';
+//BITOR           : '|';
+//CARET           : '^';
 
 //seperators
 LPAREN          : '(';
 RPAREN          : ')';
 
-AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN|ASSIGN) ;
-
+AnyAssign       : (ADD_ASSIGN|SUB_ASSIGN|MUL_ASSIGN|DIV_ASSIGN|MOD_ASSIGN) ;
 ASSIGN          : '=';
 ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';
 MUL_ASSIGN      : '*=';
 DIV_ASSIGN      : '/=';
+MOD_ASSIGN      : '%=';
+
 //AND_ASSIGN      : '&=';
 //OR_ASSIGN       : '|=';
 //XOR_ASSIGN      : '^=';
-MOD_ASSIGN      : '%=';
 
 //
 // Whitespace and comments

@@ -1,5 +1,6 @@
 package HOME.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,4 +18,10 @@ public class Function
         this.returnType = returnType;
         this.parameters = parameters;
     }
+
+    public Function()
+    {
+
+    }
+
 }

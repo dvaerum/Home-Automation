@@ -1,4 +1,4 @@
-// Generated from ./HOME.g4 by ANTLR 4.2
+// Generated from C:/Users/Marc/Documents/GitHub/Home-Automation/ANTLR/HOME/Grammar\HOME.g4 by ANTLR 4.x
 
 package HOME.Grammar;
 
@@ -1791,7 +1791,7 @@ public class HOMEParser extends Parser {
 			setState(304); match(IdentifierExact);
 			setState(309); 
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
+			_alt = 1;
 			do {
 				switch (_alt) {
 				case 1:
@@ -1809,7 +1809,7 @@ public class HOMEParser extends Parser {
 				setState(311); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
-			} while ( _alt!=2 && _alt!=-1 );
+			} while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER );
 			}
 		}
 		catch (RecognitionException re) {
@@ -2006,7 +2006,7 @@ public class HOMEParser extends Parser {
 			setState(345);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,34,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
+			while ( _alt!=2 && _alt!=ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;

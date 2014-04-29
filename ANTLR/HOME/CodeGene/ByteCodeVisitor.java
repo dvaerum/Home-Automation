@@ -2,7 +2,9 @@ package HOME.CodeGene;
 
 import HOME.Grammar.HOMEBaseVisitor;
 import HOME.Grammar.HOMEParser;
-import com.sun.org.apache.xpath.internal.operations.*;
+import HOME.Main;
+import SymbolTableNew.SymbolTableNew;
+import SymbolTableNew.VariableTable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -13,10 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * Created by Michael on 14/04/14.
- */
 public class ByteCodeVisitor extends HOMEBaseVisitor {
+
+    SymbolTableNew symbolTable = Main.symbolTable;
 
     class Function {
         private String _begin;
@@ -45,17 +46,20 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     }
 
     class Statements {
-        private int limit;
+        private int limit_stack;
+        private int limit_locale;
         private ArrayList<String> statements;
 
         public Statements() {
             this.statements = new ArrayList<String>();
-            this.limit = 0;
+            this.limit_stack = 32; // TODO change to improve performance
+            this.limit_locale = 32;
         }
 
-        public Statements(int limit) {
+        public Statements(int limit_stack) {
             this.statements = new ArrayList<String>();
-            this.limit = limit;
+            this.limit_stack = limit_stack;
+            this.limit_locale = 32;
         }
 
         public void addStatement(String statement) {
@@ -64,26 +68,59 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
         public void addStatement(String statement, int limit) {
             this.statements.add(statement);
-            this.limit += limit;
+            this.limit_locale += limit;
         }
 
         public void build() {
-            Write(String.format(".limit stack %d", this.limit));
+            Write(String.format("    " + ".limit stack %d", this.limit_stack));
+            Write(String.format("    " + ".limit locals %d", this.limit_locale));
             for (String statement : statements) {
-                Write(statement);
+                Write("    " + statement);
             }
         }
     }
 
+    class GlobalVariables {
+        private String _start;
+        private ArrayList<String> fields;
+        private Statements stmts;
+        private String _end;
+
+        public GlobalVariables() {
+            _start = ".method public <init>()V";
+            this.fields = new ArrayList<String>();
+            stmts = new Statements();
+            stmts.addStatement("aload_0");
+            stmts.addStatement("invokenonvirtual java/lang/Object/<init>()V");
+            _end = ".end method";
+        }
+
+        public void build() {
+            for (String field : fields) {
+                Write(field);
+            }
+
+            Write(_start);
+            stmts.build();
+            Write("return");
+            Write(_end);
+        }
+    }
+
     private Map<String, String> refTable = new HashMap<String, String>();
-    private ArrayList<String> fields = new ArrayList<String>();
+    private ArrayList<String> init = new ArrayList<String>();
     Function setup;
+    GlobalVariables globalVariables;
+    Statements statements;
+    private ArrayList<Function> functions = new ArrayList<>();
 
     private FileOutputStream newClass;
 
     public ByteCodeVisitor() throws IOException {
         String path = "/HOME/CodeGene/GlobalReferenceTable";
         //       Files.readAllLines(f.getPath(), Charset);
+        VariableTable variableTable = new VariableTable();
+
 
         String cwd = new File("").getAbsolutePath();
         System.out.println(cwd);
@@ -93,34 +130,28 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         Scanner sc = new Scanner(f);
         while (sc.hasNextLine()) {
             String[] matches = sc.nextLine().split("@");
-            refTable.put(matches[0].trim(), matches[1]);
+            refTable.put(matches[0].trim(), matches[1].trim());
         }
 
         File newClassFile = new File(cwd + "/HOME/CodeGene/" + "Output_test.j");
         newClass = new FileOutputStream(newClassFile);
 
-        Scanner metaClass = new Scanner(new File("./HOME/CodeGene/Frame"));
+        Scanner metaClass = new Scanner(new File("HOME/CodeGene/Frame"));
         while (metaClass.hasNextLine()) {
             Write(metaClass.nextLine());
         }
-
-        // Below initiates the class itself, re-check to see how this is properly done.
-//        .method public <init>()V
-//                aload_0
-//        invokenonvirtual java/lang/Object/<init>()V
-//        return
-//        ._end method
+        globalVariables = new GlobalVariables();
+        statements = new Statements();
 
     }
 
     public void build() {
-        for (String field : fields) {
-            Write(field);
-        }
-
-        Write("");
-
+        globalVariables.build();
         setup.build();
+        for(Function f : this.functions)
+        {
+            f.build();
+        }
     }
 
     @Override
@@ -128,15 +159,119 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return super.visitExpression(ctx);
     }
 
+    public void visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx, Statements stmt)
+    {
+        String operator = ctx.expression().logicalOperator().getText();
+        switch(operator) {
+            case "==":
+                stmt.addStatement("ldc " + ctx.expression().getText());
+                stmt.addStatement("if_cmpne goto " + symbolTable.newLabel());
+                if(ctx.stmts()!=null) {
+                    visitStmts(ctx.stmts(), stmt);
+//                    if(ctx.stmts().stmt().funcCall().funcParameters()!=null)
+//                        stmt.addStatement("invokestatic " + ctx.stmts().stmt().funcCall().identifier().getText() +"(" + ctx.stmts().stmt().funcCall().funcParameters().expression().iterator().next().getText() +")");
+//                    else
+//                        stmt.addStatement("invokestatic " + ctx.stmts().stmt().funcCall().identifier().getText() +"()");
+
+                } stmt.addStatement(symbolTable.getLabel());
+                break;
+            case "<":
+
+                break;
+            case ">":
+
+                break;
+            case "<=":
+
+                break;
+            case ">=":
+
+                break;
+            case "!=":
+
+                break;
+        }
+
+
+      //  return super.visitIfStmt(ctx);
+    }
+
+
     @Override
     public Object visitFunction(@NotNull HOMEParser.FunctionContext ctx) {
-        this.setup = new Function(".method public static main([Ljava/lang/String;)V",
-                                  ".end method");
-        setup.stmts = new Statements(1);
 
-        visitStmts(ctx.stmts(), setup.stmts);
+        String funcName = ctx.identifier().getText();
+
+        if(funcName.equals("Setup")){
+            this.setup = new Function(".method public static main([Ljava/lang/String;)V",
+                    ".end method");
+            setup.stmts = new Statements();
+
+            visitStmts(ctx.stmts(), setup.stmts);
+        } else {
+            String parameters;
+            parameters = visitDeclarationParameters(ctx.declarationParameters());
+            String returnType;
+            if(ctx.nothing() != null){
+                returnType = "V";
+            } else {
+                returnType = bytecodeType(ctx.type().getText());
+            }
+            Function func = new Function(".method public ".concat(funcName).concat("(").concat(parameters).concat(")".concat(returnType)), ".end method");
+            func.stmts = new Statements(1);
+
+            visitStmts(ctx.stmts(), func.stmts);
+
+            this.functions.add(func);
+        }
 
         return super.visitFunction(ctx);
+    }
+
+    public String bytecodeType(String str){
+        if(str.contains("List"))
+        {
+
+        } else if(str.contains("Dictionary"))
+        {
+
+        }
+
+        switch(str){
+            case "Integer":
+                return "Ljava/lang/Integer";
+            case "Decimal":
+                return "Ljava/lang/Double";
+            case "String":
+                return "Ljava/lang/String";
+            case "Boolean":
+                return "Z";
+            case "Time": // We need our own class here
+                break;
+            case "Input": // We need our own class here
+                break;
+            case "Output": // We need our own class here
+                break;
+            default: // We need the default package name for extensions here
+                break;
+        }
+        return "";
+    }
+
+    public String visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx){
+        if(ctx == null){
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for(HOMEParser.DeclarationContext dec : ctx.declaration())
+        {
+            String t = dec.type().getText().trim();
+            sb.append(bytecodeType(t));
+        }
+
+        return sb.toString();
     }
 
     public void visitStmts(@NotNull HOMEParser.StmtsContext ctx, Statements _stmts ) {
@@ -146,8 +281,43 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
     }
 
-    public void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements _stmts) {
-        _stmts.addStatement("    " + ctx.getText(), 1);
+    public void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements stmt) {
+
+        if (ctx.declaration() != null) {
+            visitDeclaration(ctx.declaration(), stmt);
+        } else if (ctx.assign() != null) {
+
+        } else if (ctx.ifStmt() != null) {
+            visitIfStmt(ctx.ifStmt(), stmt);
+        } else if (ctx.loop() != null) {
+
+        } else if (ctx.funcCall() != null) {
+
+        } else if (ctx.variableMethodCall() != null) {
+
+        } else if (ctx.incDec() != null) {
+
+        }
+        Double d = 2.0;
+    }
+
+    @Override
+    public Object visitNewline(@NotNull HOMEParser.NewlineContext ctx) {
+        symbolTable.newLine();
+        return super.visitNewline(ctx);
+    }
+
+    public void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmt) {
+        stmt.addStatement("new " + bytecodeType(ctx.type().getText()), 1);
+        stmt.addStatement("dup");
+
+        if (ctx.expression() != null){
+            stmt.addStatement("invokespecial " + bytecodeType(ctx.type().getText()) + "/<init>()V");
+        }
+
+        Integer tester = new Integer(2);
+        ctx.type().getText();
+
     }
 
     @Override
@@ -156,35 +326,73 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     }
 
     @Override
-    public Object visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx) {
-        // .field
-        String declaration = refTable.get(ctx.type().getText().trim());
+    public Object visitGlobal(@NotNull HOMEParser.GlobalContext ctx) {
+        // Declaration
+        if (ctx.declaration() != null) {
+            String declaration = refTable.get(ctx.declaration().type().getText().trim());
 
-        declaration = declaration.replace("<field-name>",ctx.identifierOrListIndex().getText());
+            declaration = declaration.replace("<field-name>", ctx.declaration().identifier().getText());
 
-        if(ctx.expression()!=null) {
-            declaration = declaration.replace("<value>", ctx.expression().getText()); // replace with whatever the expression returns.
-        } else {
-            declaration = declaration.replace("<value>", "0");
+            if (ctx.declaration().expression() != null) {
+                declaration = declaration.replace("<value>", ctx.declaration().expression().getText()); // replace with whatever the expression returns.
+            } else {
+                declaration = declaration.replace("<value>", "0");
+            }
+            globalVariables.fields.add(declaration);
+            String type = ctx.declaration().type().getText().trim();
+            switch (type) {
+                case "Integer":
+                    globalVariables.stmts.addStatement("aload_0");
+
+                    Integer value = Integer.valueOf(ctx.declaration().expression().getText().trim());
+                    if (value < 0) {
+                        value++;
+                    } // ensures fx -128 also uses bipush just like 127 would ( not 128 though )
+                    value = Math.abs(value);
+                    if (value > Math.pow(2, 31) - 1) {
+                        // TODO throw error -> Integer too big
+                    } else if (value > Math.pow(2, 15) - 1) {
+                        globalVariables.stmts.addStatement("ldc " + ctx.declaration().expression().getText()); // can be optimized with bipush when below 127
+                    } else if (value > Math.pow(2, 7) - 1) {
+                        globalVariables.stmts.addStatement("sipush " + ctx.declaration().expression().getText()); // can be optimized with bipush when below 127
+                    } else {
+                        globalVariables.stmts.addStatement("bipush " + ctx.declaration().expression().getText()); // can be optimized with bipush when below 127
+                    }
+                    globalVariables.stmts.addStatement("invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;"); // can be optimized with bipush when below 127
+                    globalVariables.stmts.addStatement(String.format("putfield HOME/%s Ljava/lang/Integer;", ctx.declaration().identifier().getText().trim()));
+                    break;
+                case "String":
+                    globalVariables.stmts.addStatement("aload_0");
+                    globalVariables.stmts.addStatement("ldc " + ctx.declaration().expression().getText());
+                    globalVariables.stmts.addStatement(String.format("putfield HOME/%s Ljava/lang/String;", ctx.declaration().identifier().getText().trim()));
+                    break;
+                case "Decimal":
+                    globalVariables.stmts.addStatement("aload_0");
+                    globalVariables.stmts.addStatement("ldc2_w " + ctx.declaration().expression().getText() + "d"); // check if .0d notation works or 2.d
+                    globalVariables.stmts.addStatement("invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;"); // can be optimized with bipush when below 127
+                    globalVariables.stmts.addStatement(String.format("putfield HOME/%s Ljava/lang/Double;", ctx.declaration().identifier().getText().trim()));
+                    break;
+            }
         }
-        fields.add(declaration);
 
-        return super.visitDeclaration(ctx);
+        return super.visitGlobal(ctx);
     }
+
+
 
     private void checkGlobal(HOMEParser.DeclarationContext ctx) // change the input to be more general
     {
         // Checks whether the variable is global, if it is, add a .fields to the output
         String declaration = refTable.get(ctx.type().getText().trim());
 
-        declaration = declaration.replace("<field-name>",ctx.identifierOrListIndex().getText());
+        declaration = declaration.replace("<field-name>",ctx.identifier().getText());
 
         if(ctx.expression()!=null) {
             declaration = declaration.replace("<value>", ctx.expression().getText()); // replace with whatever the expression returns.
         } else {
             declaration = declaration.replace("<value>", "0");
         }
-        fields.add(declaration);
+        globalVariables.fields.add(declaration);
     }
 
     protected void Write(String out) {

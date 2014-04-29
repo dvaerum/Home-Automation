@@ -1,9 +1,11 @@
 package HOME.Type;
 
 import HOME.*;
+import HOME.Grammar.HOMEParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,9 +27,24 @@ public class Type
     {
     }
 
+    public Type(Type t)
+    {
+        name = new String(t.name);
+        fields = new ArrayList<Variable>(t.fields);
+        constructor = t.constructor;
+        methods = new ArrayList<Function>(t.methods);
+    }
+
     public Type(String name) {
         this.isFinal = false;
         this.name = name;
+    }
+
+    public ArrayList<Type> toList()
+    {
+        ArrayList<Type> list = new ArrayList<Type>();
+        list.add(this);
+        return list;
     }
 
     public void Update(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
@@ -56,17 +73,22 @@ public class Type
             ArrayList<Type> constrParams = new ArrayList<>();
             for(String paramStr : constrParamsStr)
             {
+                if(paramStr.equals(""))
+                    continue;
+
                 if(Main.symbolTable.types.symbolExists(paramStr))
                     constrParams.add(Main.symbolTable.types.getSymbol(paramStr));
                 else
                     throw new Exception(String.format("Class %s didn't exist!", paramStr));
-        }
+            }
 
             constructor = new Function(constructorName, this, constrParams);
             Main.symbolTable.functions.addSymbol(constructorName, constructor);
             //Create function-type
             //And insert into constructor field
         }
+
+
 
         //--------------Method parsing---------------------
         Pattern methodPattern = Pattern.compile("([a-zA-Z0-9_]+)\\(((?:\\w(?:, )?)*)\\) > (\\w+)");
@@ -97,6 +119,9 @@ public class Type
 
                 for(String paramType : Arrays.asList(methodMatcher.group(2).replaceAll("\\s", "").split(",")))
                 {
+                    if(paramType.equals(""))
+                        continue;
+
                     if(!Main.symbolTable.types.symbolExists(paramType))
                         throw new Exception(String.format("Class %s didn't exist!", paramType));
                     else
@@ -128,6 +153,17 @@ public class Type
         return true;
     }
 
+    public static List<Type> copyTypeList(List<Type> list)
+    {
+        List<Type> newList = new ArrayList<Type>(list);
+
+        for(Type t : newList)
+        {
+            t = new Type(t);
+        }
+        return newList;
+    }
+
     public boolean isSubtypeOf(Type otherType)
     {
         if(this.equals(Main.integer))
@@ -135,6 +171,9 @@ public class Type
             if(otherType.equals(Main.decimal))
                 return true;
         }
+        else if(this.equals(Main.anything))
+            return true;
+
 
         return this.equals(otherType);
     }
@@ -151,6 +190,17 @@ public class Type
         return null;
     }
 
+    public Variable getFieldByName(String name)
+    {
+        for(Variable var : fields)
+        {
+            if (name.equals(var.name))
+            {
+                return var;
+            }
+        }
+        return null;
+    }
 
     public Type(String name, List<Variable> fields, Function constructor, List<Function> methods)
     {

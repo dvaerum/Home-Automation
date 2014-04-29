@@ -1,12 +1,50 @@
 .source                  HOME.java
 .class                   public HOME
 .super                   java/lang/Object
- .field public i Ljava/lang/Integer; = 2
-
+.field public s Ljava/lang/String; = "Hej"
+.field public a Ljava/lang/Integer; = 70000
+.field public b Ljava/lang/Integer; = 30000
+.field public c Ljava/lang/Integer; = 500
+.field public d Ljava/lang/Integer; = -100
+.method public <init>()V
+    .limit stack 32
+    .limit locals 32
+    aload_0
+    invokenonvirtual java/lang/Object/<init>()V
+    aload_0
+    ldc "Hej"
+    putfield HOME/s Ljava/lang/String;
+    aload_0
+    ldc 70000
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    putfield HOME/a Ljava/lang/Integer;
+    aload_0
+    sipush 30000
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    putfield HOME/b Ljava/lang/Integer;
+    aload_0
+    sipush 500
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    putfield HOME/c Ljava/lang/Integer;
+    aload_0
+    bipush -100
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    putfield HOME/d Ljava/lang/Integer;
+return
+.end method
 .method public static main([Ljava/lang/String;)V
-.limit stack 4
-    i=3
-    i=5
-    Decimal=2.3
+    .limit stack 32
+    .limit locals 33
+    new Ljava/lang/Integer
+    dup
+    invokespecial Ljava/lang/Integer/<init>()V
+    ldc a==b
+    if_cmpne goto Label1
+    Label1:
+return 
+.end method
+.method public test(Ljava/lang/Integer)V
+    .limit stack 1
+    .limit locals 32
 return 
 .end method

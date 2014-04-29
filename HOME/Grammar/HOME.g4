@@ -5,7 +5,6 @@ grammar HOME;
 package HOME.Grammar;
 }
 
-//---------------Test terminals----------------
 program : newline* global block EOF ;
 
 global
@@ -19,7 +18,7 @@ block
     ;
 
 function
-    : 'function' identifierOrListIndex declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
+    : 'function' identifier declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
@@ -32,16 +31,8 @@ moreFunctions
 
 //-----------------Parameters----------------
 
-funcParameters
-    : LPAREN (expression (',' expression)*)? RPAREN
-    ;
-
 declarationParameters
     : LPAREN (declaration (',' declaration)*)? RPAREN
-    ;
-
-declarationParameterList
-    : declaration (',' declaration)*
     ;
 
 //----------------End Parameters------------------
@@ -65,19 +56,19 @@ stmt
     ;
 
 incDec
-    : identifierOrListIndex INC
-    | identifierOrListIndex DEC
+    : (identifier|listIndex|field) INC
+    | (identifier|listIndex|field) DEC
     ;
 
 //--------------End Statements-----------------
 
 //---------------Declaration---------------
 declaration
-    : type identifierOrListIndex ((AnyAssign|ASSIGN) expression)?
+    : type identifier ((AnyAssign|ASSIGN) expression)?
     ;
 //---------------Assignment---------------
 assign
-    : identifierOrListIndex (AnyAssign|ASSIGN) expression
+    : (identifier|listIndex|field) (AnyAssign|ASSIGN) expression
     ;
 //---------------If statement-------------
 ifStmt
@@ -95,7 +86,7 @@ elseIfStmt
 
 elseStmt
     : 'else' newline+
-    stmts?
+    stmts
     ;
 //---------------Loops-------------
 loop
@@ -110,40 +101,44 @@ loopWhileOrUntil
     ;
 
 loopForeach
-    :  'repeat' 'foreach' LPAREN type identifierOrListIndex 'in' identifierOrListIndex RPAREN newline+
+    :  'repeat' 'foreach' LPAREN type identifier 'in' expression RPAREN newline+
         stmts
        'endrepeat'
     ;
 
 funcCall
-    :  identifierOrListIndex funcParameters
+    :  identifier funcParameters
+    ;
+
+funcParameters
+    : LPAREN (expression (',' expression)*)? RPAREN
     ;
 
 variableMethodCall
-    : identifierOrListIndex DOT funcCall (DOT funcCall)*
+    : identifier DOT funcCall
     ;
-
-//variableMethodCall
-//    : identifierOrListIndex DOT
-//    ;
-
 
 returnFunction
     : 'return' expression? // TODO change when identifierOrListIndex can be digits
     ;
 
-condition
-    : (identifierOrListIndex|literal) logicalOperator (identifierOrListIndex|literal)
+identifier
+    : IdentifierExact
     ;
 
-Identifier
+listIndex
+    : IdentifierExact ('[' expression ']')+
+    ;
+
+field
+    : identifier DOT IdentifierExact
+    ;
+
+IdentifierExact
     : Letter LetterOrDigit*
     ;
 
-identifierOrListIndex
-    : Identifier
-    | identifierOrListIndex '[' expression ']'
-    ;
+
 
 //---------------Expression---------------
 
@@ -158,7 +153,7 @@ expression
     | int2dec
 //    | collectionInit
     | variableMethodCall
-    | identifierOrListIndex
+    | identifier|listIndex|field
     | LPAREN expression RPAREN
     ;
 
@@ -180,6 +175,7 @@ listLiteral
 dictionaryLiteral
     : '{' (dictionaryEntry (',' dictionaryEntry)*)? '}'
     ;
+
 dictionaryEntry
     : expression ASSIGN expression
     ;
@@ -235,17 +231,9 @@ NullLiteral
 // Primitive types
 
 type
-    //: primitiveType
     : collectionType
     | classes
     ;
-
-//primitiveType
-//    : 'Decimal'
-//    | 'Integer'
-//    | 'Boolean'
-//    | 'String'
-//    ;
 
 collectionType
     : 'List' '<' type '>'
@@ -253,11 +241,10 @@ collectionType
     ;
 
 classes
-    : Identifier
+    : IdentifierExact
     ;
 
 // Characters
-port            : 'PORT';
 nothing         : 'Nothing';
 DOT             : '.';
 fragment
@@ -292,14 +279,16 @@ GE              : '>=';
 //Numerical operations
 INC             : '++';
 DEC             : '--';
+NOUSE1          : '+-';
+NOUSE2          : '-+';
 ADD             : '+';
 SUB             : '-';
 MUL             : '*';
 DIV             : '/';
 MOD             : '%';
-BITAND          : '&';
-BITOR           : '|';
-CARET           : '^';
+//BITAND          : '&';
+//BITOR           : '|';
+//CARET           : '^';
 
 //seperators
 LPAREN          : '(';
@@ -311,11 +300,11 @@ ADD_ASSIGN      : '+=';
 SUB_ASSIGN      : '-=';
 MUL_ASSIGN      : '*=';
 DIV_ASSIGN      : '/=';
+MOD_ASSIGN      : '%=';
 
 //AND_ASSIGN      : '&=';
 //OR_ASSIGN       : '|=';
 //XOR_ASSIGN      : '^=';
-MOD_ASSIGN      : '%=';
 
 //
 // Whitespace and comments

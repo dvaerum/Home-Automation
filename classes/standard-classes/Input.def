@@ -2,10 +2,11 @@ class Input
     fields
         - Integer x
         - Decimal y
+        - Event ONTOGGLED
     endfields
 
     constructor
-        - Input(Integer, Decimal)
+        - Input(Integer)
     endconstructor
 
     methods

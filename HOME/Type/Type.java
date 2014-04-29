@@ -1,11 +1,9 @@
 package HOME.Type;
 
 import HOME.*;
-import HOME.Grammar.HOMEParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +58,10 @@ public class Type
         for(String singleField : fieldNames)
         {
             String[] field = singleField.trim().split(" ");
-            this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
+            if(field[0].equals("Event"))
+                this.fields.add(new Variable(field[1], Main.event));
+            else
+                this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
         }
 
         //--------------Constructor parsing---------------------
@@ -190,6 +191,17 @@ public class Type
         return null;
     }
 
+    public Variable getFieldByName(String name)
+    {
+        for(Variable var : fields)
+        {
+            if (name.equals(var.name))
+            {
+                return var;
+            }
+        }
+        return null;
+    }
 
     public Type(String name, List<Variable> fields, Function constructor, List<Function> methods)
     {

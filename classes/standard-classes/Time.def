@@ -1,11 +1,12 @@
-class Integer
+class Time
     fields
     endfields
 
     constructor
+        - Time(String, String, String)
     endconstructor
 
     methods
-        - toString(Decimal) > String
+        - toString() > String
     endmethods
 endclass

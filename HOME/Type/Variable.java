@@ -5,8 +5,8 @@ package HOME.Type;
  */
 public class Variable
 {
-    String name;
-    Type type;
+    public String name;
+    public Type type;
 
     public Variable(String name, Type type)
     {

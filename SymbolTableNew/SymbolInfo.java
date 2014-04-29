@@ -5,8 +5,7 @@ import HOME.Type.*;
 
 public class SymbolInfo
 {
-    public String name;
-    public Type type;
+    public Variable var;
     int depth;
 
 
@@ -15,8 +14,7 @@ public class SymbolInfo
 
     public SymbolInfo(String name, Type type, int depth)
     {
-        this.name = name;
-        this.type = type;
+        this.var = new Variable(name, type);
         this.depth = depth;
     }
 

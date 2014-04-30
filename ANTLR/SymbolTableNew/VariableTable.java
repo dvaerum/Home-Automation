@@ -56,6 +56,26 @@ public class VariableTable
         return true;
     }
 
+    // Returns false if the symbol already exists in the current scope.
+    public Boolean addSymbol(String symbol, Type type, int location) {
+        SymbolInfo info = new SymbolInfo(symbol, type, location, currentScope);
+        Deque<SymbolInfo> stack;
+
+        if (table.containsKey(symbol))
+            stack = table.get(symbol);
+        else {
+            stack = new ArrayDeque<SymbolInfo>();
+            table.put(symbol, stack);
+        }
+        if (stack.peek() != null && stack.peek().depth == currentScope)
+        {
+            // Symbol already exists in current scope;
+            return false;
+        }
+        stack.push(info);
+        return true;
+    }
+
     public Boolean symbolExists(String symbol)
     {
         Deque<SymbolInfo> stack = table.get(symbol);

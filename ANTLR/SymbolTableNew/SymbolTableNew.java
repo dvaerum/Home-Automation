@@ -26,7 +26,7 @@ public class SymbolTableNew
         lineNumber++;
     }
 
-    public String getLineNumber() {
+    public String getLineNumberText() {
         return ".line " + lineNumber;
     }
 

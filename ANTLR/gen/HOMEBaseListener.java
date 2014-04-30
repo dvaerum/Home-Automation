@@ -1,4 +1,4 @@
-// Generated from C:/Users/Marc/Documents/GitHub/Home-Automation/ANTLR/HOME/Grammar\HOME.g4 by ANTLR 4.x
+// Generated from /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/Grammar/HOME.g4 by ANTLR 4.x
 
 package HOME.Grammar;
 
@@ -253,6 +253,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterOr(@NotNull HOMEParser.OrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOr(@NotNull HOMEParser.OrContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterGlobal(@NotNull HOMEParser.GlobalContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -318,6 +331,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAnd(@NotNull HOMEParser.AndContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnd(@NotNull HOMEParser.AndContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterField(@NotNull HOMEParser.FieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -325,19 +351,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitField(@NotNull HOMEParser.FieldContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

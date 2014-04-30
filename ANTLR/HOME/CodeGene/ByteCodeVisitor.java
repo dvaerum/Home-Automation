@@ -54,13 +54,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         public Statements() {
             this.statements = new ArrayList<String>();
             this.limit_stack = 32; // TODO change to improve performance
-            this.limit_locale = 32;
+            this.limit_locale = 0;
         }
 
         public Statements(int limit_stack) {
             this.statements = new ArrayList<String>();
             this.limit_stack = limit_stack;
-            this.limit_locale = 32;
+            this.limit_locale = 0;
         }
 
         public void addStatement(String statement) {
@@ -70,6 +70,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         public void addStatement(String statement, int limit) {
             this.statements.add(statement);
             this.limit_locale += limit;
+        }
+
+        public void addLocal(int limit) {
+            this.limit_locale += limit;
+        }
+
+        public int nextLocal() {
+            return this.limit_locale + 1;
         }
 
         public void build() {
@@ -310,11 +318,39 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     }
 
     public void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmt) {
+        String type = ctx.type().getText();
+
+        switch (type) {
+            case "Integer":
+                stmt.addStatement("ldc " + ctx.expression().literal().getText()); // TODO Add visitExpression
+                stmt.addStatement("istore " + stmt.nextLocal());
+                stmt.addLocal(1);
+                break;
+            case "Decimal":
+                stmt.addStatement("ldc2_w " + ctx.expression().literal().getText()); // TODO Add visitExpression
+                stmt.addStatement("dstore " + stmt.nextLocal());
+                stmt.addLocal(2);
+                break;
+            case "String":
+                stmt.addStatement("ldc " + ctx.expression().literal().getText()); // TODO Add visitExpression
+                stmt.addStatement("istore " + stmt.nextLocal());
+                stmt.addLocal(1);
+                break;
+            case "Boolean":
+
+
+                stmt.addStatement("astore " + stmt.nextLocal());
+                stmt.addLocal(1);
+                break;
+
+        }
+    }
+
+    public void createObject(@NotNull HOMEParser.DeclarationContext ctx, String _class, String _parameter, Statements stmt){
         stmt.addStatement("new " + "java/lang/Integer");
         stmt.addStatement("dup");
         stmt.addStatement("ldc " + ctx.expression().getText());
 
-        Integer derp = new Integer(5);
 
         if (ctx.expression() != null){
             stmt.addStatement("invokespecial " + "java/lang/Integer" + "/<init>(I)V");

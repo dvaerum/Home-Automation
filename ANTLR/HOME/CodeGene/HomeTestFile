@@ -5,8 +5,6 @@ Integer c = 500
 Integer d = -100
 function Setup() returns Nothing
     Integer tester = 4
-    if(a==b)
-    endif
 endfunction
 
 function test(Integer x, List<Integer> y) returns Nothing

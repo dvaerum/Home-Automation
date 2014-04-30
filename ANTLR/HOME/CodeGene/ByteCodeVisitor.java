@@ -42,6 +42,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             stmts.build();
             Write(String.format("return %s", this._return));
             Write(this._end);
+            Write("");
         }
     }
 
@@ -104,6 +105,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             stmts.build();
             Write("return");
             Write(_end);
+            Write("");
         }
     }
 
@@ -239,11 +241,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
         switch(str){
             case "Integer":
-                return "Ljava/lang/Integer";
+                return "Ljava/lang/Integer;";
             case "Decimal":
-                return "Ljava/lang/Double";
+                return "Ljava/lang/Double;";
             case "String":
-                return "Ljava/lang/String";
+                return "Ljava/lang/String;";
             case "Boolean":
                 return "Z";
             case "Time": // We need our own class here
@@ -308,16 +310,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     }
 
     public void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmt) {
-        stmt.addStatement("new " + bytecodeType(ctx.type().getText()), 1);
+        stmt.addStatement("new " + "java/lang/Integer");
         stmt.addStatement("dup");
+        stmt.addStatement("ldc " + ctx.expression().getText());
+
+        Integer derp = new Integer(5);
 
         if (ctx.expression() != null){
-            stmt.addStatement("invokespecial " + bytecodeType(ctx.type().getText()) + "/<init>()V");
+            stmt.addStatement("invokespecial " + "java/lang/Integer" + "/<init>(I)V");
         }
-
-        Integer tester = new Integer(2);
-        ctx.type().getText();
-
     }
 
     @Override

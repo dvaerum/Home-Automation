@@ -32,19 +32,20 @@
     putfield HOME/d Ljava/lang/Integer;
 return
 .end method
+
 .method public static main([Ljava/lang/String;)V
     .limit stack 32
-    .limit locals 33
-    new Ljava/lang/Integer
+    .limit locals 32
+    new java/lang/Integer
     dup
-    invokespecial Ljava/lang/Integer/<init>()V
-    ldc a==b
-    if_cmpne goto Label1
-    Label1:
+    ldc 4
+    invokespecial java/lang/Integer/<init>(I)V
 return 
 .end method
-.method public test(Ljava/lang/Integer)V
+
+.method public test(Ljava/lang/Integer;)V
     .limit stack 1
     .limit locals 32
 return 
 .end method
+

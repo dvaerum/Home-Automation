@@ -1,11 +1,11 @@
-package SymbolTableNew; /**
+package HOME.SymbolTable; /**
  * Created by Frederik on 09-04-2014.
  */
 
 /**
  * Created by Frederik on 13-03-14.
  */
-public class SymbolTableNew
+public class SymbolTable
 {
     public FunctionTable functions = new FunctionTable();
     public TypeTable types = new TypeTable();

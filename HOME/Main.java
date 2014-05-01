@@ -1,8 +1,8 @@
 package HOME;
 import HOME.Grammar.*;
+import HOME.SymbolTable.SymbolTable;
 import HOME.Type.*;
 
-import SymbolTableNew.SymbolTableNew;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -15,7 +15,7 @@ import java.util.Arrays;
  */
 public class Main
 {
-    public static SymbolTableNew symbolTable = new SymbolTableNew();
+    public static SymbolTable symbolTable = new SymbolTable();
 
     public static Type nothing = new Type("Nothing");
     public static Type generic = new Type("#Generic");
@@ -34,8 +34,6 @@ public class Main
 
     public static void main(String[] args) throws IOException
     {
-        //System.out.println("\n-----------------------------Loader-----------------------\n");
-        //       try{
         HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.program();
@@ -82,8 +80,11 @@ public class Main
         if (!(returnType instanceof ErrorType))
         {
             System.out.println("-----------------------------Typechecker-----------------------");
-            Type type = typeChecker.visit(tree);
-            System.out.println("Testing");
+            Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
+            if(type instanceof ErrorType)
+                System.out.println("Error, halting!");
+            else
+                System.out.println("Success");
         }
 
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
@@ -91,12 +92,5 @@ public class Main
 //        lol.inspect(parser);
 //=================================================================================
 
-        /*
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-            //System.err.println(e.initCause(e.getCause()));
-        }
-        */
     }
 }

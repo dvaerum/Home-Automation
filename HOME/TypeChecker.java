@@ -53,8 +53,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 returnType = new ErrorType( String.format("Missing return statement at function: %s", currentFunction));
             else if(ctx.stmts().getChildCount() > 0)
             {
-                System.out.println(String.format("Warning line %d: Reached unreachable code!", ctx.getStart().getLine()));
-                ctx.removeLastChild();
+                System.out.println(String.format("WARNING line %d: Reached unreachable code!", ctx.getStart().getLine()));
+                //ctx.removeLastChild();
             }
         }
         else if(ctx.stmt().variableMethodCall() != null)
@@ -70,8 +70,40 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return returnType;
         }
 
+        Type stmtsType = null;
         if(ctx.stmts() != null && ctx.stmts().getChildCount() > 0)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
+
+        return returnType;
+    }
+
+    @Override
+    public Type visitBlock(@NotNull HOMEParser.BlockContext ctx)
+    {
+        Type returnType = Main.nothing;
+        Type blockType;
+
+        //Checks if function exists
+        if(ctx.function() != null)
+        {
+            returnType = visitFunction(ctx.function());
+        }
+
+        if(returnType instanceof ErrorType)
+        {
+            return returnType;
+        }
+
+        //Calls visitBlock recursively if it hasn't failed already.
+        if(ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
+        {
+            blockType = visitBlock(ctx.moreFunctions().block());
+            if(!blockType.equals(Main.nothing))
+                returnType = blockType;
+        }
 
         return returnType;
     }
@@ -194,6 +226,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 System.out.println(String.format("Warning at line %d: Function doesn't contain any return statement", ctx.getStart().getLine()));
             }
         }
+        else if(stmtsType instanceof ErrorType)
+            returnType = stmtsType;
 
         forkReturnStack.dispose();
 
@@ -303,32 +337,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         return returnList;
     }
-/*
-    @Override
-    public Type visitFuncParameters(@NotNull HOMEParser.FuncParametersContext ctx)
-    {
-        Type returnType = new Type("Nothing", new ArrayList<Type>());
-        ArrayList<Type> genericList = new ArrayList<>();
 
-        for(HOMEParser.ExpressionContext currCtx : ctx.expression())
-        {
-            if(currCtx.expression() != null)
-                genericList.add(visitExpression(currCtx));
-
-//            //literal
-//            if(currCtx.literal() != null)
-//                genericList.add(visitLiteral(currCtx.literal()));
-//            else if(currCtx.identifierOrListIndex() != null) //variable
-//                genericList.add(new HOME.Type(scope.getSymbol(currCtx.getText()).type.primaryType));
-//            else
-//                System.out.println("WARNING: INCORRECT FUNCTION PARAMETER!: " + currCtx.getText());
-        }
-
-        returnType.value = genericList;
-        return returnType;
-    }
-
-*/
     @Override
     public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
     {
@@ -443,7 +452,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             expression = visitExpression(ctx.expression());
             if(expression instanceof ErrorType)
                 return expression;
-
         }
 
         if(!Main.symbolTable.variables.addSymbol(identifier, type))
@@ -457,11 +465,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 addConversionNode(type, expression, ctx.expression());
             returnType = type;
         }
-//        else if(type.equals(Main.decimal) && expression.equals(Main.integer))
-//        {
-//            System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
-//            //System.out.println("\t Integer should be converted!");
-//            returnType = Main.decimal;
 //        }
         else
             returnType = new ErrorType(String.format("Incompatible types. Expected %s, got %s", type, expression));
@@ -469,235 +472,107 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    /*
-    /**public HOME.Type checkCollectionInit(HOMEParser.ExpressionContext ctx, boolean isList, HOME.Type.TypeEnum targetType)
-     {
-     HOME.Type returnType;
+    public Type checkInnerExpressions(@NotNull HOMEParser.ExpressionContext ctx)
+    {
+        Type returnType;
+        Type r1 = null, r2 = null;
+        String operator = null;
 
-     //If we're working with a list
-     if(isList){
+        //1 expr = expression in parenteses
+        if(ctx.expression().size() == 1)
+        {
+            returnType = visitExpression(ctx.expression().get(0));
+            if(ctx.getChild(0).getText().equals("+") || ctx.getChild(0).getText().equals("-"))
+            {
+                //unary + or - can only be in front of integer and decimal
+                if(! (returnType.equals(Main.integer) || returnType.equals(Main.decimal)) )
+                {
+                    returnType = new ErrorType(String.format("Unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()));
+                }
+            }
 
-     if(ctx.collectionInit() == null){
-     return visitExpression(ctx);
-     }
-     for(HOMEParser.ExpressionContext eCtx : ctx.collectionInit().expression())
-     {
-     if(!visitExpression(eCtx).equals(targetType))
-     {
-     return new HOME.Type("Error", "List value not right.");
-     }
-     }
-     return new HOME.Type(targetType);
-     }
+            return returnType;
+        }
+        else //else two expressions
+        {
+            r1 = visitExpression(ctx.expression(0));
+            operator = ctx.getChild(1).getText();
+            r2 = visitExpression(ctx.expression(1));
 
-     if(ctx.collectionInit().expression(0) != null && ctx.collectionInit().expression(1) == null)
-     {
-     returnType = new HOME.Type("Error", "Wrong initializer for dictionary.");
-     }
-     else if(visitExpression(ctx.collectionInit().expression(0)).equals("String"))
-     {
-     returnType = visitExpression(ctx.collectionInit().expression(1));
-     }
-     else
-     {
-     returnType = new HOME.Type("Error", "Dictionary key must be string!");
-     }
-     return returnType;
-     }*/
+            if (r1 instanceof ErrorType)
+                return r1;
+            else if (r2 instanceof ErrorType)
+                return r2;
 
+            if(isBooleanOperator(operator))
+            {
+                //If AND or OR is used, check that both sides are boolean, else throw an error
+                if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
+                    returnType = new ErrorType(String.format("AND/OR can't be used with other types than boolean"));
+                    //If comparison is used, and both sides are not numbers, throw an error
+                else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1)) && (r1.equals(Main.integer) || r1.equals(Main.decimal))))
+                    returnType = new ErrorType(String.format("Comparison can only be used with integers and decimals"));
+                    //check if both sides of expression is boolean
+                else if(((operator.equals("==") || operator.equals("!=")) && !(r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1))))
+                    returnType = new ErrorType("Can't use equals on different types");
+                    //Else accept the expression
+                else
+                    returnType = Main.bool;
+            }
+            // Check for a single literal
+            //Check if type is equal
+            else if(r1.equals(r2))
+            {
+                if(r1.equals(Main.bool))
+                    returnType = new ErrorType("Can't use this operator with Booleans");
+                else if(r1.equals(Main.string) && !operator.equals("+"))
+                    returnType = new ErrorType("String can only be concatenated with \"+\", no other operations allowed");
+                else
+                    returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
+            }
+            //Check if it is possible to convert from Int to Dec
+            else if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
+            {
+                addIntToDecNode(ctx.expression(0));
+                returnType = Main.decimal;
+            }
+            else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
+            {
+                addIntToDecNode(ctx.expression(1));
+                returnType = Main.decimal;
+            }
+            else
+            {
+                returnType = new ErrorType(String.format("Incompatible types %s and %s", r1, r2));
+            }
+        }
+        return returnType;
+    }
 
     @Override
     public Type visitExpression(@NotNull HOMEParser.ExpressionContext ctx)
     {
         Type returnType = new ErrorType("Unknown expression");
+
         //Check the expression consists of additional expressions.
-
         if(ctx.expression().size() > 0)
-        {
-            Type r1 = null, r2 = null;
-            String operator = null;
-
-            //1 expr = expression in parenteses
-            if(ctx.expression().size() == 1)
-            {
-                returnType = visitExpression(ctx.expression().get(0));
-                if(ctx.getChild(0).getText().equals("+") || ctx.getChild(0).getText().equals("-"))
-                {
-                    //unary + or - can only be in front of integer and decimal
-                    if(! (returnType.equals(Main.integer) || returnType.equals(Main.decimal)) )
-                    {
-                        returnType = new ErrorType(String.format("unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()));
-                    }
-                }
-
-                return returnType;
-            }
-            else //else two expressions
-            {
-                r1 = visitExpression(ctx.expression(0));
-                operator = ctx.getChild(1).getText();
-                r2 = visitExpression(ctx.expression(1));
-
-                if (r1 instanceof ErrorType)
-                    return r1;
-                else if (r2 instanceof ErrorType)
-                    return r2;
-
-                if(isBooleanOperator(operator))
-                {
-                    //If AND or OR is used, check that both sides are boolean, else throw an error
-                    if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
-                        returnType = new ErrorType(String.format("AND/OR can't be used with other types than boolean"));
-                        //If comparison is used, and both sides are not numbers, throw an error
-                    else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1)) && (r1.equals(Main.integer) || r1.equals(Main.decimal))))
-                        returnType = new ErrorType(String.format("Comparison can only be used with integers and decimals"));
-                        //check if both sides of expression is boolean
-                    else if(((operator.equals("==") || operator.equals("!=")) && !(r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1))))
-                        returnType = new ErrorType("Can't use equals on different types");
-                        //Else accept the expression
-                    else
-                        returnType = Main.bool;
-                }
-                // Check for a single literal
-                //Check if type is equal
-                else if(r1.equals(r2))
-                {
-                    if(r1.equals(Main.bool))
-                        returnType = new ErrorType("Can't use this operator with Booleans");
-                    else if(r1.equals(Main.string) && !operator.equals("+"))
-                        returnType = new ErrorType("String can only be concatenated with \"+\", no other operations allowed");
-                    else
-                        returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
-                }
-                //Check if it is possible to convert from Int to Dec
-                else if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
-                {
-                    addIntToDecNode(ctx.expression(0));
-                    returnType = Main.decimal;
-                }
-                else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
-                {
-                    addIntToDecNode(ctx.expression(1));
-                    returnType = Main.decimal;
-                }
-                else
-                {
-                    returnType = new ErrorType(String.format("Incompatible types %s and %s", r1, r2));
-                }
-            }
-        }
-        // Is expression doesn't contain any expressions, use below
+            returnType = checkInnerExpressions(ctx);
+        // If expression doesn't contain any expressions, use one of the following:
         else if(ctx.funcCall() != null)
-        {
             returnType = visitFuncCall(ctx.funcCall());
-        }
         else if(ctx.literal() != null)
-        {
             returnType = visitLiteral(ctx.literal());
-        }
         else if(ctx.variableMethodCall() != null)
-        {
-            //System.out.println("Expression should not go into variableMethodCall() yet");
             returnType = visitVariableMethodCall(ctx.variableMethodCall());
-        }
         else if(ctx.identifier() != null)
-        {
             returnType = visitIdentifier(ctx.identifier());
-        }
         else if(ctx.listIndex() != null)
-        {
             returnType = visitListIndex(ctx.listIndex());
-        }
         else if(ctx.field() != null)
-        {
             returnType = visitField(ctx.field());
-        }
 
         return returnType;
     }
-/*
-    @Override
-    public Type visitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx)
-    {
-        Type outerType = new Type("List");
-        Type containedType = null;
-        Type previousContained = null;
-        boolean notDictionary = true;
-
-        if (ctx.expression().size() > 0)
-        {
-            containedType = visitExpression(ctx.expression(0));
-
-            // Check if initializer is a Dictionary
-            for(HOMEParser.ExpressionContext expr : ctx.expression())
-            {
-                if(expr.collectionInit() != null && expr.collectionInit().expression().size() == 2)
-                {
-                    Type first = visitExpression(expr.collectionInit().expression(0));
-                    Type second = visitExpression(expr.collectionInit().expression(1));
-                    if (first.equals("String"))
-                    {
-                        if (second.equals("String"))
-                        {
-                            // HOME.Type is Dictionary<String> or List<List<String>>
-                            outerType = new Type("ListListOrDictionary");
-                        }
-                        else
-                        {
-                            // HOME.Type is Dictionary<HOME.Type>
-                            outerType = new Type("Dictionary");
-                        }
-                        containedType = second;
-                        if (previousContained != null && !previousContained.equals(containedType))
-                        {
-                            // Error, different types.
-                            return new Type("Error", "Invalid collection initializer");
-                        }
-                        previousContained = second;
-                        notDictionary = false;
-                    }
-                    else
-                    {
-                        // First value in inner collectionInitializer is not String, therefore this collectionInitializer can't be a Dictionary.
-                        notDictionary = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    // Inner collectionInitializer does not have 2 values or doesn't exist, therefore this collectionInitializer can't be a Dictionary.
-                    notDictionary = true;
-                    break;
-                }
-            }
-
-            if (notDictionary)
-            {
-                // Collection is List
-                outerType = new Type("List");
-                containedType = visitExpression(ctx.expression(0));
-                previousContained = containedType;
-                for(HOMEParser.ExpressionContext expr : ctx.expression())
-                {
-                    Type exprType = visitExpression(expr);
-                    if (containedType.equals("Anything"))
-                    {
-                        containedType = exprType;
-                    }
-                    if (!previousContained.compatibleWith(exprType) && !exprType.compatibleWith(previousContained) || exprType.primaryType.equals("Error"))
-                        return new Type("Error", "Invalid collection initializer");
-                    previousContained = exprType;
-                }
-            }
-        }
-        else
-        {
-            containedType = new Type("Anything");
-        }
-
-        return new Type(outerType.primaryType, containedType.toList());
-    }
-*/
 
     @Override
     public Type visitLiteral(@NotNull HOMEParser.LiteralContext ctx)
@@ -849,7 +724,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return Main.symbolTable.types.getSymbol(className);
         }
 
-        return new ErrorType("Undefined Class");
+        return new ErrorType(String.format("Undefined Type, \"%s\" isn't defined", className));
     }
 
 //    @Override
@@ -1107,16 +982,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
 
-    //TODO: Newline i starten fucker stuff op med blocks.
-    //TODO: Beslut: passing by references vs value
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
-    //TODO: Tilføj konvertingsnoder ved int til decimal i IsSubtypeOf().
+    //TODO: When CollectionTypes are initialized, only the methods are copied, but neither the fields nor the constructor are copied.
     // ------- NEW GRAMMAR -------
 
     // --------- Til 2. iteration --------
-    //TODO: [lav prioritet]del visitExpression op, sÃƒÆ’Ã†â€™Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ãƒâ€šÃ‚Â¥ det er mere overskueligt.
-    //TODO: Foreach (Vent til collection)
     //TODO: Events
-    //TODO: Change grammar so that methods can only be used after an identifier.
 
 }

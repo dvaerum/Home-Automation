@@ -1,11 +1,10 @@
-package SymbolTableNew; /**
+package HOME.SymbolTable; /**
  * Created by Frederik on 09-04-2014.
  */
 
 import HOME.Type.*;
 
-import java.lang.Boolean;import java.lang.String;import java.util.ArrayDeque;
-import java.util.Deque;
+import java.lang.Boolean;import java.lang.String;
 import java.util.HashMap;
 
 /**

@@ -1,4 +1,4 @@
-package SymbolTableNew; /**
+package HOME.SymbolTable; /**
 * Created by Frederik on 13-03-14.
 */
 import HOME.Type.*;

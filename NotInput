@@ -4,8 +4,12 @@ function Setup() returns Nothing
     Input i = Input(PORT[1])
     Integer d = 5
 
+    if(true)
+        String i = "Hej"
+    endif
+
     RegisterEvent(i.ONTOGGLED, hej)
-    detp(i,i,i,i)
+    //detp(i,i,i,i)
 
 endfunction
 

@@ -13,4 +13,8 @@ class Input
         - toString(Integer, Decimal) > String
         - ultraLol(Integer) > Integer
     endmethods
+
+    bytecode
+        - Ljava/lang/Integer;
+    endbytecode
 endclass

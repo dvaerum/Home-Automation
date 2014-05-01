@@ -19,6 +19,7 @@ public class Type
     public List<Variable> fields = new ArrayList<>();
     public Function constructor;
     public List<Function> methods = new ArrayList<>();
+    public String bytecode;
 
 
     public Type()
@@ -45,7 +46,7 @@ public class Type
         return list;
     }
 
-    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
     {
         this.isFinal = true;
         //Add classname into name field
@@ -66,8 +67,10 @@ public class Type
 
         //--------------Constructor parsing---------------------
         if(constructorName != null)
-        {
             constructorName = constructorName.replaceAll("- ", "");
+
+        if(constructorName.equals(name))
+        {
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
             //Prepares list of parameters for constructor.
@@ -88,6 +91,8 @@ public class Type
             //Create function-type
             //And insert into constructor field
         }
+        else
+            System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
 
 
 
@@ -134,6 +139,7 @@ public class Type
             }
         }
 
+        this.bytecode = bytecode;
         //--------------End of constructor---------------------
     }
 

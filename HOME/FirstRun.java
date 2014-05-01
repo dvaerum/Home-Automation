@@ -43,7 +43,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         Type returnType = Main.nothing;
         Type blockType;
 
-        //Checks if function already exist
+        //Checks if function exists
         if(ctx.function() != null)
         {
             returnType = visitFunction(ctx.function());

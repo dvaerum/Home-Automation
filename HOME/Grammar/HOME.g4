@@ -139,15 +139,19 @@ IdentifierExact
     ;
 
 
-
 //---------------Expression---------------
 
 expression
-    : expression ('*'|'/'|'%') expression
-    | expression ('+'|'-') expression
-    | ('+'|'-') expression
- //   | ('++'|'--') identifierOrListIndex
-    | expression logicalOperator expression
+    : SUB expression
+    | expression (MUL|DIV|MOD) expression
+    | expression (ADD|SUB) expression
+    | expression (LE | GE | GT | LT) expression
+    | expression (EQUAL | NOTEQUAL) expression
+    | expression and expression
+    | expression or expression
+//    | expression logicalOperator expression
+//    | expression and expression
+//    | expression or expression
     | funcCall
     | literal
     | int2dec
@@ -266,7 +270,10 @@ BANG            : '!';
 SEMICOLON       : ';';
 
 //Logical operators
-logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
+//logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
+
+and             : 'AND';
+or              : 'OR';
 NOTEQUAL        : '!=';
 EQUAL           : '==';
 GT              : '>';

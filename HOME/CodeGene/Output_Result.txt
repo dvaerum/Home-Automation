@@ -1,0 +1,112 @@
+Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
+  Last modified Apr 25, 2014; size 561 bytes
+  MD5 checksum 5a99379a8ac9a5917672ff29c0279e65
+  Compiled from "HOME.java"
+public class HOME
+  SourceFile: "HOME.java"
+  minor version: 3
+  major version: 45
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = NameAndType        #43:#5         //  a:Ljava/lang/Integer;
+   #2 = Class              #23            //  HOME
+   #3 = Utf8               ()V
+   #4 = Utf8               main
+   #5 = Utf8               Ljava/lang/Integer;
+   #6 = Utf8               java/lang/Object
+   #7 = Utf8               java/lang/Integer
+   #8 = NameAndType        #33:#37        //  s:Ljava/lang/String;
+   #9 = Fieldref           #2.#8          //  HOME.s:Ljava/lang/String;
+  #10 = Class              #6             //  java/lang/Object
+  #11 = Class              #7             //  java/lang/Integer
+  #12 = NameAndType        #42:#5         //  b:Ljava/lang/Integer;
+  #13 = String             #24            //  Hej
+  #14 = NameAndType        #15:#18        //  valueOf:(I)Ljava/lang/Integer;
+  #15 = Utf8               valueOf
+  #16 = Integer            -100
+  #17 = Fieldref           #2.#31         //  HOME.d:Ljava/lang/Integer;
+  #18 = Utf8               (I)Ljava/lang/Integer;
+  #19 = Fieldref           #2.#12         //  HOME.b:Ljava/lang/Integer;
+  #20 = Utf8               ConstantValue
+  #21 = NameAndType        #40:#5         //  c:Ljava/lang/Integer;
+  #22 = Integer            70000
+  #23 = Utf8               HOME
+  #24 = Utf8               Hej
+  #25 = Utf8               ([Ljava/lang/String;)V
+  #26 = Integer            30000
+  #27 = NameAndType        #30:#3         //  "<init>":()V
+  #28 = Integer            500
+  #29 = Utf8               SourceFile
+  #30 = Utf8               <init>
+  #31 = NameAndType        #39:#5         //  d:Ljava/lang/Integer;
+  #32 = Methodref          #10.#27        //  java/lang/Object."<init>":()V
+  #33 = Utf8               s
+  #34 = Methodref          #11.#14        //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #35 = Utf8               HOME.java
+  #36 = Fieldref           #2.#21         //  HOME.c:Ljava/lang/Integer;
+  #37 = Utf8               Ljava/lang/String;
+  #38 = Fieldref           #2.#1          //  HOME.a:Ljava/lang/Integer;
+  #39 = Utf8               d
+  #40 = Utf8               c
+  #41 = Utf8               Code
+  #42 = Utf8               b
+  #43 = Utf8               a
+{
+  public java.lang.String s;
+    flags: ACC_PUBLIC
+    ConstantValue: String Hej
+
+
+  public java.lang.Integer a;
+    flags: ACC_PUBLIC
+    ConstantValue: int 70000
+
+
+  public java.lang.Integer b;
+    flags: ACC_PUBLIC
+    ConstantValue: int 30000
+
+
+  public java.lang.Integer c;
+    flags: ACC_PUBLIC
+    ConstantValue: int 500
+
+
+  public java.lang.Integer d;
+    flags: ACC_PUBLIC
+    ConstantValue: int -100
+
+
+  public HOME();
+    flags: ACC_PUBLIC
+    Code:
+      stack=32, locals=32, args_size=1
+         0: aload_0
+         1: invokespecial #32                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #13                 // String Hej
+         7: putfield      #9                  // Field s:Ljava/lang/String;
+        10: aload_0
+        11: ldc           #22                 // int 70000
+        13: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        16: putfield      #38                 // Field a:Ljava/lang/Integer;
+        19: aload_0
+        20: sipush        30000
+        23: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        26: putfield      #19                 // Field b:Ljava/lang/Integer;
+        29: aload_0
+        30: sipush        500
+        33: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        36: putfield      #36                 // Field c:Ljava/lang/Integer;
+        39: aload_0
+        40: bipush        -100
+        42: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        45: putfield      #17                 // Field d:Ljava/lang/Integer;
+        48: return
+
+  public static void main(java.lang.String[]);
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=32, locals=32, args_size=1
+         0: return        
+}

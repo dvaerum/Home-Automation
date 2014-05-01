@@ -8,4 +8,8 @@ class Integer
     methods
         - toString(Integer, Decimal) > String
     endmethods
+
+    bytecode
+        - Ljava/lang/Integer;
+    endbytecode
 endclass

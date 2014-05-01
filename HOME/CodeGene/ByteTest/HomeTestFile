@@ -1,0 +1,67 @@
+function Setup() returns Nothing
+ Integer x = 213
+ Decimal y =24.3
+
+ /*******************
+ *****if/elseif/else*
+ *******************/
+ if(x == 334)
+
+ endif
+
+ if(x == 314)
+  x++
+ elseif(43 == x)
+  x = x + 123
+
+ else
+  x=x+4
+ endif
+
+ if(x == 3)
+  if(y == 3.3)
+   y++
+  else
+   y++
+  endif
+ endif
+
+ /**********
+ **Repeats**
+ **********/
+ repeat while(x == 3)
+  x++
+ endrepeat
+
+ repeat until(true == (4 > 5.1))
+  x++
+ endrepeat
+
+ repeat while(y < 3.2)
+  repeat while(x > 3)
+   y++
+  endrepeat
+ endrepeat
+
+ /***********
+ *Expresssions**
+ ***********/
+
+ //Integer intnnnn  = 3 * (3*3)+intnnnn
+    Boolean booltest1 = true AND (false OR true)
+    Boolean booltest2 = 3 > 3 AND true
+    Boolean booltest3 = ((((((((((true))))))OR false))))
+    String f = "asdf"
+
+    /**************
+    ****Classes****
+    **************/
+
+    Input TestingObj
+    //TestingObj.x = 334     //x = int
+    //TestingObj.y = 35.3    //y = dec
+    //TestingObj.y = 34
+
+    Input TestingObj2 = Input(34, 53.5)
+    //String resultString = TestingObj2.ultralol(343)
+endfunction

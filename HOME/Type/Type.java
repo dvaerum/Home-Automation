@@ -19,10 +19,19 @@ public class Type
     public List<Variable> fields = new ArrayList<>();
     public Function constructor;
     public List<Function> methods = new ArrayList<>();
+    public String bytecode;
 
 
     public Type()
     {
+    }
+
+    public Type(Type t)
+    {
+        name = new String(t.name);
+        fields = new ArrayList<Variable>(t.fields);
+        constructor = t.constructor;
+        methods = new ArrayList<Function>(t.methods);
     }
 
     public Type(String name) {
@@ -30,7 +39,14 @@ public class Type
         this.name = name;
     }
 
-    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
+    public ArrayList<Type> toList()
+    {
+        ArrayList<Type> list = new ArrayList<Type>();
+        list.add(this);
+        return list;
+    }
+
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
     {
         this.isFinal = true;
         //Add classname into name field
@@ -43,7 +59,10 @@ public class Type
         for(String singleField : fieldNames)
         {
             String[] field = singleField.trim().split(" ");
-            this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
+            if(field[0].equals("Event"))
+                this.fields.add(new Variable(field[1], Main.event));
+            else
+                this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
         }
 
         //--------------Constructor parsing---------------------
@@ -56,6 +75,9 @@ public class Type
             ArrayList<Type> constrParams = new ArrayList<>();
             for(String paramStr : constrParamsStr)
             {
+                if(paramStr.equals(""))
+                    continue;
+
                 if(Main.symbolTable.types.symbolExists(paramStr))
                     constrParams.add(Main.symbolTable.types.getSymbol(paramStr));
                 else
@@ -63,9 +85,12 @@ public class Type
             }
 
             constructor = new Function(constructorName, this, constrParams);
+            Main.symbolTable.functions.addSymbol(constructorName, constructor);
             //Create function-type
             //And insert into constructor field
         }
+
+
 
         //--------------Method parsing---------------------
         Pattern methodPattern = Pattern.compile("([a-zA-Z0-9_]+)\\(((?:\\w(?:, )?)*)\\) > (\\w+)");
@@ -96,6 +121,9 @@ public class Type
 
                 for(String paramType : Arrays.asList(methodMatcher.group(2).replaceAll("\\s", "").split(",")))
                 {
+                    if(paramType.equals(""))
+                        continue;
+
                     if(!Main.symbolTable.types.symbolExists(paramType))
                         throw new Exception(String.format("Class %s didn't exist!", paramType));
                     else
@@ -107,7 +135,74 @@ public class Type
             }
         }
 
+        this.bytecode = bytecode;
         //--------------End of constructor---------------------
+    }
+
+    public static boolean isListSubtypeOfList(List<Type> l1, List<Type> l2)
+    {
+        if (l1.size() == l2.size())
+            for(int i=0; i < l1.size(); i++)
+            {
+                if (!l1.get(i).isSubtypeOf(l2.get(i)))
+                {
+                    return false;
+                }
+            }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static List<Type> copyTypeList(List<Type> list)
+    {
+        List<Type> newList = new ArrayList<Type>(list);
+
+        for(Type t : newList)
+        {
+            t = new Type(t);
+        }
+        return newList;
+    }
+
+    public boolean isSubtypeOf(Type otherType)
+    {
+        if(this.equals(Main.integer))
+        {
+            if(otherType.equals(Main.decimal))
+                return true;
+        }
+        else if(this.equals(Main.anything))
+            return true;
+
+
+        return this.equals(otherType);
+    }
+
+    public Function getMethodByName(String name)
+    {
+        for(Function func : methods)
+        {
+            if (name.equals(func.name))
+            {
+                return func;
+            }
+        }
+        return null;
+    }
+
+    public Variable getFieldByName(String name)
+    {
+        for(Variable var : fields)
+        {
+            if (name.equals(var.name))
+            {
+                return var;
+            }
+        }
+        return null;
     }
 
     public Type(String name, List<Variable> fields, Function constructor, List<Function> methods)

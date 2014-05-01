@@ -1,5 +1,6 @@
 package HOME.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,9 +8,9 @@ import java.util.List;
  */
 public class Function
 {
-    String name;
-    Type returnType;
-    List<Type> parameters;
+    public String name;
+    public Type returnType;
+    public List<Type> parameters;
 
     public Function(String name, Type returnType, List<Type> parameters)
     {
@@ -17,4 +18,10 @@ public class Function
         this.returnType = returnType;
         this.parameters = parameters;
     }
+
+    public Function()
+    {
+
+    }
+
 }

@@ -1,7 +1,0 @@
-Integer.add(Integer, Integer) > Integer
-String.toString() > String
-Integer.toString() > String
-Decimal.toString() > String
-Decimal.toInteger() > Integer
-Integer.add(Integer, Integer) > Integer
-Integer.test(Decimal) > Integer

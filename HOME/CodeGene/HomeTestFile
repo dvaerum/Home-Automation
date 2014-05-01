@@ -1,0 +1,6 @@
+function Setup() returns Nothing
+    Integer x = 0
+    repeat until (x < 100)
+        x++
+    endrepeat
+endfunction

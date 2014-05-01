@@ -1,13 +1,12 @@
 package SymbolTableNew; /**
-* Created by Frederik on 13-03-14.
-*/
+ * Created by Frederik on 13-03-14.
+ */
 import HOME.Type.*;
 
 public class SymbolInfo
 {
-    public String name;
-    public Type type;
-    int depth;
+    public Variable var;
+    public int depth;
 
 
     public SymbolInfo() {
@@ -15,8 +14,13 @@ public class SymbolInfo
 
     public SymbolInfo(String name, Type type, int depth)
     {
-        this.name = name;
-        this.type = type;
+        this.var = new Variable(name, type);
+        this.depth = depth;
+    }
+
+    public SymbolInfo(String name, Type type, int location, int depth)
+    {
+        this.var = new Variable(name, type, location);
         this.depth = depth;
     }
 

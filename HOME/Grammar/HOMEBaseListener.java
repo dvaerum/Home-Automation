@@ -19,19 +19,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPort(@NotNull HOMEParser.PortContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPort(@NotNull HOMEParser.PortContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpression(@NotNull HOMEParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -71,6 +58,32 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInt2dec(@NotNull HOMEParser.Int2decContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInt2dec(@NotNull HOMEParser.Int2decContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictionaryLiteral(@NotNull HOMEParser.DictionaryLiteralContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterStmts(@NotNull HOMEParser.StmtsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -91,6 +104,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBlock(@NotNull HOMEParser.BlockContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListIndex(@NotNull HOMEParser.ListIndexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListIndex(@NotNull HOMEParser.ListIndexContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -188,6 +214,32 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictionaryEntry(@NotNull HOMEParser.DictionaryEntryContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterListLiteral(@NotNull HOMEParser.ListLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDeclaration(@NotNull HOMEParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -201,13 +253,13 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondition(@NotNull HOMEParser.ConditionContext ctx) { }
+	@Override public void enterOr(@NotNull HOMEParser.OrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCondition(@NotNull HOMEParser.ConditionContext ctx) { }
+	@Override public void exitOr(@NotNull HOMEParser.OrContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -279,13 +331,26 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { }
+	@Override public void enterAnd(@NotNull HOMEParser.AndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { }
+	@Override public void exitAnd(@NotNull HOMEParser.AndContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterField(@NotNull HOMEParser.FieldContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitField(@NotNull HOMEParser.FieldContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -325,19 +390,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIdentifierOrListIndex(@NotNull HOMEParser.IdentifierOrListIndexContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -409,13 +461,13 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclarationParameterList(@NotNull HOMEParser.DeclarationParameterListContext ctx) { }
+	@Override public void enterIdentifier(@NotNull HOMEParser.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDeclarationParameterList(@NotNull HOMEParser.DeclarationParameterListContext ctx) { }
+	@Override public void exitIdentifier(@NotNull HOMEParser.IdentifierContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -442,19 +494,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCollectionInit(@NotNull HOMEParser.CollectionInitContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

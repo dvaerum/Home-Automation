@@ -1,6 +1,7 @@
 
 function Setup() returns Nothing
-    Integer tester = - (5 - 4) * 4 + 5
+    Integer tester = 4 + 5
+    Integer hej = tester + ((12 + 3) + tester) + 1
 endfunction
 
 function test(Integer x, List<Integer> y) returns Nothing

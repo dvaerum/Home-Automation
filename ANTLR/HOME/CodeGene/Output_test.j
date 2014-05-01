@@ -11,8 +11,17 @@ return
 
 .method public static main([Ljava/lang/String;)V
     .limit stack 32
-    .limit locals 1
+    .limit locals 2
+    ldc 9
+    istore 0
+    ldc 15
+    iload 0
+    iadd
+    iload 0
+    swap
+    iadd
     ldc 1
+    iadd
     istore 1
 return 
 .end method

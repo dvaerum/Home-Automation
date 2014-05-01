@@ -105,7 +105,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
 
         public int nextLocal() {
-            return this.limit_locale + 1;
+            return this.limit_locale;
         }
 
         public void build() {
@@ -294,7 +294,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
     }
 
-    public Object visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts) {
+    // Todo Remove denne metode
+    public Object visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, String str) {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.getText());
         if (symbolInfo.depth == 0) {
             stmts.addStatement("getfield " + symbolInfo.var.name);
@@ -499,7 +500,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return super.visitNewline(ctx);
     }
 
-    public expressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, String str) {
+    public expressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, boolean topFlag) {
         if (ctx.expression().size() > 0) {
             expressionReturn r1 = null, r2 = null;
             String operator = null;
@@ -507,7 +508,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             //1 expr = expression in parenteses
             if (ctx.expression().size() == 1) {
                 //parenthesis
-                expressionReturn _temp = visitExpression(ctx.expression().get(0), stmt, "");
+                expressionReturn _temp = visitExpression(ctx.expression().get(0), stmt, false);
 
                 //checks for unary operator
                 if (ctx.getChild(0).getText().equals("-")) {
@@ -517,9 +518,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                 return _temp;
             } else //else two expressions
             {
-                r1 = visitExpression(ctx.expression(0), stmt, "");
+                expressionReturn _return = null;
+                r1 = visitExpression(ctx.expression(0), stmt, false);
                 operator = getOperator(ctx);
-                r2 = visitExpression(ctx.expression(1), stmt, "");
+                r2 = visitExpression(ctx.expression(1), stmt, false);
 
 
                 if (isBooleanOperator(operator)) {
@@ -541,39 +543,97 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     }
                 }
 
+
+                else if (r1.equals(Main.variable) && r2.equals(Main.variable)) {
+                    if (!r1.returnValue.equals("")) {
+                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r1.returnValue));
+                    }
+                    if (!r2.returnValue.equals("")) {
+                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r2.returnValue));
+                    } else {
+                        stmt.addStatement("swap");
+                    }
+
+
+                    stmt.addStatement("iadd");
+
+                    if (!topFlag) {
+                        return new expressionReturn(Main.variable, "");
+                    }
+                }
+
+                else if (r1.equals(Main.variable)){
+                    if (!r1.returnValue.equals("")) {
+                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r1.returnValue));
+                    }
+                    stmt.addStatement("ldc " + Integer.parseInt(r2.returnValue));
+                    stmt.addStatement("iadd");
+
+                    if (!topFlag) {
+                        return new expressionReturn(Main.variable, "");
+                    }
+                }
+
+                else if (r2.equals(Main.variable)){
+                    stmt.addStatement("ldc " + Integer.parseInt(r1.returnValue));
+
+                    if (!r2.returnValue.equals("")) {
+                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r2.returnValue));
+                    } else {
+                        stmt.addStatement("swap");
+                    }
+
+                    stmt.addStatement("iadd");
+
+                    if (!topFlag) {
+                        return new expressionReturn(Main.variable, "");
+                    }
+                }
+
+
                 // Concat Strings and calc int and dec
                 else if (r1.equals(r2)) {
                     if (r1.equals(Main.integer)) {
                         switch (operator) {
                             case "+":
-                                return new expressionReturn(Main.integer,
+                                _return = new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) +
                                                                                 Integer.parseInt(r2.returnValue)));
+                                break;
                             case "-":
-                                return new expressionReturn(Main.integer,
+                                _return = new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) -
                                                             Integer.parseInt(r2.returnValue)));
-
+                                break;
                             case "/":
-                                return new expressionReturn(Main.integer,
+                                _return = new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) /
                                                             Integer.parseInt(r2.returnValue)));
-
+                                break;
                             case "*":
-                                return new expressionReturn(Main.integer,
+                                _return = new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) *
                                                             Integer.parseInt(r2.returnValue)));
-
+                                break;
                             case "%":
-                                return new expressionReturn(Main.integer,
+                                _return = new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) %
                                                             Integer.parseInt(r2.returnValue)));
+                                break;
                         }
+
+                        if (topFlag) {
+                            stmt.addStatement("ldc " + _return.returnValue);
+                        } else {
+                            return _return;
+                        }
+
                     } else if (r1.equals(Main.decimal)) {
 
                     } else if (r1.equals(Main.string)) {
 
                     }
+
                 }
 
                 //Check if it is possible to convert from Int to Dec
@@ -586,6 +646,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             }
         }
 
+
+
         // Is expression doesn't contain any expressions, use below
         else if (ctx.funcCall() != null) {
             visitFuncCall(ctx.funcCall());
@@ -595,7 +657,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             //System.out.println("Expression should not go into variableMethodCall() yet");
             visitVariableMethodCall(ctx.variableMethodCall());
         } else if (ctx.identifier() != null) {
-            visitIdentifier(ctx.identifier());
+            return visitIdentifier(ctx.identifier(), stmt);
         } else if (ctx.listIndex() != null) {
             visitListIndex(ctx.listIndex());
         } else if (ctx.field() != null) {
@@ -603,6 +665,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
 
         return null;
+    }
+
+    public expressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmt) {
+
+        return new expressionReturn(Main.variable, ctx.getText());
     }
 
     @Override
@@ -630,19 +697,21 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
         switch (type) {
             case "Integer":
-                stmt.addStatement("ldc " + visitExpression(ctx.expression(), stmt, "").returnValue); // TODO Add visitExpression
+                visitExpression(ctx.expression(), stmt, true); // TODO Add visitExpression
                 stmt.addStatement("istore " + stmt.nextLocal());
-                //symbolTable.variables.addSymbol("test", Main.Integer);
+                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.integer, stmt.nextLocal());
                 stmt.addLocal(1);
                 break;
             case "Decimal":
                 stmt.addStatement("ldc2_w " + ctx.expression().literal().getText()); // TODO Add visitExpression
                 stmt.addStatement("dstore " + stmt.nextLocal());
+                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.decimal, stmt.nextLocal());
                 stmt.addLocal(2);
                 break;
             case "String":
                 stmt.addStatement("ldc " + ctx.expression().literal().getText()); // TODO Add visitExpression
                 stmt.addStatement("istore " + stmt.nextLocal());
+                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.string, stmt.nextLocal());
                 stmt.addLocal(1);
                 break;
             case "Boolean":

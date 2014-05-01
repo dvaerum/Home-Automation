@@ -76,6 +76,11 @@ public class VariableTable
         return true;
     }
 
+    // Returns false if the symbol already exists in the current scope.
+    public int getLocation(String symbol) {
+        return getSymbol(symbol).var.location;
+    }
+
     public Boolean symbolExists(String symbol)
     {
         Deque<SymbolInfo> stack = table.get(symbol);

@@ -2,6 +2,7 @@ package HOME;
 import HOME.Grammar.*;
 import HOME.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import sun.org.mozilla.javascript.internal.ErrorReporter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else if(ctx.stmt().ifStmt() != null){
             returnType = visitIfStmt(ctx.stmt().ifStmt());
 
+            if(returnType instanceof ErrorType)
+                return returnType;
+
             if(forkReturnStack.closed() && ctx.stmt().ifStmt().elseStmt() != null){
                 if(ctx.stmts().getChildCount() > 0)
                 {
@@ -43,7 +47,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         }
         else if(ctx.stmt().loop() != null)
+        {
             returnType = visitLoop(ctx.stmt().loop());
+            if(returnType instanceof ErrorType)
+                return returnType;
+        }
         else if(ctx.stmt().funcCall() != null)
             returnType = visitFuncCall(ctx.stmt().funcCall());
         else if(ctx.stmt().returnFunction() != null)
@@ -747,8 +755,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
+        Type stmtsType = null;
         if(ctx.stmts().getChildCount() > 0)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
 
         Main.symbolTable.closeScope();
 
@@ -840,8 +852,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else if( !(returnType instanceof ErrorType) &&  !returnType.equals(Main.bool))
             returnType = new ErrorType(String.format("Loop expressions should be of type Boolean - got %s", returnType));
 
+        Type stmtsType = null;
         if(ctx.stmts().getChildCount() > 0)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
 
         Main.symbolTable.closeScope();
         return returnType;
@@ -867,8 +883,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Main.symbolTable.variables.addSymbol(ctx.identifier().getText(), returnType);
 
+        Type stmtsType = null;
         if(ctx.stmts().getChildCount() > 0)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
 
         Main.symbolTable.closeScope();
         return returnType;
@@ -984,6 +1004,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
     //TODO: When CollectionTypes are initialized, only the methods are copied, but neither the fields nor the constructor are copied.
+    //TODO: Search and destroy double error-printing, and missing propagation.
     // ------- NEW GRAMMAR -------
 
     // --------- Til 2. iteration --------

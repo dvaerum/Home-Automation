@@ -11,6 +11,12 @@ function Setup() returns Nothing
     RegisterEvent(i.ONTOGGLED, hej)
     //detp(i,i,i,i)
 
+    repeat foreach(Integer i in {1,2,3,4})
+        repeat foreach(Integer i in {1,2,3,4})
+            hejf()
+        endrepeat
+    endrepeat
+
 endfunction
 
 function detp(Integer i, Decimal j, Boolean b, Input g) returns Nothing

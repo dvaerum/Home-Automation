@@ -164,6 +164,14 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitOr(@NotNull HOMEParser.OrContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitGlobal(@NotNull HOMEParser.GlobalContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -204,7 +212,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitField(@NotNull HOMEParser.FieldContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAnd(@NotNull HOMEParser.AndContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -212,7 +220,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx) { return visitChildren(ctx); }
+	@Override public T visitField(@NotNull HOMEParser.FieldContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

@@ -186,7 +186,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     public void build() {
         globalVariables.build();
         setup.build();
-        for (Function f : this.functions) {
+        for(Function f : this.functions)
+        {
             f.build();
         }
     }
@@ -255,8 +256,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
     public void visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts) {
 
-        if (ctx.expression().size() > 0) {
-            if (ctx.expression().size() == 1) {
+        if(ctx.expression().size()>0)
+        {
+            if(ctx.expression().size() == 1)
+            {
 
 //                visitExpression(ctx.expression(0).expression(0));
 //
@@ -266,7 +269,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 //                Type LHSType = typeChecker.visitExpression(LHS);
 //
 //                visitLogicalOperator(logicalOperator, LHSType, stmts);
-            } else // two expressions
+            }
+            else // two expressions
             {
 //                HOMEParser.ExpressionContext RHS = ctx.expression(1);
 //                HOMEParser.LogicalOperatorContext logicalOperator = ctx.logicalOperator();
@@ -294,7 +298,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.getText());
         if (symbolInfo.depth == 0) {
             stmts.addStatement("getfield " + symbolInfo.var.name);
-            // TODO Michael start here
+
+// TODO Michael start here
         } else {
             stmts.addStatement("aload_" + symbolInfo.var.location);
         }
@@ -309,8 +314,46 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return BooleanOperator.contains(str);
     }
 
+    public String getOperator(HOMEParser.ExpressionContext expressionContext) {
+        if(expressionContext.expression().size()==1) {
+            return expressionContext.getChild(0).getText();
+        } else {
+            return expressionContext.getChild(1).getText();
+        }
+    }
+/*
+    public String getOperator(HOMEParser.ExpressionContext expressionContext){
+        // Gets the appropriate operator
+
+        if(expressionContext.EQUAL()!=null) {
+            return expressionContext.EQUAL().getText();
+        } else if(expressionContext.NOTEQUAL()!=null) {
+            return expressionContext.EQUAL().getText();
+        } else if(expressionContext.LE()!=null) {
+            return expressionContext.LE().getText();
+        } else if(expressionContext.GE()!=null) {
+            return expressionContext.GE().getText();
+        } else if(expressionContext.GT()!=null) {
+            return expressionContext.GT().getText();
+        } else if(expressionContext.LT()!=null) {
+            return expressionContext.LT().getText();
+        } else if(expressionContext.GT()!=null) {
+            return expressionContext.GT().getText();
+        } else if(expressionContext.MUL()!=null) {
+            return expressionContext.MUL().getText();
+        } else if(expressionContext.DIV()!=null) {
+            return expressionContext.DIV().getText();
+        } else if(expressionContext.MOD()!=null) {
+            return expressionContext.MOD().getText();
+        } else if(expressionContext.ADD()!=null) {
+            return expressionContext.ADD().getText();
+        } else if(expressionContext.SUB()!=null) {
+            return expressionContext.SUB().getText();
+        } else {return null;}
+    }
+*/
     public void visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx, Statements stmt) {
-        String operator = ctx.expression().logicalOperator().getText();
+        String operator = getOperator(ctx.expression());
         switch (operator) {
             case "==":
                 //stmt.addStatement("ldc " + ctx.expression().getText());
@@ -475,7 +518,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             } else //else two expressions
             {
                 r1 = visitExpression(ctx.expression(0), stmt, "");
-                operator = ctx.getChild(1).getText();
+                operator = getOperator(ctx);
                 r2 = visitExpression(ctx.expression(1), stmt, "");
 
 
@@ -501,7 +544,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                 // Concat Strings and calc int and dec
                 else if (r1.equals(r2)) {
                     if (r1.equals(Main.integer)) {
-                        switch (operator){
+                        switch (operator) {
                             case "+":
                                 return new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) +
@@ -525,7 +568,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                                 return new expressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) %
                                                             Integer.parseInt(r2.returnValue)));
-
                         }
                     } else if (r1.equals(Main.decimal)) {
 
@@ -685,6 +727,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     public Object visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx, Statements statements) {
         String label1 = symbolTable.newLabel();
         String label2 = symbolTable.newLabel();
+
 
 
         statements.addStatement("goto " + label2);

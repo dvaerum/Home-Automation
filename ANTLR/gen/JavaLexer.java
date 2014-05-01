@@ -1,4 +1,4 @@
-// Generated from /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/JavaGrammar.g4 by ANTLR 4.x
+// Generated from C:/Users/Marc/Documents/GitHub/Home-Automation/ANTLR\JavaGrammar.g4 by ANTLR 4.x
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

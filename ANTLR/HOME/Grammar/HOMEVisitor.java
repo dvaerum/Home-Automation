@@ -140,6 +140,13 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HOMEParser#or}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOr(@NotNull HOMEParser.OrContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HOMEParser#global}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -175,18 +182,18 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HOMEParser#and}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd(@NotNull HOMEParser.AndContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HOMEParser#field}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitField(@NotNull HOMEParser.FieldContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#logicalOperator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#newline}.

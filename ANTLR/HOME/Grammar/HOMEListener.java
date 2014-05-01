@@ -209,6 +209,17 @@ public interface HOMEListener extends ParseTreeListener {
 	void exitDeclaration(@NotNull HOMEParser.DeclarationContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HOMEParser#or}.
+	 * @param ctx the parse tree
+	 */
+	void enterOr(@NotNull HOMEParser.OrContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#or}.
+	 * @param ctx the parse tree
+	 */
+	void exitOr(@NotNull HOMEParser.OrContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HOMEParser#global}.
 	 * @param ctx the parse tree
 	 */
@@ -264,6 +275,17 @@ public interface HOMEListener extends ParseTreeListener {
 	void exitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link HOMEParser#and}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnd(@NotNull HOMEParser.AndContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#and}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnd(@NotNull HOMEParser.AndContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link HOMEParser#field}.
 	 * @param ctx the parse tree
 	 */
@@ -273,17 +295,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitField(@NotNull HOMEParser.FieldContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#logicalOperator}.
-	 * @param ctx the parse tree
-	 */
-	void enterLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#logicalOperator}.
-	 * @param ctx the parse tree
-	 */
-	void exitLogicalOperator(@NotNull HOMEParser.LogicalOperatorContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#newline}.

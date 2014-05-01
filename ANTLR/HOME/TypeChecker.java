@@ -994,6 +994,29 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         returnType = visitType(ctx.type());
         Type collectionType;
 
+        collectionType = visitExpression(ctx.expression());
+        if (collectionType instanceof ErrorType)
+            return collectionType;
+        if (!(collectionType instanceof CollectionType))
+            return new ErrorType(String.format("Foreach loops must operate on collection types, got %s.", collectionType));
+
+        if (!returnType.equals(((CollectionType) collectionType).innerType))
+            return new ErrorType(String.format("Collection type doesn't match type of %s.", ctx.identifier().getText()));
+
+        Main.symbolTable.variables.addSymbol(ctx.identifier().getText(), returnType);
+
+        if(ctx.stmts().getChildCount() > 0)
+            visitStmts(ctx.stmts());
+
+        Main.symbolTable.closeScope();
+        return returnType;
+        /*
+        Main.symbolTable.openScope();
+        Type returnType;
+
+        returnType = visitType(ctx.type());
+        Type collectionType;
+
         if(ctx.identifier() != null)
         {
             collectionType = visitIdentifier(ctx.identifier(1));
@@ -1012,6 +1035,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Main.symbolTable.closeScope();
         return returnType;
+        */
     }
 
     @Override
@@ -1122,14 +1146,14 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
     //TODO: Fix multidimensional indexing (list[2][3])
-    //TODO: Fields pÃ¥ klasser.
+    //TODO: Fields pÃƒÂ¥ klasser.
     //TODO: Beslut: passing by references vs value
     //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
-    //TODO: Tilfï¿½j konvertingsnoder ved int til decimal i IsSubtypeOf().
+    //TODO: TilfÃ¯Â¿Â½j konvertingsnoder ved int til decimal i IsSubtypeOf().
     // ------- NEW GRAMMAR -------
 
     // --------- Til 2. iteration --------
-    //TODO: [lav prioritet]del visitExpression op, sÃƒÆ’Ã†â€™Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ãƒâ€šÃ‚Â¥ det er mere overskueligt.
+    //TODO: [lav prioritet]del visitExpression op, sÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥ det er mere overskueligt.
     //TODO: Foreach (Vent til collection)
     //TODO: Events
     //TODO: Change grammar so that methods can only be used after an identifier.

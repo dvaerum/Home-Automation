@@ -1,11 +1,9 @@
 package HOME.Type;
 
 import HOME.*;
-import HOME.Grammar.HOMEParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +19,7 @@ public class Type
     public List<Variable> fields = new ArrayList<>();
     public Function constructor;
     public List<Function> methods = new ArrayList<>();
+    public String bytecode;
 
 
     public Type()
@@ -47,7 +46,7 @@ public class Type
         return list;
     }
 
-    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods) throws Exception
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
     {
         this.isFinal = true;
         //Add classname into name field
@@ -60,7 +59,10 @@ public class Type
         for(String singleField : fieldNames)
         {
             String[] field = singleField.trim().split(" ");
-            this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
+            if(field[0].equals("Event"))
+                this.fields.add(new Variable(field[1], Main.event));
+            else
+                this.fields.add( new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
         }
 
         //--------------Constructor parsing---------------------
@@ -133,6 +135,7 @@ public class Type
             }
         }
 
+        this.bytecode = bytecode;
         //--------------End of constructor---------------------
     }
 

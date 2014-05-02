@@ -2,14 +2,19 @@ class Input
     fields
         - Integer x
         - Decimal y
+        - Event ONTOGGLED
     endfields
 
     constructor
-        - Input(Integer, Decimal)
+        - Input(Integer)
     endconstructor
 
     methods
         - toString(Integer, Decimal) > String
         - ultraLol(Integer) > Integer
     endmethods
+
+    bytecode
+        - Ljava/lang/Integer;
+    endbytecode
 endclass

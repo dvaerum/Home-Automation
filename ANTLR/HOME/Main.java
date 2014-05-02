@@ -30,8 +30,9 @@ public class Main
     public static Type string;
     public static Type list;
     public static Type dictionary;
-    public static Type variable = new Type("variable");
+    public static Type variable = new Type("Variable");
     public static Type anything = new Type("Anything");
+    public static Type event = new Type("Event");
 
     public static void main(String[] args) throws IOException
     {

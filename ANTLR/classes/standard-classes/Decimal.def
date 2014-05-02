@@ -9,4 +9,8 @@ class Decimal
     methods
         - toString(Integer, Decimal) > String
     endmethods
+
+    bytecode
+        - Ljava/lang/Double;
+    endbytecode
 endclass

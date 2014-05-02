@@ -3,6 +3,7 @@ package HOME.CodeGene;
 import HOME.Grammar.HOMEBaseVisitor;
 import HOME.Grammar.HOMEParser;
 import HOME.Main;
+import HOME.Type.CollectionType;
 import HOME.Type.Type;
 import HOME.TypeChecker;
 import SymbolTableNew.SymbolTableNew;
@@ -105,7 +106,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
 
         public int nextLocal() {
-            return this.limit_locale;
+            return this.limit_locale + 1;
         }
 
         public void build() {
@@ -288,17 +289,65 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         } else if (ctx.identifier() != null) {
             visitIdentifier(ctx.identifier());
         } else if (ctx.listIndex() != null) {
-            visitListIndex(ctx.listIndex());
+            visitListIndex(ctx.listIndex(), stmts);
         } else if (ctx.field() != null) {
             visitField(ctx.field());
         }
     }
 
-    // Todo Remove denne metode
+    public Object visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts) {
+        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.IdentifierExact().getText());
+        CollectionType type = ((CollectionType) symbolInfo.var.type);
+
+        for (HOMEParser.ExpressionContext expressionContext : ctx.expression()) {
+            if (symbolInfo.depth == 0)
+            {
+                stmts.addStatement("aload_0");
+                stmts.addStatement("getfield " + "HOME/" + symbolInfo.var.name + "");
+                // list[2],
+                visitExpression(expressionContext);
+                switch(type.primaryType.name) {
+                    case "List":
+                        stmts.addStatement(String.format("invokeinterface java/util/List.get(%r)Ljava/lang/Object; 2","Ljava/lang/Object;")); // TODO replace '%r' if this doesn't work for everything
+                        break;
+                    case "Dictionary":
+                        stmts.addStatement(String.format("invokeinterface java/util/Map.get(%r)Ljava/lang/Object; 2","Ljava/lang/Object;")); // TODO replace '%r' if this doesn't work for everything
+
+                        break;
+                }
+                switch(type.innerType.name) {
+                    case "List":
+                        stmts.addStatement(String.format("checkcast class %r","java/util/List")); // TODO replace '%r' if this doesn't work for everything
+                        break;
+                    case "Dictionary":
+                        stmts.addStatement(String.format("checkcast class %r","java/util/Map")); // TODO replace '%r' if this doesn't work for everything
+
+                        break;
+                }
+
+
+                stmts.addStatement("aload_" + symbolInfo.var.location);
+            } else { // Local variable
+            }
+            visitExpression(expressionContext);
+
+            stmts.addStatement("pop");
+
+            type = (CollectionType) type.innerType;
+        }
+
+
+
+        return super.visitListIndex(ctx);
+    }
+
     public Object visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, String str) {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.getText());
+
         if (symbolInfo.depth == 0) {
-            stmts.addStatement("getfield " + symbolInfo.var.name);
+            String byteCodeClassName = refTable.get(symbolInfo.var.type.name);
+            // field is always in the same class which atm is 'HOME'. Hardcoded ftl
+            stmts.addStatement("getfield " + "HOME/" +  symbolInfo.var.name + byteCodeClassName);
 
 // TODO Michael start here
         } else {
@@ -329,7 +378,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         if(expressionContext.EQUAL()!=null) {
             return expressionContext.EQUAL().getText();
         } else if(expressionContext.NOTEQUAL()!=null) {
-            return expressionContext.EQUAL().getText();
+            return expressionContext.NOTEQUAL().getText();
         } else if(expressionContext.LE()!=null) {
             return expressionContext.LE().getText();
         } else if(expressionContext.GE()!=null) {
@@ -483,15 +532,29 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         } else if (ctx.ifStmt() != null) {
             visitIfStmt(ctx.ifStmt(), stmt);
         } else if (ctx.loop() != null) {
-
+            visitLoop(ctx.loop(), stmt);
         } else if (ctx.funcCall() != null) {
 
         } else if (ctx.variableMethodCall() != null) {
 
         } else if (ctx.incDec() != null) {
-
+            visitIncDec(ctx.incDec(), stmt);
+        } else if (ctx.returnFunction() != null){
+            visitReturnFunction(ctx.returnFunction(), stmt);
         }
         Double d = 2.0;
+    }
+
+    public Object visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements _stmts) {
+        //int location = symbolTable.variables.getSymbol(ctx.identifier().getText()).var.location;
+        int location = 42;
+        if(ctx.getChild(1).getText() == "++"){
+            _stmts.addStatement("iinc " + location + " 1");
+        } else {
+            _stmts.addStatement("iinc " + location + " -1");
+        }
+
+        return super.visitIncDec(ctx);
     }
 
     @Override
@@ -633,7 +696,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     } else if (r1.equals(Main.string)) {
 
                     }
-
                 }
 
                 //Check if it is possible to convert from Int to Dec
@@ -645,8 +707,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
             }
         }
-
-
 
         // Is expression doesn't contain any expressions, use below
         else if (ctx.funcCall() != null) {
@@ -793,31 +853,108 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return super.visitGlobal(ctx);
     }
 
+    public Object visitLoop(@NotNull HOMEParser.LoopContext ctx, Statements statements) {
+        if(ctx.loopForeach() != null){
+            visitLoopForeach(ctx.loopForeach());
+        } else if(ctx.loopWhileOrUntil() != null){
+            visitLoopWhileOrUntil(ctx.loopWhileOrUntil(), statements);
+        }
+
+        return super.visitLoop(ctx);
+    }
+
+    public Object visitLoopForeach(@NotNull HOMEParser.LoopForeachContext ctx, Statements statements) {
+        //TODO: MAKE FOREACH WORK - WHEN LISTS AND DICTIONARIES WORK
+       return super.visitLoopForeach(ctx);
+    }
+
     public Object visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx, Statements statements) {
         String label1 = symbolTable.newLabel();
         String label2 = symbolTable.newLabel();
+        String loopType = ctx.getChild(1).getText();
 
-
-
-        statements.addStatement("goto " + label2);
-        statements.addStatement(label1 + ":");
+        if(loopType.equalsIgnoreCase("while")){
+            statements.addStatement("goto " + label2);
+            statements.addStatement(label1 + ":");
+        } else if(loopType.equalsIgnoreCase("until")){
+            statements.addStatement(label1 + ":");
+            // CHECK CONDITION. IF TRUE GOTO LABEL2);
+            // visitExpression(ctx.expression(), label2);
+        }
 
         // DO STUFF HERE
         visitStmts(ctx.stmts(), statements);
 
-        statements.addStatement(label2 + ":");
 
-        // CHECK LOOP CONDITION HERE
-        // IF FALSE && WHILE, CONTINUE
-        // IF FALSE && UNTIL, GOTO LABEL1
-        // IF TRUE  && WHILE, GOTO LABEL1
-        // IF TRUE  && UNTIL, CONTINUE
-
-//        visitExpression(ctx.expression());
+        if(loopType.equalsIgnoreCase("while")){
+            statements.addStatement(label2 + ":");
+            // CHECK CONDITION. IF TRUE GOTO LABEL1);
+            // visitExpression(ctx.expression(), label1);
+        } else if(loopType.equalsIgnoreCase("until")){
+            statements.addStatement("goto " + label1);
+            statements.addStatement(label2 + ":");
+        }
 
         return super.visitLoopWhileOrUntil(ctx);
     }
 
+    public Object visitReturnFunction(@NotNull HOMEParser.ReturnFunctionContext ctx, Statements _stmts) {
+        if(ctx.expression() == null){
+            _stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+            _stmts.addStatement("ldc \"RETURNING NOTHING\"");
+            _stmts.addStatement("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+            _stmts.addStatement("return");
+        } else {
+            SymbolInfo symbol = symbolTable.variables.getSymbol(ctx.expression().identifier().getText());
+            String type = symbol.var.type.name;
+            switch (type){
+                case "Integer":
+                    if(ctx.expression().identifier() != null){
+                        _stmts.addStatement("iload " + symbol.var.location);
+                    } else {
+                       _stmts.addStatement("bipush " + ctx.expression().literal().getText());
+                    }
+                    // TODO: Remove debug
+                    _stmts.addStatement("dup");
+                    _stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    _stmts.addStatement("swap");
+                    _stmts.addStatement("invokevirtual java/io/PrintStream/println(I)V");
+
+                    _stmts.addStatement("ireturn");
+                    break;
+                case "Decimal":
+                    if(ctx.expression().identifier() != null){
+                        _stmts.addStatement("dload " + symbol.var.location);
+                    } else {
+                        _stmts.addStatement("ldc " + ctx.expression().literal().getText());
+                    }
+                    // TODO: Remove debug
+                    _stmts.addStatement("dup");
+                    _stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    _stmts.addStatement("swap");
+                    _stmts.addStatement("invokevirtual java/io/PrintStream/println(D)V");
+
+                    _stmts.addStatement("dreturn");
+                    break;
+                default:
+                    if(ctx.expression().identifier() != null){
+                        _stmts.addStatement("aload " + symbol.var.location);
+                    } else {
+                        _stmts.addStatement("ldc " + ctx.expression().literal().getText());
+                    }
+                    // TODO: Remove debug
+                    _stmts.addStatement("dup");
+                    _stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    _stmts.addStatement("swap");
+                    _stmts.addStatement("invokevirtual java/io/PrintStream/println(" + bytecodeType(type) + ")V");
+
+_stmts.addStatement("areturn");
+                    break;
+            }
+        }
+
+        return super.visitReturnFunction(ctx);
+    }
 
     private void checkGlobal(HOMEParser.DeclarationContext ctx) // change the input to be more general
     {

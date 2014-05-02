@@ -13,16 +13,16 @@ return
     .limit stack 32
     .limit locals 2
     ldc 9
-    istore 0
+    istore 1
     ldc 15
-    iload 0
+    iload 1
     iadd
-    iload 0
+    iload 1
     swap
     iadd
     ldc 1
     iadd
-    istore 1
+    istore 2
 return 
 .end method
 

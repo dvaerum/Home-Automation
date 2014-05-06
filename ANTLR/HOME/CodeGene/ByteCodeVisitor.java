@@ -9,7 +9,6 @@ import HOME.TypeChecker;
 import SymbolTableNew.SymbolTableNew;
 import SymbolTableNew.VariableTable;
 import SymbolTableNew.SymbolInfo;
-import com.sun.org.apache.xerces.internal.util.SymbolTable;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -22,16 +21,16 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     SymbolTableNew symbolTable = Main.symbolTable;
     TypeChecker typeChecker = new TypeChecker();
 
-    class expressionReturn {
+    class ExpressionReturn {
         Type type;
         String returnValue;
 
-        expressionReturn(Type type, String returnValue) {
+        ExpressionReturn(Type type, String returnValue) {
             this.type = type;
             this.returnValue = returnValue;
         }
 
-        public boolean equals(expressionReturn epxR) {
+        public boolean equals(ExpressionReturn epxR) {
             if (this.type.equals(epxR.type)) {
                 return true;
             } else {
@@ -83,13 +82,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         public Statements() {
             this.statements = new ArrayList<String>();
             this.limit_stack = 32; // TODO change to improve performance
-            this.limit_locale = 0;
+            this.limit_locale = 1;
         }
 
         public Statements(int limit_stack) {
             this.statements = new ArrayList<String>();
             this.limit_stack = limit_stack;
-            this.limit_locale = 0;
+            this.limit_locale = 1;
         }
 
         public void addStatement(String statement) {
@@ -106,7 +105,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
 
         public int nextLocal() {
-            return this.limit_locale + 1;
+            return this.limit_locale;
         }
 
         public void build() {
@@ -255,46 +254,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         }
     }
 
-    public void visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts) {
-
-        if(ctx.expression().size()>0)
-        {
-            if(ctx.expression().size() == 1)
-            {
-
-//                visitExpression(ctx.expression(0).expression(0));
-//
-//                HOMEParser.ExpressionContext RHS = ctx.expression(1);
-//                String logicalOperator = ctx.logicalOperator().getText();
-//                HOMEParser.ExpressionContext LHS = ctx.expression(0).expression(1);
-//                Type LHSType = typeChecker.visitExpression(LHS);
-//
-//                visitLogicalOperator(logicalOperator, LHSType, stmts);
-            }
-            else // two expressions
-            {
-//                HOMEParser.ExpressionContext RHS = ctx.expression(1);
-//                HOMEParser.LogicalOperatorContext logicalOperator = ctx.logicalOperator();
-//                HOMEParser.ExpressionContext LHS = ctx.expression(0);
-//                visitExpression(LHS);
-//                visitExpression(RHS);
-//                visitLogicalOperator(logicalOperator);
-            }
-        } else if (ctx.funcCall() != null) {
-            visitFuncCall(ctx.funcCall());
-        } else if (ctx.literal() != null) {
-            visitLiteral(ctx.literal());
-        } else if (ctx.variableMethodCall() != null) {
-            visitVariableMethodCall(ctx.variableMethodCall());
-        } else if (ctx.identifier() != null) {
-            visitIdentifier(ctx.identifier());
-        } else if (ctx.listIndex() != null) {
-            visitListIndex(ctx.listIndex(), stmts);
-        } else if (ctx.field() != null) {
-            visitField(ctx.field());
-        }
-    }
-
     public Object visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts) {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.IdentifierExact().getText());
         CollectionType type = ((CollectionType) symbolInfo.var.type);
@@ -339,22 +298,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
 
         return super.visitListIndex(ctx);
-    }
-
-    public Object visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, String str) {
-        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.getText());
-
-        if (symbolInfo.depth == 0) {
-            String byteCodeClassName = refTable.get(symbolInfo.var.type.name);
-            // field is always in the same class which atm is 'HOME'. Hardcoded ftl
-            stmts.addStatement("getfield " + "HOME/" +  symbolInfo.var.name + byteCodeClassName);
-
-// TODO Michael start here
-        } else {
-            stmts.addStatement("aload_" + symbolInfo.var.location);
-        }
-
-        return super.visitIdentifier(ctx);
     }
 
     List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
@@ -443,7 +386,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
     @Override
     public Object visitFunction(@NotNull HOMEParser.FunctionContext ctx) {
-
+        symbolTable.openScope();
         String funcName = ctx.identifier().getText();
 
         if (funcName.equals("Setup")) {
@@ -563,25 +506,28 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return super.visitNewline(ctx);
     }
 
-    public expressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, boolean topFlag) {
+    public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, boolean topFlag) {
         if (ctx.expression().size() > 0) {
-            expressionReturn r1 = null, r2 = null;
+            ExpressionReturn r1 = null, r2 = null;
             String operator = null;
 
             //1 expr = expression in parenteses
             if (ctx.expression().size() == 1) {
                 //parenthesis
-                expressionReturn _temp = visitExpression(ctx.expression().get(0), stmt, false);
+                ExpressionReturn _temp = visitExpression(ctx.expression().get(0), stmt, false);
 
                 //checks for unary operator
                 if (ctx.getChild(0).getText().equals("-")) {
                     _temp.returnValue = String.format("%d", -1 * Integer.parseInt(_temp.returnValue));
                 }
-
+                //if (topFlag)
+                {
+                    addLiteral(stmt, _temp);
+                }
                 return _temp;
             } else //else two expressions
             {
-                expressionReturn _return = null;
+                ExpressionReturn _return = null;
                 r1 = visitExpression(ctx.expression(0), stmt, false);
                 operator = getOperator(ctx);
                 r2 = visitExpression(ctx.expression(1), stmt, false);
@@ -608,48 +554,60 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
 
                 else if (r1.equals(Main.variable) && r2.equals(Main.variable)) {
-                    if (!r1.returnValue.equals("")) {
-                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r1.returnValue));
+
+
+                    switch (operator) {
+                        case "+":
+                            stmt.addStatement("iadd");
+                            break;
+                        case "-":
+                            stmt.addStatement("isub");
+                            break;
                     }
-                    if (!r2.returnValue.equals("")) {
-                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r2.returnValue));
-                    } else {
-                        stmt.addStatement("swap");
-                    }
 
-
-                    stmt.addStatement("iadd");
-
-                    if (!topFlag) {
-                        return new expressionReturn(Main.variable, "");
+                    //if (!topFlag)
+                    {
+                        return new ExpressionReturn(Main.variable, "");
                     }
                 }
 
                 else if (r1.equals(Main.variable)){
-                    if (!r1.returnValue.equals("")) {
-                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r1.returnValue));
-                    }
-                    stmt.addStatement("ldc " + Integer.parseInt(r2.returnValue));
-                    stmt.addStatement("iadd");
 
-                    if (!topFlag) {
-                        return new expressionReturn(Main.variable, "");
+                    addLiteral(stmt, r2);
+                    //stmt.addStatement("ldc " + Integer.parseInt(r2.returnValue));
+
+                    switch (operator) {
+                        case "+":
+                            stmt.addStatement("iadd");
+                            break;
+                        case "-":
+                            stmt.addStatement("isub");
+                            break;
+                    }
+
+
+                    //if (!topFlag)
+                    {
+                        return new ExpressionReturn(Main.variable, "");
                     }
                 }
 
                 else if (r2.equals(Main.variable)){
-                    stmt.addStatement("ldc " + Integer.parseInt(r1.returnValue));
+                    addLiteral(stmt, r1);
 
-                    if (!r2.returnValue.equals("")) {
-                        stmt.addStatement("iload " + symbolTable.variables.getLocation(r2.returnValue));
-                    } else {
-                        stmt.addStatement("swap");
+
+                    switch (operator) {
+                        case "+":
+                            stmt.addStatement("iadd");
+                            break;
+                        case "-":
+                            stmt.addStatement("isub");
+                            break;
                     }
 
-                    stmt.addStatement("iadd");
-
-                    if (!topFlag) {
-                        return new expressionReturn(Main.variable, "");
+                    //if (!topFlag)
+                    {
+                        return new ExpressionReturn(Main.variable, "");
                     }
                 }
 
@@ -659,37 +617,38 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     if (r1.equals(Main.integer)) {
                         switch (operator) {
                             case "+":
-                                _return = new expressionReturn(Main.integer,
+                                _return = new ExpressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) +
                                                                                 Integer.parseInt(r2.returnValue)));
                                 break;
                             case "-":
-                                _return = new expressionReturn(Main.integer,
+                                _return = new ExpressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) -
                                                             Integer.parseInt(r2.returnValue)));
                                 break;
                             case "/":
-                                _return = new expressionReturn(Main.integer,
+                                _return = new ExpressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) /
                                                             Integer.parseInt(r2.returnValue)));
                                 break;
                             case "*":
-                                _return = new expressionReturn(Main.integer,
+                                _return = new ExpressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) *
                                                             Integer.parseInt(r2.returnValue)));
                                 break;
                             case "%":
-                                _return = new expressionReturn(Main.integer,
+                                _return = new ExpressionReturn(Main.integer,
                                                             String.format("%d", Integer.parseInt(r1.returnValue) %
                                                             Integer.parseInt(r2.returnValue)));
                                 break;
                         }
 
-                        if (topFlag) {
-                            stmt.addStatement("ldc " + _return.returnValue);
-                        } else {
-                            return _return;
+
+                        //if (topFlag)
+                        {
+                            addLiteral(stmt, _return);
                         }
+                        return _return;
 
                     } else if (r1.equals(Main.decimal)) {
 
@@ -727,23 +686,75 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return null;
     }
 
-    public expressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmt) {
+    public ExpressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts) {
 
-        return new expressionReturn(Main.variable, ctx.getText());
+        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.getText());
+        if (symbolInfo.depth == 0) {
+            String byteCodeClassName = refTable.get(symbolInfo.var.type.name);
+            // field is always in the same class which atm is 'HOME'. Hardcoded ftl
+            stmts.addStatement("getfield " + "HOME/" +  symbolInfo.var.name + byteCodeClassName);
+        } else {
+            stmts.addStatement("iload_" + symbolInfo.var.location);
+        }
+
+        return new ExpressionReturn(Main.variable, "");
+    }
+/*        HOME.Type.Function function = symbolTable.functions.getSymbol(ctx.identifier().getText());
+        String code = "invokevirtual ";
+        code += function.name + "(";
+        for (Type parameter : function.parameters) {
+            code+=parameter.bytecode; // TODO if this is a class, check bytecode for it.
+        }
+        code+=")" + function.returnType.bytecode; // TODO Same as above.
+        stmts.addStatement(code);
+        if(pop) {
+            stmts.addStatement("pop");
+    }
+}*/
+
+    public void addLiteral(Statements stmts, ExpressionReturn expressionReturn) {
+        String type = expressionReturn.type.name;
+        String val = expressionReturn.returnValue;
+
+        switch (type) {
+            case "Integer":
+                Integer value = Integer.valueOf(val);
+                if (value < 0) {
+                    value++;
+                } // ensures fx -128 also uses bipush just like 127 would ( not 128 though )
+                value = Math.abs(value);
+                if (value > Math.pow(2, 31) - 1) {
+                    // TODO throw error -> Integer too big
+                } else if (value > Math.pow(2, 15) - 1) {
+                    stmts.addStatement("ldc " + val); // can be optimized with bipush when below 127
+                } else if (value > Math.pow(2, 7) - 1) {
+                    stmts.addStatement("sipush " + val); // can be optimized with bipush when below 127
+                } else {
+                    stmts.addStatement("bipush " + val); // can be optimized with bipush when below 127
+                }
+                break;
+            case "String":
+                stmts.addStatement("ldc " + val);
+                break;
+            case "Decimal":
+                stmts.addStatement("ldc2_w " + val + "d"); // check if .0d notation works or 2.d
+                stmts.addStatement("invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;"); // can be optimized with bipush when below 127
+                break;
+        }
     }
 
     @Override
-    public expressionReturn visitLiteral(@NotNull HOMEParser.LiteralContext ctx) {
-        expressionReturn returnType = null;
+    public ExpressionReturn visitLiteral(@NotNull HOMEParser.LiteralContext ctx) {
+        ExpressionReturn returnType = null;
 
         if (ctx.IntegerLiteral() != null) {
-            returnType = new expressionReturn(Main.integer, ctx.getText());
+            returnType = new ExpressionReturn(Main.integer, ctx.getText());
         } else if (ctx.booleanLiteral() != null) {
-            returnType = new expressionReturn(Main.bool, ctx.getText());
+            returnType = new ExpressionReturn(Main.bool, ctx.getText());
         } else if (ctx.DecimalLiteral() != null) {
-            returnType = new expressionReturn(Main.decimal, ctx.getText());
+            returnType = new ExpressionReturn(Main.decimal, ctx.getText());
         } else if (ctx.StringLiteral() != null) {
-            returnType = new expressionReturn(Main.string, ctx.getText());
+            returnType = new ExpressionReturn(Main.string, ctx.getText());
         } else if (ctx.listLiteral() != null) {
             // returnType = visitListLiteral(ctx.listLiteral()); // Todo visitListLiteral
         } else if (ctx.dictionaryLiteral() != null) {
@@ -938,7 +949,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     break;
                 default:
                     if(ctx.expression().identifier() != null){
-                        _stmts.addStatement("aload " + symbol.var.location);
+                        _stmts.addStatement("iload " + symbol.var.location);
                     } else {
                         _stmts.addStatement("ldc " + ctx.expression().literal().getText());
                     }

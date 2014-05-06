@@ -507,6 +507,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
     }
 
     public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, boolean topFlag) {
+            return visitExpression(ctx, stmt, topFlag, 0);
+    }
+
+    public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmt, boolean topFlag, int reduceFlag) {
         if (ctx.expression().size() > 0) {
             ExpressionReturn r1 = null, r2 = null;
             String operator = null;
@@ -520,10 +524,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                 if (ctx.getChild(0).getText().equals("-")) {
                     _temp.returnValue = String.format("%d", -1 * Integer.parseInt(_temp.returnValue));
                 }
-                //if (topFlag)
+/*                if (topFlag)
                 {
                     addLiteral(stmt, _temp);
-                }
+                }*/
                 return _temp;
             } else //else two expressions
             {
@@ -573,7 +577,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
                 else if (r1.equals(Main.variable)){
 
-                    addLiteral(stmt, r2);
+                    //addLiteral(stmt, r2);
                     //stmt.addStatement("ldc " + Integer.parseInt(r2.returnValue));
 
                     switch (operator) {
@@ -593,7 +597,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                 }
 
                 else if (r2.equals(Main.variable)){
-                    addLiteral(stmt, r1);
+                    //addLiteral(stmt, r1);
 
 
                     switch (operator) {
@@ -614,12 +618,18 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
                 // Concat Strings and calc int and dec
                 else if (r1.equals(r2)) {
+/*                    if () {
+                        _return = visitExpression(ctx, stmt, topFlag, reduceFlag + 1);
+                        addLiteral(stmt, _return);
+                        return _return;
+                    }*/
+
                     if (r1.equals(Main.integer)) {
                         switch (operator) {
                             case "+":
                                 _return = new ExpressionReturn(Main.integer,
-                                                            String.format("%d", Integer.parseInt(r1.returnValue) +
-                                                                                Integer.parseInt(r2.returnValue)));
+                                                               String.format("%d", Integer.parseInt(r1.returnValue) +
+                                                                                   Integer.parseInt(r2.returnValue)));
                                 break;
                             case "-":
                                 _return = new ExpressionReturn(Main.integer,
@@ -644,10 +654,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                         }
 
 
-                        //if (topFlag)
+/*                        if (topFlag)
                         {
                             addLiteral(stmt, _return);
+                        }*/
+
+                        if (!moreOptimizing(ctx)) {
+                            addLiteral(stmt, _return);
                         }
+
                         return _return;
 
                     } else if (r1.equals(Main.decimal)) {
@@ -667,6 +682,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             }
         }
 
+
         // Is expression doesn't contain any expressions, use below
         else if (ctx.funcCall() != null) {
             visitFuncCall(ctx.funcCall());
@@ -685,6 +701,27 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
 
         return null;
     }
+
+
+    public boolean moreOptimizing (@NotNull HOMEParser.ExpressionContext ctx)
+    {
+        if (ctx.getParent() instanceof HOMEParser.DeclarationContext) {
+            return false;
+        } else if (ctx.getParent() instanceof HOMEParser.AssignContext) {
+            return false;
+        } else if (((HOMEParser.ExpressionContext) ctx.getParent()).expression().size() > 1) {
+            if (((HOMEParser.ExpressionContext) ctx.getParent()).expression().get(1).literal() == null) {
+                return false;
+            }
+        } else {
+            if (((HOMEParser.ExpressionContext) ctx.getParent()).expression().get(0).expression() == null){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     public ExpressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts) {
 

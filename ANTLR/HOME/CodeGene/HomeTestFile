@@ -1,5 +1,6 @@
 
 function Setup() returns Nothing
-    Integer tester = 1 + (4 + 5)
-    Integer hej = tester + (12 + 3 + 4 - tester)
+    Decimal x = 4.5
+    //Integer tester = (-x) //= -1 + -(4 + -x)
+    //Integer hej = tester + (12 + 3 + 4 - tester)
 endfunction

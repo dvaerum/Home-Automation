@@ -32,6 +32,7 @@ public class Main
     public static Type dictionary;
     public static Type variable = new Type("variable");
     public static Type anything = new Type("Anything");
+    public static Type intermediate = new Type("Intermediate");
 
     public static void main(String[] args) throws IOException
     {

@@ -81,6 +81,10 @@ public class VariableTable
         return getSymbol(symbol).var.location;
     }
 
+    public Type getType(String symbol) {
+        return getSymbol(symbol).var.type;
+    }
+
     public Boolean symbolExists(String symbol)
     {
         Deque<SymbolInfo> stack = table.get(symbol);

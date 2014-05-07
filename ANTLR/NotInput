@@ -1,8 +1,7 @@
 
 function Setup() returns Nothing
-    Decimal lol = 2.
-    Decimal hej = 5.0
-    Decimal x = -(lol + hej)
+    String lol = "lol"
+    String hej = lol + "error"
     //Integer tester = (-x) //= -1 + -(4 + -x)
     //Integer hej = tester + (12 + 3 + 4 - tester)
 endfunction

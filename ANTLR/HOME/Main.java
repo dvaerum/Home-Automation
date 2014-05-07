@@ -7,7 +7,7 @@ import HOME.Type.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -81,13 +81,12 @@ public class Main
         //If error print it, if not visit typechecker
         if (!(returnType instanceof ErrorType))
         {
-            System.out.println(String.format("Error: %s", returnType));
-        }
-        else
-        {
             System.out.println("-----------------------------Typechecker-----------------------");
-            TypeChecker visitor = new TypeChecker();
-            visitor.visit(tree);
+            Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
+            if(type instanceof ErrorType)
+                System.out.println("Error, halting!");
+            else
+                System.out.println("Success");
         }
 
 
@@ -135,16 +134,9 @@ public class Main
 
        // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-        //HOMEParser.BlockContext lol = (HOMEParser.BlockContext) tree.getChild(1);
-        //lol.inspect(parser);
+//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
+//        lol.inspect(parser);
 //=================================================================================
 
-        /*
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-            //System.err.println(e.initCause(e.getCause()));
-        }
-        */
     }
 }

@@ -4,7 +4,8 @@ package HOME.SymbolTable; /**
 import HOME.Type.*;
 
 import java.lang.Boolean;
-import java.lang.String;import java.util.HashMap;
+import java.lang.String;
+import java.util.HashMap;
 /**
  * Created by Frederik on 13-03-14.
  */

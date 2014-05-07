@@ -6,7 +6,7 @@ import HOME.Grammar.HOMEParser;
 import HOME.Type.Function;
 import HOME.Type.Type;
 import HOME.TypeChecker;
-import SymbolTableNew.SymbolTableNew;
+import HOME.SymbolTable.SymbolTable;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;

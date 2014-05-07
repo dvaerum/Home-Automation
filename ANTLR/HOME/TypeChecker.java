@@ -2,7 +2,7 @@ package HOME;
 import HOME.Grammar.*;
 import HOME.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
-import sun.org.mozilla.javascript.internal.ErrorReporter;
+//import sun.org.mozilla.javascript.internal.ErrorReporter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

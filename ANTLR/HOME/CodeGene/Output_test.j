@@ -21,7 +21,7 @@ return
     dadd
     dneg
     dstore 5
-    
+
 
     getstatic java/lang/System/out Ljava/io/PrintStream;
     dload 5

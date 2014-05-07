@@ -1,8 +1,7 @@
 package HOME;
 
+import HOME.SymbolTable.SymbolTable;
 import HOME.Type.Type;
-import SymbolTableNew.SymbolTableNew;
-import com.sun.org.apache.bcel.internal.generic.LoadClass;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +15,7 @@ import java.util.regex.Pattern;
  * Created by Jacob on 26-03-14.
  */
 public class FileReader {
-    SymbolTableNew symbolTable = Main.symbolTable;
+    SymbolTable symbolTable = Main.symbolTable;
 
     //Insert prototype of classes
     public void loadClassPrototypes() throws IOException
@@ -122,7 +121,7 @@ public class FileReader {
         //TODO: Add PORTx into regex
         //TODO: Add generic types
         //Define the pattern, that is used to recognize the class.def file
-        Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z0-9_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)\\sendmethods\\sendclass");
+        Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z0-9_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)\\sendmethods\\sbytecode\\s((?:\\-\\s.+;\\s*)*)\\sendbytecode\\sendclass");
         //Convert multiple whitespaces into single whitesspaces, and remove newline and caret return to ease the regex
         str = str.replaceAll("\\s+", " ");
         str = str.replaceAll("[\\n|\\r]]", "");
@@ -140,10 +139,12 @@ public class FileReader {
 
             String[] methodList = methods.split("-");
 
+            String bytecode = mtchr.group(6).replace("-", "").trim();
+
             try
             {
                 //Update the existing type with fields, constructors and methods
-                symbolTable.types.getSymbol(className).Update(className, fields, constrName, constrArgs, methods);
+                symbolTable.types.getSymbol(className).Update(className, fields, constrName, constrArgs, methods, bytecode);
             }
             catch (Exception e)
             {

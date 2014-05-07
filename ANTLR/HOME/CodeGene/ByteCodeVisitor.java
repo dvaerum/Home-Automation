@@ -3,12 +3,11 @@ package HOME.CodeGene;
 import HOME.Grammar.HOMEBaseVisitor;
 import HOME.Grammar.HOMEParser;
 import HOME.Main;
+import HOME.SymbolTable.SymbolInfo;
 import HOME.Type.CollectionType;
 import HOME.Type.Type;
 import HOME.TypeChecker;
-import SymbolTableNew.SymbolTableNew;
-import SymbolTableNew.VariableTable;
-import SymbolTableNew.SymbolInfo;
+import HOME.SymbolTable.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -18,7 +17,7 @@ import java.util.*;
 
 public class ByteCodeVisitor extends HOMEBaseVisitor {
 
-    SymbolTableNew symbolTable = Main.symbolTable;
+    SymbolTable symbolTable = Main.symbolTable;
     TypeChecker typeChecker = new TypeChecker();
 
     class ExpressionReturn {

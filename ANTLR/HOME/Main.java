@@ -7,7 +7,10 @@ import HOME.Type.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -27,10 +30,12 @@ public class Main
     public static Type string;
     public static Type list;
     public static Type dictionary;
-    public static Type variable = new Type("variable");
+    public static Type variable = new Type("Variable");
     public static Type anything = new Type("Anything");
     public static Type event = new Type("Event");
     public static Type functionType = new Type("Function");
+    public static Type intermediate = new Type("Intermediate");
+
 
     public static TypeChecker typeChecker;
 
@@ -89,25 +94,36 @@ public class Main
                 System.out.println("Success");
         }
 
-
+        nothing.bytecode="V";
         System.out.println("-----------------------------Code Generation-----------------------");
         //ByteCodeVisitor bytecode = new ByteCodeVisitor();
         //bytecode.visit(tree);
 
         // TODO change
         symbolTable.resetVariableTable();
-        HOME.CodeGene.Main codeGeneration = new HOME.CodeGene.Main();
-        codeGeneration.main(null);
+
+//        HOME.CodeGene.Main codeGeneration = new HOME.CodeGene.Main();
+//        codeGeneration.main(null);
+        ByteCodeVisitor visitor = new ByteCodeVisitor();
+        visitor.visit(tree);
+        visitor.build();
 
         try{
             // Run a java app in a separate system process
-            Process proc = Runtime.getRuntime().exec("java -jar ../jar/jasmin.jar codeGene/Output_test.j");
+            Process proc = Runtime.getRuntime().exec("java -jar jar/jasmin.jar HOME/CodeGene/Output_test.j");
             proc.waitFor();
             // Then retreive the process output
             InputStream in = proc.getInputStream();
             InputStream err = proc.getErrorStream();
-            while(in.available() > 0){
-                System.out.write(in.read());
+
+            BufferedReader bIn =new BufferedReader(new InputStreamReader(in));
+            BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
+            String s;
+            while((s = bIn.readLine()) != null){
+                System.out.println(s);
+            }
+            while((s = bErr.readLine()) != null){
+                System.out.println(s);
             }
         } catch (Exception e){
             System.out.println(e.toString());
@@ -117,15 +133,42 @@ public class Main
         System.out.println("-----------------------------Decompiling-----------------------");
         try{
             // Run a java app in a separate system process
-            Process proc = Runtime.getRuntime().exec("javap -c -v -private HOME/CodeGene/HOME.class");
+            Process proc = Runtime.getRuntime().exec("javap -c -v -private HOME.class");
             //proc.waitFor();
             // Then retreive the process output
             InputStream in = proc.getInputStream();
             InputStream err = proc.getErrorStream();
 
             BufferedReader bIn =new BufferedReader(new InputStreamReader(in));
+            BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
             String s;
             while((s = bIn.readLine()) != null){
+                System.out.println(s);
+            }
+            while((s = bErr.readLine()) != null){
+                System.out.println(s);
+            }
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+
+        System.out.println("-----------------------------Running-----------------------");
+        try{
+            // Run a java app in a separate system process
+            Process proc = Runtime.getRuntime().exec("java HOME");
+            //proc.waitFor();
+            // Then retreive the process output
+            InputStream in = proc.getInputStream();
+            InputStream err = proc.getErrorStream();
+
+            BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
+            BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
+            String s;
+            while((s = bIn.readLine()) != null){
+                System.out.println(s);
+            }
+            while((s = bErr.readLine()) != null){
                 System.out.println(s);
             }
         } catch (Exception e){

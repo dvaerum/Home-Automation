@@ -1,4 +1,4 @@
-// Generated from C:/Users/Marc/Documents/GitHub/Home-Automation/ANTLR/HOME/Grammar\HOME.g4 by ANTLR 4.x
+// Generated from /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/Grammar/HOME.g4 by ANTLR 4.x
 
 package HOME.Grammar;
 

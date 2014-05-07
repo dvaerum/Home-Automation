@@ -11,12 +11,20 @@ return
 
 .method public static main([Ljava/lang/String;)V
     .limit stack 32
-    .limit locals 3
-    ldc2_w 4.5d
+    .limit locals 7
+    ldc2_w 2.d
     dstore 1
+    ldc2_w 5.0d
+    dstore 3
+    dload 1
+    dload 3
+    dadd
+    dneg
+    dstore 5
+    
 
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    dload 1
+    dload 5
     invokevirtual java/io/PrintStream/println(D)V
 return 
 .end method

@@ -1,16 +1,13 @@
 package HOME;
 import HOME.CodeGene.ByteCodeVisitor;
 import HOME.Grammar.*;
+import HOME.SymbolTable.SymbolTable;
 import HOME.Type.*;
 
-import SymbolTableNew.SymbolTableNew;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,7 +16,7 @@ import java.util.Arrays;
  */
 public class Main
 {
-    public static SymbolTableNew symbolTable = new SymbolTableNew();
+    public static SymbolTable symbolTable = new SymbolTable();
 
     public static Type nothing = new Type("Nothing");
     public static Type generic = new Type("#Generic");
@@ -32,24 +29,29 @@ public class Main
     public static Type dictionary;
     public static Type variable = new Type("variable");
     public static Type anything = new Type("Anything");
-    public static Type intermediate = new Type("Intermediate");
+    public static Type event = new Type("Event");
+    public static Type functionType = new Type("Function");
+
+    public static TypeChecker typeChecker;
 
     public static void main(String[] args) throws IOException
     {
-        //System.out.println("\n-----------------------------Loader-----------------------\n");
-        //       try{
         HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.program();
 
+        //Read files, to include classes
         FileReader fileR = new FileReader();
         fileR.loadClassPrototypes();
         fileR.expandTypes();
 
+        //Create shortcuts to common types
         integer = symbolTable.types.getSymbol("Integer");
         decimal = symbolTable.types.getSymbol("Decimal");
         bool = symbolTable.types.getSymbol("Boolean");
         string = symbolTable.types.getSymbol("String");
+
+        //Create generic list and dictionary
         list = new Type("List");
         list.methods.add(new Function("add", nothing, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
@@ -60,15 +62,24 @@ public class Main
         dictionary.methods.add(new Function("lol", integer, new ArrayList<Type>()));
         //TODO: Allow collections as parameters/return types. Also, constructors/fields don't work for collections atm.
 
+        symbolTable.functions.addSymbol("RegisterEvent", new Function("RegisterEvent", nothing,  new ArrayList<>(Arrays.asList(event, functionType))));
 
-//        Integer[][][] lol = new Integer[2][2][2];
-//        lol[1][1][1][1] = 2;
+        //Instantiate typechecker, because this is used in firstrun
+        typeChecker = new TypeChecker();
 
         //System.out.println("\n-----------------------------FirstRun-----------------------\n");
+        //Firstrun is the first pass in the compiler, and this reads the functions and global variables, and adds to symboltable
         FirstRun firstVisit = new FirstRun();
 
-        Type returnType = firstVisit.visitBlock((HOMEParser.BlockContext) tree.getChild(1));
-        if (returnType instanceof ErrorType)
+        //Visit globals
+        Type returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext)tree).global());
+
+        //Check if errors, if not visitblock
+        if(!(returnType instanceof ErrorType))
+            returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext)tree).block());
+
+        //If error print it, if not visit typechecker
+        if (!(returnType instanceof ErrorType))
         {
             System.out.println(String.format("Error: %s", returnType));
         }

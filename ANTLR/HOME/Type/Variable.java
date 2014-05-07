@@ -9,19 +9,16 @@ public class Variable
     public Type type;
     public int location;
 
-    private void setVals(String name, Type type, int location){
+    public Variable(String name, Type type)
+    {
         this.name = name;
         this.type = type;
-        this.location = location;
     }
 
     public Variable(String name, Type type, int location)
     {
-        setVals(name, type, location);
-    }
-
-    public Variable(String name, Type type)
-    {
-        setVals(name, type, 0);
+        this.name = name;
+        this.type = type;
+        this.location = location;
     }
 }

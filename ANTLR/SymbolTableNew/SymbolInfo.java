@@ -23,6 +23,4 @@ public class SymbolInfo
         this.var = new Variable(name, type, location);
         this.depth = depth;
     }
-
-
 }

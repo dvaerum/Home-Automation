@@ -67,6 +67,16 @@ public class CollectionType extends Type
         return newFunc;
     }
 
+    public String getObjectByteCode() {
+        switch(this.primaryType.name) {
+            case "List":
+                return "java/util/List;";
+            case "Dictionary":
+                return "java/util/Map;";
+        }
+        return null;
+    }
+
     // Returns a copy of the specified List<Type> where all elements of type 'generic' have been replaced with innerType
 //    private List<Type> replaceGenericList(List<Type> list)
 //    {

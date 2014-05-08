@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
-  Last modified May 7, 2014; size 609 bytes
-  MD5 checksum 1cd19cb5e818b948fb1eb0ad15f3565f
+  Last modified May 8, 2014; size 485 bytes
+  MD5 checksum 35e67d53c05631348058da07e8d43412
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -8,82 +8,66 @@ public class HOME
   major version: 45
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
-   #1 = Class              #19            //  HOME
-   #2 = Methodref          #1.#23         //  HOME."<init>":()V
-   #3 = Utf8               ()Ljava/lang/String;
-   #4 = Utf8               ()V
-   #5 = Utf8               main
-   #6 = Utf8               toString
-   #7 = NameAndType        #30:#22        //  append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-   #8 = Utf8               lol
-   #9 = Methodref          #15.#17        //  java/lang/StringBuilder.toString:()Ljava/lang/String;
-  #10 = Utf8               java/lang/Object
-  #11 = Methodref          #15.#7         //  java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-  #12 = Class              #10            //  java/lang/Object
-  #13 = Methodref          #24.#33        //  java/io/PrintStream.println:(Ljava/lang/String;)V
-  #14 = Utf8               java/lang/System
-  #15 = Class              #28            //  java/lang/StringBuilder
-  #16 = Class              #14            //  java/lang/System
-  #17 = NameAndType        #6:#3          //  toString:()Ljava/lang/String;
-  #18 = Utf8               error
-  #19 = Utf8               HOME
-  #20 = String             #18            //  error
-  #21 = Utf8               ([Ljava/lang/String;)V
-  #22 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
-  #23 = NameAndType        #27:#4         //  "<init>":()V
-  #24 = Class              #43            //  java/io/PrintStream
-  #25 = Utf8               SourceFile
-  #26 = Utf8               println
-  #27 = Utf8               <init>
-  #28 = Utf8               java/lang/StringBuilder
-  #29 = NameAndType        #31:#44        //  out:Ljava/io/PrintStream;
-  #30 = Utf8               append
-  #31 = Utf8               out
-  #32 = Methodref          #12.#23        //  java/lang/Object."<init>":()V
-  #33 = NameAndType        #26:#40        //  println:(Ljava/lang/String;)V
-  #34 = Utf8               HOME.java
-  #35 = String             #8             //  lol
-  #36 = Methodref          #1.#37         //  HOME.Setup:()V
-  #37 = NameAndType        #41:#4         //  Setup:()V
-  #38 = Methodref          #15.#23        //  java/lang/StringBuilder."<init>":()V
-  #39 = Fieldref           #16.#29        //  java/lang/System.out:Ljava/io/PrintStream;
-  #40 = Utf8               (Ljava/lang/String;)V
-  #41 = Utf8               Setup
-  #42 = Utf8               Code
-  #43 = Utf8               java/io/PrintStream
-  #44 = Utf8               Ljava/io/PrintStream;
+   #1 = Class              #14            //  HOME
+   #2 = Utf8               (Ljava/lang/Object;)Z
+   #3 = Methodref          #28.#20        //  java/lang/String.equals:(Ljava/lang/Object;)Z
+   #4 = Methodref          #1.#16         //  HOME."<init>":()V
+   #5 = Utf8               ()V
+   #6 = Utf8               main
+   #7 = NameAndType        #22:#25        //  println:(Z)V
+   #8 = Utf8               java/lang/Object
+   #9 = Class              #8             //  java/lang/Object
+  #10 = Utf8               java/lang/System
+  #11 = String             #18            //  jeg
+  #12 = Class              #10            //  java/lang/System
+  #13 = Utf8               equals
+  #14 = Utf8               HOME
+  #15 = Utf8               ([Ljava/lang/String;)V
+  #16 = NameAndType        #24:#5         //  "<init>":()V
+  #17 = Class              #37            //  java/io/PrintStream
+  #18 = Utf8               jeg
+  #19 = Utf8               java/lang/String
+  #20 = NameAndType        #13:#2         //  equals:(Ljava/lang/Object;)Z
+  #21 = Utf8               SourceFile
+  #22 = Utf8               println
+  #23 = String             #39            //  j3g
+  #24 = Utf8               <init>
+  #25 = Utf8               (Z)V
+  #26 = NameAndType        #27:#38        //  out:Ljava/io/PrintStream;
+  #27 = Utf8               out
+  #28 = Class              #19            //  java/lang/String
+  #29 = Methodref          #17.#7         //  java/io/PrintStream.println:(Z)V
+  #30 = Methodref          #9.#16         //  java/lang/Object."<init>":()V
+  #31 = Utf8               HOME.java
+  #32 = Methodref          #1.#33         //  HOME.Setup:()V
+  #33 = NameAndType        #35:#5         //  Setup:()V
+  #34 = Fieldref           #12.#26        //  java/lang/System.out:Ljava/io/PrintStream;
+  #35 = Utf8               Setup
+  #36 = Utf8               Code
+  #37 = Utf8               java/io/PrintStream
+  #38 = Utf8               Ljava/io/PrintStream;
+  #39 = Utf8               j3g
 {
   public HOME();
     flags: ACC_PUBLIC
     Code:
       stack=32, locals=2, args_size=1
          0: aload_0       
-         1: invokespecial #32                 // Method java/lang/Object."<init>":()V
+         1: invokespecial #30                 // Method java/lang/Object."<init>":()V
          4: return        
 
   public void Setup();
     flags: ACC_PUBLIC
     Code:
-      stack=32, locals=6, args_size=1
-         0: ldc           #35                 // String lol
-         2: astore        1
-         4: aload         1
-         6: ldc           #20                 // String error
-         8: astore        3
-        10: astore        2
-        12: new           #15                 // class java/lang/StringBuilder
-        15: dup           
-        16: invokespecial #38                 // Method java/lang/StringBuilder."<init>":()V
-        19: aload         2
-        21: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-        24: aload         3
-        26: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-        29: invokevirtual #9                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
-        32: astore        4
-        34: getstatic     #39                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        37: aload         4
-        39: invokevirtual #13                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-        42: return        
+      stack=32, locals=3, args_size=1
+         0: ldc           #23                 // String j3g
+         2: ldc           #11                 // String jeg
+         4: invokevirtual #3                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+         7: istore        1
+         9: getstatic     #34                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        12: iload         1
+        14: invokevirtual #29                 // Method java/io/PrintStream.println:(Z)V
+        17: return        
 
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
@@ -91,7 +75,7 @@ Constant pool:
       stack=32, locals=2, args_size=1
          0: new           #1                  // class HOME
          3: dup           
-         4: invokespecial #2                  // Method "<init>":()V
-         7: invokespecial #36                 // Method Setup:()V
+         4: invokespecial #4                  // Method "<init>":()V
+         7: invokespecial #32                 // Method Setup:()V
         10: return        
 }

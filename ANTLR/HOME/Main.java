@@ -1,4 +1,5 @@
 package HOME;
+
 import HOME.CodeGene.ByteCodeVisitor;
 import HOME.Grammar.*;
 import HOME.SymbolTable.SymbolTable;
@@ -7,22 +8,19 @@ import HOME.Type.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Created by Jacob on 12-03-14.
  */
-public class Main
-{
+public class Main {
     public static SymbolTable symbolTable = new SymbolTable();
 
     public static Type nothing = new Type("Nothing");
     public static Type generic = new Type("#Generic");
+    public static Type object = new Type("Object");
 
     public static Type integer;
     public static Type decimal;
@@ -39,8 +37,7 @@ public class Main
 
     public static TypeChecker typeChecker;
 
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.program();
@@ -58,16 +55,16 @@ public class Main
 
         //Create generic list and dictionary
         list = new Type("List");
-        list.methods.add(new Function("add", nothing, generic.toList()));
+        list.methods.add(new Function("add", bool, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
         list.methods.add(new Function("lol", integer, new ArrayList<Type>()));
         dictionary = new Type("Dictionary");
-        dictionary.methods.add(new Function("add", nothing, new ArrayList<Type>(Arrays.asList(string, generic))));
+        dictionary.methods.add(new Function("put", object, new ArrayList<Type>(Arrays.asList(string, generic))));
         dictionary.methods.add(new Function("remove", nothing, string.toList()));
         dictionary.methods.add(new Function("lol", integer, new ArrayList<Type>()));
         //TODO: Allow collections as parameters/return types. Also, constructors/fields don't work for collections atm.
 
-        symbolTable.functions.addSymbol("RegisterEvent", new Function("RegisterEvent", nothing,  new ArrayList<>(Arrays.asList(event, functionType))));
+        symbolTable.functions.addSymbol("RegisterEvent", new Function("RegisterEvent", nothing, new ArrayList<>(Arrays.asList(event, functionType))));
 
         //Instantiate typechecker, because this is used in firstrun
         typeChecker = new TypeChecker();
@@ -77,38 +74,48 @@ public class Main
         FirstRun firstVisit = new FirstRun();
 
         //Visit globals
-        Type returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext)tree).global());
+        Type returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext) tree).global());
 
         //Check if errors, if not visitblock
-        if(!(returnType instanceof ErrorType))
-            returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext)tree).block());
+        if (!(returnType instanceof ErrorType))
+            returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext) tree).block());
 
         //If error print it, if not visit typechecker
-        if (!(returnType instanceof ErrorType))
-        {
+        if (!(returnType instanceof ErrorType)) {
             System.out.println("-----------------------------Typechecker-----------------------");
             Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
-            if(type instanceof ErrorType)
+            if (type instanceof ErrorType) {
                 System.out.println("Error, halting!");
-            else
+                System.exit(1);
+            } else {
                 System.out.println("Success");
+            }
         }
 
-        nothing.bytecode="V";
+        nothing.bytecode = "V";
         System.out.println("-----------------------------Code Generation-----------------------");
         //ByteCodeVisitor bytecode = new ByteCodeVisitor();
         //bytecode.visit(tree);
-
+        File file = new File("HOME.class");
+        if (file.exists()) {
+            file.delete();
+        }
         // TODO change
         symbolTable.resetVariableTable();
 
 //        HOME.CodeGene.Main codeGeneration = new HOME.CodeGene.Main();
 //        codeGeneration.main(null);
+        object.bytecode = "Ljava/lang/Object;";
+        symbolTable.types.addSymbol(object.name, object);
+        list.bytecode = "Ljava/lang/List";
+        symbolTable.types.addSymbol(list.name, list);
+        dictionary.bytecode = "Ljava/lang/Map";
+        symbolTable.types.addSymbol(dictionary.name, dictionary);
         ByteCodeVisitor visitor = new ByteCodeVisitor();
         visitor.visit(tree);
         visitor.build();
 
-        try{
+        try {
             // Run a java app in a separate system process
             Process proc = Runtime.getRuntime().exec("java -jar jar/jasmin.jar HOME/CodeGene/Output_test.j");
             proc.waitFor();
@@ -116,22 +123,22 @@ public class Main
             InputStream in = proc.getInputStream();
             InputStream err = proc.getErrorStream();
 
-            BufferedReader bIn =new BufferedReader(new InputStreamReader(in));
+            BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
             BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
             String s;
-            while((s = bIn.readLine()) != null){
+            while ((s = bIn.readLine()) != null) {
                 System.out.println(s);
             }
-            while((s = bErr.readLine()) != null){
+            while ((s = bErr.readLine()) != null) {
                 System.out.println(s);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
 
         System.out.println("-----------------------------Decompiling-----------------------");
-        try{
+        try {
             // Run a java app in a separate system process
             Process proc = Runtime.getRuntime().exec("javap -c -v -private HOME.class");
             //proc.waitFor();
@@ -139,22 +146,22 @@ public class Main
             InputStream in = proc.getInputStream();
             InputStream err = proc.getErrorStream();
 
-            BufferedReader bIn =new BufferedReader(new InputStreamReader(in));
+            BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
             BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
             String s;
-            while((s = bIn.readLine()) != null){
+            while ((s = bIn.readLine()) != null) {
                 System.out.println(s);
             }
-            while((s = bErr.readLine()) != null){
+            while ((s = bErr.readLine()) != null) {
                 System.out.println(s);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
 
         System.out.println("-----------------------------Running-----------------------");
-        try{
+        try {
             // Run a java app in a separate system process
             Process proc = Runtime.getRuntime().exec("java HOME");
             //proc.waitFor();
@@ -165,17 +172,17 @@ public class Main
             BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
             BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
             String s;
-            while((s = bIn.readLine()) != null){
+            while ((s = bIn.readLine()) != null) {
                 System.out.println(s);
             }
-            while((s = bErr.readLine()) != null){
+            while ((s = bErr.readLine()) != null) {
                 System.out.println(s);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
-       // System.out.println("omagmward");
+        // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
 //        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
 //        lol.inspect(parser);

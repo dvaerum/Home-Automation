@@ -1,7 +1,6 @@
 
 function Setup() returns Nothing
-    String lol = "lol"
-    String hej = lol + "error"
-    //Integer tester = (-x) //= -1 + -(4 + -x)
-    //Integer hej = tester + (12 + 3 + 4 - tester)
+    Boolean x = "jeg" == "jeg"
+    String str = x.toString()
+
 endfunction

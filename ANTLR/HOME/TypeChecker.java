@@ -527,6 +527,15 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     //Else accept the expression
                 else
                     returnType = Main.bool;
+
+                if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
+                {
+                    addIntToDecNode(ctx.expression(0));
+                }
+                else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
+                {
+                    addIntToDecNode(ctx.expression(1));
+                }
             }
             // Check for a single literal
             //Check if type is equal
@@ -736,13 +745,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return new ErrorType(String.format("Undefined Type, \"%s\" isn't defined", className));
     }
 
-//    @Override
-//    public HOME.Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
-//    {
-//        return new HOME.Type(ctx.getText());
-//    }
-
-
     @Override
     public Type visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx)
     {
@@ -751,10 +753,16 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         forkReturnStack.newStack();
         forkReturnStack.addFork();
 
+
+        new Boolean(true).toString();
+
         Type returnType = null;
 
         if(ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
+
+        if(!returnType.equals(Main.bool))
+            return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType);
 
         Type stmtsType = null;
         if(ctx.stmts().getChildCount() > 0)

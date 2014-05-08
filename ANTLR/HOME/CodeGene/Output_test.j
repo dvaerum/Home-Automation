@@ -11,25 +11,16 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 6
-    ldc "lol"
-    astore 1
-    load 1
-    ldc "error"
+    .limit locals 4
+    ldc "jeg"
+    ldc "jeg"
+    invokevirtual java/lang/String.equals(Ljava/lang/Object;)Z
+    istore 2
     astore 3
-    astore 2
-    new java/lang/StringBuilder
-    dup
-    invokespecial java/lang/StringBuilder.<init>()V
-    aload 2
-    invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    aload 3
-    invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    invokevirtual java/lang/StringBuilder.toString()Ljava/lang/String;
-    astore 4
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "RETURNING NOTHING"
-    invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+    aload 3
+    invokevirtual java/util/HashMap.toString()Ljava/lang/String;
+    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
     return
 .end method
 

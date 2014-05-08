@@ -67,10 +67,8 @@ public class Type
 
         //--------------Constructor parsing---------------------
         if(constructorName != null)
-            constructorName = constructorName.replaceAll("- ", "");
-
-        if(constructorName.equals(name))
         {
+            constructorName = constructorName.replaceAll("- ", "");
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
             //Prepares list of parameters for constructor.
@@ -91,8 +89,6 @@ public class Type
             //Create function-type
             //And insert into constructor field
         }
-        else
-            System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
 
 
 
@@ -220,5 +216,20 @@ public class Type
     @Override
     public String toString() {
         return name;
+    }
+
+    public String getObjectByteCode() {
+        switch(this.bytecode) {
+            case "I":
+                return "Ljava/lang/Integer;";
+            case "D":
+                return "Ljava/lang/Double;";
+            case "Z":
+                return "Ljava/lang/Integer;";
+            case "java/Lang/String":
+                return "Ljava/Lang/String";
+            default:
+                return "HOME/" + this.bytecode;
+        }
     }
 }

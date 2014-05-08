@@ -12,4 +12,7 @@ class Input
         - toString(Integer, Decimal) > String
         - ultraLol(Integer) > Integer
     endmethods
+    bytecode
+        - A
+    endbytecode
 endclass

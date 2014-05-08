@@ -982,6 +982,37 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
         return null;
     }
 
+    public void visitField(@NotNull HOMEParser.FieldContext ctx, Statements stmts) {
+        String objectname = ctx.identifier().getText();
+        stmts.addStatement("aload " + symbolTable.variables.getSymbol(objectname).var.location);
+
+        stmts.addStatement("iconst_1");
+
+        String className = symbolTable.variables.getSymbol(objectname).var.type.toString();
+        String fieldname = ctx.IdentifierExact().getText();
+        stmts.addStatement("putfield " + className + "/" + fieldname + " I");
+
+
+
+
+
+
+        /*
+        SymbolInfo symbol_res = symbolTable.variables.getSymbol(objectname);
+
+        ExpressionReturn x = new ExpressionReturn(symbol_res.var.type, "");
+        x.invokeToObject(stmts);
+        stmts.addStatement("astore " + stmts.nextLocal());
+        stmts.addLocal(1);
+
+
+        String classname = x.type.toString();
+        //TODO: make it work for not only integer
+        stmts.addStatement("putfield " + classname + "/" + fieldname + " I");
+        */
+
+    }
+
     public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts) {
         return visitExpression(ctx, stmts, null, false);
     }
@@ -1214,6 +1245,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     buildDictionary(stmts, symbolType);
                 }
                 break;
+
+            default:
+                stmts.addLocal(1);
+                String className = ctx.type().getText();
+                stmts.addStatement("new " + className);
+                stmts.addStatement("dup");
+                stmts.addStatement("invokespecial " + className + ".<init>()V");
+                stmts.addStatement("astore " + stmts.currentLocal());
         }
     }
 

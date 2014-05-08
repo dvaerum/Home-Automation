@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
-  Last modified May 8, 2014; size 485 bytes
-  MD5 checksum 35e67d53c05631348058da07e8d43412
+  Last modified May 8, 2014; size 488 bytes
+  MD5 checksum 02e1f81bcd5dee184b17ac6a2ec580ba
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -8,74 +8,71 @@ public class HOME
   major version: 45
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
-   #1 = Class              #14            //  HOME
-   #2 = Utf8               (Ljava/lang/Object;)Z
-   #3 = Methodref          #28.#20        //  java/lang/String.equals:(Ljava/lang/Object;)Z
-   #4 = Methodref          #1.#16         //  HOME."<init>":()V
-   #5 = Utf8               ()V
-   #6 = Utf8               main
-   #7 = NameAndType        #22:#25        //  println:(Z)V
-   #8 = Utf8               java/lang/Object
-   #9 = Class              #8             //  java/lang/Object
-  #10 = Utf8               java/lang/System
-  #11 = String             #18            //  jeg
-  #12 = Class              #10            //  java/lang/System
-  #13 = Utf8               equals
-  #14 = Utf8               HOME
-  #15 = Utf8               ([Ljava/lang/String;)V
-  #16 = NameAndType        #24:#5         //  "<init>":()V
-  #17 = Class              #37            //  java/io/PrintStream
-  #18 = Utf8               jeg
-  #19 = Utf8               java/lang/String
-  #20 = NameAndType        #13:#2         //  equals:(Ljava/lang/Object;)Z
-  #21 = Utf8               SourceFile
+   #1 = Methodref          #27.#8         //  HOME."<init>":()V
+   #2 = NameAndType        #29:#34        //  out:Ljava/io/PrintStream;
+   #3 = Utf8               java/lang/Integer
+   #4 = Utf8               ([Ljava/lang/String;)V
+   #5 = Utf8               java/lang/Object
+   #6 = Utf8               <init>
+   #7 = Class              #5             //  java/lang/Object
+   #8 = NameAndType        #6:#12         //  "<init>":()V
+   #9 = Class              #21            //  java/io/PrintStream
+  #10 = Utf8               HOME
+  #11 = NameAndType        #22:#25        //  println:(Ljava/lang/Object;)V
+  #12 = Utf8               ()V
+  #13 = Class              #26            //  java/lang/System
+  #14 = Utf8               Code
+  #15 = Utf8               main
+  #16 = Utf8               HOME.java
+  #17 = Fieldref           #13.#2         //  java/lang/System.out:Ljava/io/PrintStream;
+  #18 = Utf8               valueOf
+  #19 = Utf8               SourceFile
+  #20 = Methodref          #32.#23        //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #21 = Utf8               java/io/PrintStream
   #22 = Utf8               println
-  #23 = String             #39            //  j3g
-  #24 = Utf8               <init>
-  #25 = Utf8               (Z)V
-  #26 = NameAndType        #27:#38        //  out:Ljava/io/PrintStream;
-  #27 = Utf8               out
-  #28 = Class              #19            //  java/lang/String
-  #29 = Methodref          #17.#7         //  java/io/PrintStream.println:(Z)V
-  #30 = Methodref          #9.#16         //  java/lang/Object."<init>":()V
-  #31 = Utf8               HOME.java
-  #32 = Methodref          #1.#33         //  HOME.Setup:()V
-  #33 = NameAndType        #35:#5         //  Setup:()V
-  #34 = Fieldref           #12.#26        //  java/lang/System.out:Ljava/io/PrintStream;
-  #35 = Utf8               Setup
-  #36 = Utf8               Code
-  #37 = Utf8               java/io/PrintStream
-  #38 = Utf8               Ljava/io/PrintStream;
-  #39 = Utf8               j3g
+  #23 = NameAndType        #18:#35        //  valueOf:(I)Ljava/lang/Integer;
+  #24 = Methodref          #7.#8          //  java/lang/Object."<init>":()V
+  #25 = Utf8               (Ljava/lang/Object;)V
+  #26 = Utf8               java/lang/System
+  #27 = Class              #10            //  HOME
+  #28 = Methodref          #27.#31        //  HOME.Setup:()V
+  #29 = Utf8               out
+  #30 = Utf8               Setup
+  #31 = NameAndType        #30:#12        //  Setup:()V
+  #32 = Class              #3             //  java/lang/Integer
+  #33 = Methodref          #9.#11         //  java/io/PrintStream.println:(Ljava/lang/Object;)V
+  #34 = Utf8               Ljava/io/PrintStream;
+  #35 = Utf8               (I)Ljava/lang/Integer;
 {
   public HOME();
     flags: ACC_PUBLIC
     Code:
       stack=32, locals=2, args_size=1
          0: aload_0       
-         1: invokespecial #30                 // Method java/lang/Object."<init>":()V
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
          4: return        
 
   public void Setup();
     flags: ACC_PUBLIC
     Code:
       stack=32, locals=3, args_size=1
-         0: ldc           #23                 // String j3g
-         2: ldc           #11                 // String jeg
-         4: invokevirtual #3                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
-         7: istore        1
-         9: getstatic     #34                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        12: iload         1
-        14: invokevirtual #29                 // Method java/io/PrintStream.println:(Z)V
-        17: return        
+         0: bipush        5
+         2: bipush        6
+         4: iadd          
+         5: invokestatic  #20                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         8: astore        2
+        10: getstatic     #17                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        13: aload         2
+        15: invokevirtual #33                 // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+        18: return        
 
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
     Code:
       stack=32, locals=2, args_size=1
-         0: new           #1                  // class HOME
+         0: new           #27                 // class HOME
          3: dup           
-         4: invokespecial #4                  // Method "<init>":()V
-         7: invokespecial #32                 // Method Setup:()V
+         4: invokespecial #1                  // Method "<init>":()V
+         7: invokespecial #28                 // Method Setup:()V
         10: return        
 }

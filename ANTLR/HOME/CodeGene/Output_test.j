@@ -11,16 +11,15 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 4
-    ldc "jeg"
-    ldc "jeg"
-    invokevirtual java/lang/String.equals(Ljava/lang/Object;)Z
-    istore 2
-    astore 3
+    .limit locals 3
+    bipush 5
+    bipush 6
+    iadd
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    astore 2
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    aload 3
-    invokevirtual java/util/HashMap.toString()Ljava/lang/String;
-    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+    aload 2
+    invokevirtual java/io/PrintStream.println(Ljava/lang/Object;)V
     return
 .end method
 

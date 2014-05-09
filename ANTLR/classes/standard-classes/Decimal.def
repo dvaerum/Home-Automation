@@ -9,4 +9,7 @@ class Decimal
     methods
         - toString() > String
     endmethods
+    bytecode
+        - D
+    endbytecode
 endclass

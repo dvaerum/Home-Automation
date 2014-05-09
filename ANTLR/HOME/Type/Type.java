@@ -232,4 +232,16 @@ public class Type
                 return "HOME/" + this.bytecode;
         }
     }
+    public String getByteCode() {
+        if(this.equals(Main.integer))
+            return this.bytecode;
+        if(this.equals(Main.decimal))
+            return this.bytecode;
+        if(this.equals(Main.bool))
+            return this.bytecode;
+        if(this.equals(Main.string))
+            return this.bytecode;
+        else
+            return "HOME/" + this.bytecode;
+    }
 }

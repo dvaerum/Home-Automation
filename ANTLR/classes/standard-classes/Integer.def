@@ -6,6 +6,10 @@ class Integer
     endconstructor
 
     methods
-        - toString(Integer, Decimal) > String
+        - toString() > String
+        - getValue() > Integer
     endmethods
+    bytecode
+        - I
+    endbytecode
 endclass

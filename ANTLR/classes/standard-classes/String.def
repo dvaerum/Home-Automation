@@ -1,0 +1,14 @@
+class String
+    fields
+    endfields
+
+    constructor
+    endconstructor
+
+    methods
+        - toString(Integer, Decimal) > String
+    endmethods
+    bytecode
+        - Ljava/lang/String;
+    endbytecode
+endclass

@@ -2,6 +2,7 @@ class Input
     fields
         - Integer x
         - Decimal y
+        - String  name
     endfields
 
     constructor
@@ -13,6 +14,6 @@ class Input
         - ultraLol(Integer) > Integer
     endmethods
     bytecode
-        - A
+        - Input
     endbytecode
 endclass

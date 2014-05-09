@@ -1,5 +1,9 @@
 
 function Setup() returns Nothing
-    Integer int = 5 + 6
-
+    Input t
+    //Integer what = 54
+    t.x = -54
+    Decimal x = 324.
+    Boolean z = x > t.x
+    //Boolean z = x > what.getValue()
 endfunction

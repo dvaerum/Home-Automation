@@ -11,20 +11,22 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 5
+    .limit locals 9
     new Input
     dup
     invokespecial Input.<init>()V
     astore 1
     aload 1
-    bipush 54
-    ineg
+    sipush 400
     putfield Input/x I
     ldc2_w 324.d
     dstore 2
     dload 2
-    aload 4
+    aload 1
     getfield Input/x I
+    i2d
+    dup2
+    dstore 6
     dcmpl
     ifle Label1
     iconst_1
@@ -34,8 +36,8 @@ return
     Label2:
     istore 4
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    aload 4
-    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+    iload 4
+    invokevirtual java/io/PrintStream/println(Z)V
     return
 .end method
 

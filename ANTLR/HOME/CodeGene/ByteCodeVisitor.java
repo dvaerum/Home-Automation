@@ -1062,8 +1062,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
             ExpressionReturn r1, r2;
             String operator;
 
-            r1 = checkExpression(ctx, stmts, 0, convertingFlag);
-            r2 = checkExpression(ctx, stmts, 1, convertingFlag);
+//            r1 = checkExpression(ctx, stmts, 0, convertingFlag);
+//            r2 = checkExpression(ctx, stmts, 1, convertingFlag);
+            r1 = visitExpression(ctx.expression(0), stmts, label, convertingFlag);
+            r2 = visitExpression(ctx.expression(1), stmts, label, convertingFlag);
 
             Type type = compareTypes(r1, r2);
 

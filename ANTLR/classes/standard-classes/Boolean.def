@@ -9,6 +9,7 @@ class Boolean
     methods
         - toString() > String
     endmethods
+
     bytecode
         - Z
     endbytecode

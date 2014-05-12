@@ -106,11 +106,11 @@ public class Main {
 //        HOME.CodeGene.Main codeGeneration = new HOME.CodeGene.Main();
 //        codeGeneration.main(null);
         object.bytecode = "Ljava/lang/Object;";
-        symbolTable.types.addSymbol(object.name, object);
-        list.bytecode = "Ljava/lang/List";
-        symbolTable.types.addSymbol(list.name, list);
-        dictionary.bytecode = "Ljava/lang/Map";
-        symbolTable.types.addSymbol(dictionary.name, dictionary);
+        symbolTable.types.addSymbol(object.name,object);
+        list.bytecode = "Ljava/util/ArrayList;";
+        symbolTable.types.addSymbol(list.name,list);
+        dictionary.bytecode = "Ljava/util/HashMap;";
+        symbolTable.types.addSymbol(dictionary.name,dictionary);
         ByteCodeVisitor visitor = new ByteCodeVisitor();
         visitor.visit(tree);
         visitor.build();
@@ -184,8 +184,8 @@ public class Main {
 
         // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
-        lol.inspect(parser);
+//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
+//        lol.inspect(parser);
 //=================================================================================
 
     }

@@ -6,9 +6,11 @@ class String
     endconstructor
 
     methods
-        - toString(Integer, Decimal) > String
+        - toString() > String
+        - length() > Integer
     endmethods
+
     bytecode
-        - Ljava/lang/String;
+        - java/lang/String
     endbytecode
 endclass

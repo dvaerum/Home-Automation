@@ -67,13 +67,25 @@ public class CollectionType extends Type
         return newFunc;
     }
 
+    //@Override
     public String getObjectByteCode() {
-        switch(this.primaryType.name) {
-            case "List":
-                return "java/util/List;";
-            case "Dictionary":
-                return "java/util/Map;";
+        if (this.primaryType.equals(Main.list)){
+            return "Ljava/util/ArrayList;";
+        } else if (this.primaryType.equals(Main.dictionary)){
+            return "Ljava/util/HashMap;";
         }
+
+        return null;
+    }
+
+    //@Override
+    public String getClassByteCode() {
+        if (this.primaryType.equals(Main.list)){
+            return "java/util/ArrayList";
+        } else if (this.primaryType.equals(Main.dictionary)){
+            return "java/util/HashMap";
+        }
+
         return null;
     }
 

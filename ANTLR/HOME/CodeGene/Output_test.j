@@ -11,33 +11,71 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 9
-    new Input
+    .limit locals 4
+    new java/util/ArrayList
     dup
-    invokespecial Input.<init>()V
+    invokespecial java/util/ArrayList.<init>()V
     astore 1
+    new java/util/ArrayList
+    dup
+    invokespecial java/util/ArrayList.<init>()V
+    astore 2
+    aload 2
+    bipush 1
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 2
+    bipush 2
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 2
+    bipush 3
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
     aload 1
-    sipush 400
-    putfield Input/x I
-    ldc2_w 324.d
-    dstore 2
-    dload 2
+    aload 2
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    new java/util/ArrayList
+    dup
+    invokespecial java/util/ArrayList.<init>()V
+    astore 3
+    aload 3
+    bipush 7
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 3
+    bipush 8
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 3
+    bipush 9
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
     aload 1
-    getfield Input/x I
-    i2d
-    dup2
-    dstore 6
-    dcmpl
-    ifle Label1
-    iconst_1
-    goto Label2
-    Label1:
-    iconst_0
-    Label2:
-    istore 4
+    aload 3
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload_0
+    aload 1
+    bipush 1
+    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
+    checkcast java/util/ArrayList
+    bipush 1
+    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
+    checkcast java/lang/Integer
+    invokevirtual java/lang/Integer/intValue()I
+    invokevirtual HOME/PrintInteger(I)I
+    pop
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    iload 4
-    invokevirtual java/io/PrintStream/println(Z)V
+    ldc "Great Success!!"
+    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
     return
 .end method
 
@@ -49,5 +87,46 @@ return
     invokespecial HOME/<init>()V
     invokespecial HOME/Setup()V
     return
+.end method
+
+.method public PrintString(Ljava/lang/String;)Ljava/lang/String;
+    .limit stack 11
+    .limit locals 2
+    aload 1
+    dup
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    swap
+    invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+    areturn
+.end method
+
+.method public PrintInteger(I)I
+    .limit stack 11
+    .limit locals 2
+    iload 1
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    iload 1
+    invokevirtual java/io/PrintStream/println(I)V
+    ireturn
+.end method
+
+.method public PrintDecimal(D)D
+    .limit stack 11
+    .limit locals 3
+    dload 1
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    dload 1
+    invokevirtual java/io/PrintStream/println(D)V
+    dreturn
+.end method
+
+.method public PrintBoolean(Z)Z
+    .limit stack 11
+    .limit locals 2
+    iload 1
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    iload 1
+    invokevirtual java/io/PrintStream/println(Z)V
+    ireturn
 .end method
 

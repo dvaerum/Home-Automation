@@ -1,9 +1,21 @@
-
 function Setup() returns Nothing
-    Input t
-    //Integer what = 54
-    t.x = -54
-    Decimal x = 324.
-    Boolean z = x > t.x
-    //Boolean z = x > what.getValue()
+    List<List<Integer>> wat = {{1, 2, 3}, {7, 8, 9}}
+
+    PrintInteger(wat[1][1])
+endfunction
+
+function PrintString(String x) returns String
+    return x
+endfunction
+
+function PrintInteger(Integer x) returns Integer
+    return x
+endfunction
+
+function PrintDecimal(Decimal x) returns Decimal
+    return x
+endfunction
+
+function PrintBoolean(Boolean x) returns Boolean
+    return x
 endfunction

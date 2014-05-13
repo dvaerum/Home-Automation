@@ -184,8 +184,8 @@ public class Main {
 
         // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
-//        lol.inspect(parser);
+        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
+        lol.inspect(parser);
 //=================================================================================
 
     }

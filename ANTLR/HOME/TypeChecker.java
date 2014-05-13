@@ -121,6 +121,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         String symbol = ctx.IdentifierExact().getText();
 
+        if(!Main.symbolTable.variables.symbolExists(symbol))
+            return new ErrorType(String.format("The variable \"%s\" is undefined.", symbol));
+
         Type collectionType = Main.symbolTable.variables.getSymbol(symbol).var.type;
         Type indexType = null;
         Type innerType = null;
@@ -753,9 +756,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         forkReturnStack.newStack();
         forkReturnStack.addFork();
 
-
-        new Boolean(true).toString();
-
         Type returnType = null;
 
         if(ctx.expression() != null)
@@ -773,6 +773,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Main.symbolTable.closeScope();
 
+        if(!returnType.equals(Main.bool))
+            return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType);
 
         if(ctx.elseIfStmt().size() > 0)
         {
@@ -940,6 +942,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type typeOfObject = visitIdentifier(ctx.identifier());
         Function method;
         String methodName = ctx.funcCall().identifier().getText();
+
+        if(typeOfObject instanceof ErrorType)
+            return typeOfObject;
 
         //Get method from type object, and return if not found
         if((method = typeOfObject.getMethodByName(methodName)) == null)

@@ -1392,6 +1392,16 @@ public class ByteCodeVisitor extends HOMEBaseVisitor {
                     }
                 }
                 break;
+
+            default:
+                stmts.addLocal(1);
+                String className = ctx.type().getText();
+                symbolTable.variables.addSymbol(ctx.identifier().getText(), symbolTable.types.getSymbol(className), stmts.currentLocal());
+                stmts.addStatement("new " + className);
+                stmts.addStatement("dup");
+                stmts.addStatement("invokespecial " + className + ".<init>()V");
+                stmts.addStatement("astore " + stmts.currentLocal());
+                break;
         }
     }
 

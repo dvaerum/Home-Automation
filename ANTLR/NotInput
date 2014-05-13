@@ -1,24 +1,206 @@
-    //List<List<Integer>> wat = {{1, 2, 3}, {7, 8, 9}}
 function Setup() returns Nothing
+	Integer x = 213
+	Decimal y =24.3
 
-    List<Integer> x1 = wat[1]
+	/*******************
+	*****if/elseif/else*
+	*******************/
+	if(x == 334)
 
-    PrintInteger(wat[1][1])
-    PrintInteger(x1[2])
+	endif
+
+	if(x == 314)
+		x++
+	elseif(43 == x)
+		x = x + 123
+
+	else
+		x=x+4
+	endif
+
+	if(x == 3)
+		if(y == 3.3)
+			y++
+		else
+			y++
+		endif
+	endif
+
+	/**********
+	**Repeats**
+	**********/
+	repeat while(x == 3)
+		x++
+	endrepeat
+
+	repeat until(true == (4 > 5.1))
+		x++
+	endrepeat
+
+	repeat while(y < 3.2)
+		repeat while(x > 3)
+			y++
+		endrepeat
+	endrepeat
+
+	/***********
+	*List init**
+	***********/
+
+	//Integer intnnnn  = 3 * (3*3)+intnnnn
+    Boolean booltest1 = true AND (false OR true)
+    Boolean booltest2 = 3 > 3 AND true
+    Boolean booltest3 = ((((((((((true))))))OR false))))
+    String f = "asdf"
+
+    /**************
+    ****Classes****
+    **************/
+
+    Input TestingObj
+    //TestingObj.x = 334     //x = int
+    //TestingObj.y = 35.3    //y = dec
+    //TestingObj.y = 34
+
+    Input TestingObj2 = Input(34, 53.5)
+    //String resultString = TestingObj2.ultralol(343)
+
+
+
+
+
+
+	/********************
+	*Function call tests*
+	**Everything below***
+	********************/
+	//nothingtest1()
+	//nothingtest2(32, 55)
+	//nothingtest3(123, 32.4, "sfsdf", false);
+	Input inputParam
+	//nothingtest4(inputParam)
+	//returnTest()
+	//returnTest2()
+	//returnForkTest1()
+	//returnForkTest2()
+	//returnForkTest3()
+
 endfunction
 
-function PrintString(String x) returns String
+function nothingtest1() returns Nothing
+    return
+endfunction
+
+function nothingtest2(Integer x, Integer y) returns Nothing
+
+endfunction
+
+function nothingtest3(Integer a, Decimal b, String c, Boolean d) returns Nothing
+
+endfunction
+
+function nothingtest4(Input x) returns Nothing
+
+endfunction
+
+function returnTest() returns Integer
+    return 4
+endfunction
+
+function returnTest2() returns Input
+    Input testingObject
+	return testingObject
+endfunction
+
+
+/******************************************************
+**Ikke sikker paa funktionerne nedenunder skal fungere*
+******************************************************/
+
+//function returnForkTest1() returns Integer
+//    if(3==3)
+//        return 5
+//    endif
+//endfunction
+
+function returnForkTest2() returns Integer
+    if(3==4)
+        return 6
+    elseif(5==6)
+        return 7
+    else
+        return 8
+    endif
+endfunction
+/*
+function returnForkTest3()
+    if(1 == 2)
+        if(3 == 4)
+            if(5 == 6)
+                return 7
+            endif
+        endif
+    endif
+endfunction
+*/
+
+/*function Setup() returns Nothing
+
+   //Boolean x = (true AND false) OR ( true AND true)
+   //Boolean q = false
+    // x = q+true
+
+    //List<Integer> li = {2, 3, 3, 4}
+    //List<List<Integer>> s = { {}, {2, 3} }
+    //List<List<String>> es = { {"herp", "derp"}, {"Merp", "Erp"} }
+    //Dictionary<String> dic = { {"lol", "derp"},  {"lol2", "derp2"} }
+    //List<List<List<String>>> d = { { {"derp", "erp", "lerp"}, {"lol"} } }
+    //Dictionary<Dictionary<Integer>> dd = { {"s", { {"s", 1} } }, {"s2", { {"f" , 2} } } }
+    //List<Integer> sgsd = {}
+    //List<Dictionary<String>> fsdfsd = { {} }
+    //Dictionary<String> fgrer = { {"1", "l"} }
+    //Dictionary<Dictionary<String>> gklg = { {"l" ,{ {"lol", "derp"} } } }
+    //List<Dictionary<List<String>>> sdalllll = { { {"string", {"lol", "lol2"}} }  }
+    //List<String> sll = {"lol"}
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop = { { { { {2, 3}, {1,2} } } } }
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop4 = { { { { {} } } } }
+
+    // Bad
+    //List<Integer> sad = {2, 2, 2, {}}
+    //List<Dictionary<String>> aaa = { { {} }, {} }
+    //Dictionary<Dictionary<String>> gklsag = { {"l" ,{ {"lol", "derp", "nerp"} } } }
+    //List<Integer> aaaaaaaaa = { { {} } }
+    //List<List<Integer>> dsssssssss = {2,2,2,2}
+    //List<Dictionary<List<String>>> sdallfg = { { {"string", {"lol", "lol2"}, {"lol", "lol"} } }  }
+    //List<String> saall = {"lol", {}}
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop2 = { { { { {2, 3}, {{2}} } } } }
+    //List<List<List<List<List<Integer>>>>> omgWhenWillItStop3 = { { { { { {} } } } } }
+    //List<List<Integer>> x ={ { { } } }
+
+     //List<Integer> sadferrr
+     //List<String> afiirgnrek
+     //sadferrr = afiirgnrek
+     //List<Boolean> aiawefja = { 3=={4} }
+     //Boolean afaefaggaerg = 3=="lol"  //fejler ikke
+     //String hash = "hej"
+     //hash()
+     Integer lkkk
+     List<Integer> faef = {1, 2, 3}
+     //List<Decimal> adfadf = {1, 2}
+     Dictionary<Integer> sdef = { {"lol", 5} }
+     //adfadf = faef
+     //Decimal n = faef[0]
+       sdef["lol"] = 2
+     //faef[3]++
+     String soeren_jensen = "PC-MasterRace"
+     Decimal the_d = 2.0
+     //soeren_jensen++
+endfunction
+*/
+
+/*
+function hej() returns String
+    String sf
     return x
 endfunction
-
-function PrintInteger(Integer x) returns Integer
-    return x
-endfunction
-
-function PrintDecimal(Decimal x) returns Decimal
-    return x
-endfunction
-
-function PrintBoolean(Boolean x) returns Boolean
-    return x
-endfunction
+*/

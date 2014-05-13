@@ -18,6 +18,25 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
     }
 
     @Override
+    public Type visitGlobal(@NotNull HOMEParser.GlobalContext ctx)
+    {
+        Type returnType;
+        if(ctx.declaration() != null)
+        {
+            returnType = Main.typeChecker.visitDeclaration(ctx.declaration());
+            if(returnType instanceof ErrorType)
+                return returnType;
+
+            if(ctx.global() != null)
+                returnType = visitGlobal(ctx.global());
+
+            return returnType;
+        }
+        else
+            return null;
+    }
+
+    @Override
     public Type visitBlock(@NotNull HOMEParser.BlockContext ctx)
     {
         Type returnType = Main.nothing;
@@ -27,8 +46,12 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         if(ctx.function() != null)
         {
             returnType = visitFunction(ctx.function());
-            if(returnType instanceof ErrorType)
-                return returnType;
+        }
+
+        if(returnType instanceof ErrorType)
+        {
+            System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType));
+            return returnType;
         }
 
         //Calls visitBlock recursively if it hasn't failed already.
@@ -43,7 +66,8 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         //Checks if "setup" function has been found
         if(!Main.symbolTable.functions.symbolExists("Setup"))
         {
-            returnType = new ErrorType("No \\\"Setup\\\" function found, please provide one.");
+            returnType = new ErrorType("No \"Setup\" function found, please provide one.");
+            System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType));
         }
 
         return returnType;
@@ -63,10 +87,20 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         else //otherwise return error if other unexpected type
             returns = new ErrorType("Error");
 
+        if(returns instanceof  ErrorType)
+            return returns;
+
         String funcName = ctx.getChild(1).getText();
 
         //Gets the types of the parameters
-        ArrayList<Type> paramTypes = (ArrayList<Type>)getFunctionParameters(ctx.declarationParameters());
+        ArrayList<Type> paramTypes = getFunctionParameters(ctx.declarationParameters());
+        for(Type t : paramTypes)
+        {
+            if(t instanceof ErrorType)
+            {
+                return t;
+            }
+        }
         Function symbol = new Function(funcName, returns, paramTypes);
 
         if(funcName.equals("Setup"))
@@ -77,7 +111,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         //adds function + parameter types to symbol table.
         if(!Main.symbolTable.functions.addSymbol(funcName, symbol))
-            returnType = new ErrorType(String.format("Function %s is duplicated at line %d",
+            returnType = new ErrorType(String.format("Function \"%s\" already exists.",
                     funcName, ctx.getStart().getLine()));
         else
             returnType = Main.nothing;
@@ -119,7 +153,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             return Main.symbolTable.types.getSymbol(className);
         }
 
-        return new ErrorType("Undefined Class");
+        return new ErrorType(String.format("Undefined Class \"%s\" isn't defined", className));
     }
 
     @Override
@@ -141,7 +175,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             return Main.symbolTable.types.getSymbol(typeName);
         else
         {
-            t = new CollectionType(typeName, t, innerType);
+            t = new CollectionType(typeName, t, innerType, t.bytecode);
             Main.symbolTable.types.addSymbol(typeName, t);
         }
 

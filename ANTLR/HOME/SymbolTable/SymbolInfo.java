@@ -1,7 +1,8 @@
-package HOME.SymbolTable; /**
-* Created by Frederik on 13-03-14.
-*/
+package HOME.SymbolTable;
+
+import HOME.Main;
 import HOME.Type.*;
+import HOME.CodeGene.ByteCodeVisitor.*;
 
 public class SymbolInfo
 {
@@ -22,5 +23,25 @@ public class SymbolInfo
     {
         this.var = new Variable(name, type, location);
         this.depth = depth;
+    }
+
+    public void store(Statements stmts) {
+        if (depth == 0) {
+            stmts.addStatement("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+        } else {
+            String typePrefix = "";
+
+            if (var.type.equals(Main.integer)) {
+                typePrefix = "i";
+            } else if (var.type.equals(Main.decimal)) {
+                typePrefix = "d";
+            } else if (var.type.equals(Main.bool)) {
+                typePrefix = "i";
+            } else {
+                typePrefix = "a";
+            }
+            stmts.addStatement(typePrefix + "store " + var.location);
+        }
+
     }
 }

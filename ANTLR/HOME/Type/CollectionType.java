@@ -14,11 +14,12 @@ public class CollectionType extends Type
     public Type primaryType;
     public Type innerType;
 
-    public CollectionType(String name, Type primaryType, Type innerType)
+    public CollectionType(String name, Type primaryType, Type innerType, String byteCode)
     {
         this.name = name;
         this.primaryType = primaryType;
         this.innerType = innerType;
+        this.bytecode = byteCode;
 
         // Copy methods
         for(Function meth : primaryType.methods)
@@ -26,7 +27,6 @@ public class CollectionType extends Type
             Function newMeth = replaceGenericFunction(meth);
             this.methods.add(newMeth);
         }
-
     }
 
     public Type getInnermostType()
@@ -67,7 +67,19 @@ public class CollectionType extends Type
         return newFunc;
     }
 
-    //@Override
+    public String getByteCode() {
+        if(this.equals(Main.integer))
+            return this.bytecode;
+        if(this.equals(Main.decimal))
+            return this.bytecode;
+        if(this.equals(Main.bool))
+            return this.bytecode;
+        if(this.equals(Main.string))
+            return this.bytecode;
+        else
+            return "HOME/" + this.bytecode;
+    }
+
     public String getObjectByteCode() {
         if (this.primaryType.equals(Main.list)){
             return "Ljava/util/ArrayList;";

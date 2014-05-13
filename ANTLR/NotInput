@@ -1,7 +1,10 @@
+    //List<List<Integer>> wat = {{1, 2, 3}, {7, 8, 9}}
 function Setup() returns Nothing
-    List<List<Integer>> wat = {{1, 2, 3}, {7, 8, 9}}
+
+    List<Integer> x1 = wat[1]
 
     PrintInteger(wat[1][1])
+    PrintInteger(x1[2])
 endfunction
 
 function PrintString(String x) returns String

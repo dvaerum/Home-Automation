@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
-  Last modified May 12, 2014; size 1137 bytes
-  MD5 checksum 3ebe6c73ed35fbcf6c070da0fcc98ce1
+  Last modified May 12, 2014; size 1225 bytes
+  MD5 checksum 8b154a5fdc7e6f1cefe74e35196a2b9e
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -8,157 +8,183 @@ public class HOME
   major version: 45
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
-   #1 = Class              #35            //  java/util/List
+   #1 = Class              #36            //  java/util/List
    #2 = Utf8               HOME.java
-   #3 = NameAndType        #58:#46        //  Setup:()V
+   #3 = NameAndType        #60:#48        //  Setup:()V
    #4 = Utf8               java/lang/Integer
-   #5 = Methodref          #44.#8         //  java/io/PrintStream.println:(Ljava/lang/String;)V
+   #5 = Methodref          #46.#8         //  java/io/PrintStream.println:(Ljava/lang/String;)V
    #6 = Utf8               SourceFile
-   #7 = InterfaceMethodref #1.#64         //  java/util/List.add:(Ljava/lang/Object;)Z
+   #7 = InterfaceMethodref #1.#66         //  java/util/List.add:(Ljava/lang/Object;)Z
    #8 = NameAndType        #16:#25        //  println:(Ljava/lang/String;)V
    #9 = Utf8               <init>
   #10 = Utf8               java/lang/System
-  #11 = NameAndType        #55:#40        //  get:(I)Ljava/lang/Object;
+  #11 = NameAndType        #57:#42        //  get:(I)Ljava/lang/Object;
   #12 = Utf8               (Z)Z
   #13 = Utf8               (Z)V
   #14 = Utf8               PrintString
-  #15 = NameAndType        #16:#47        //  println:(I)V
+  #15 = NameAndType        #16:#49        //  println:(I)V
   #16 = Utf8               println
-  #17 = Methodref          #60.#33        //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #17 = Methodref          #62.#34        //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
   #18 = Utf8               main
   #19 = Utf8               add
-  #20 = Class              #34            //  java/lang/Object
+  #20 = Class              #35            //  java/lang/Object
   #21 = Utf8               valueOf
-  #22 = Methodref          #44.#45        //  java/io/PrintStream.println:(Z)V
+  #22 = Methodref          #46.#47        //  java/io/PrintStream.println:(Z)V
   #23 = Utf8               (Ljava/lang/Object;)Z
-  #24 = Fieldref           #72.#32        //  java/lang/System.out:Ljava/io/PrintStream;
+  #24 = Fieldref           #76.#33        //  java/lang/System.out:Ljava/io/PrintStream;
   #25 = Utf8               (Ljava/lang/String;)V
   #26 = Utf8               PrintBoolean
-  #27 = NameAndType        #16:#59        //  println:(D)V
-  #28 = Class              #41            //  HOME
-  #29 = Methodref          #28.#36        //  HOME.PrintInteger:(I)I
-  #30 = Methodref          #28.#3         //  HOME.Setup:()V
-  #31 = Utf8               PrintDecimal
-  #32 = NameAndType        #69:#61        //  out:Ljava/io/PrintStream;
-  #33 = NameAndType        #21:#42        //  valueOf:(I)Ljava/lang/Integer;
-  #34 = Utf8               java/lang/Object
-  #35 = Utf8               java/util/List
-  #36 = NameAndType        #73:#52        //  PrintInteger:(I)I
-  #37 = Methodref          #49.#63        //  java/util/ArrayList."<init>":()V
-  #38 = Methodref          #49.#11        //  java/util/ArrayList.get:(I)Ljava/lang/Object;
-  #39 = Utf8               Code
-  #40 = Utf8               (I)Ljava/lang/Object;
-  #41 = Utf8               HOME
-  #42 = Utf8               (I)Ljava/lang/Integer;
-  #43 = String             #66            //  Great Success!!
-  #44 = Class              #50            //  java/io/PrintStream
-  #45 = NameAndType        #16:#13        //  println:(Z)V
-  #46 = Utf8               ()V
-  #47 = Utf8               (I)V
-  #48 = Utf8               ([Ljava/lang/String;)V
-  #49 = Class              #57            //  java/util/ArrayList
-  #50 = Utf8               java/io/PrintStream
-  #51 = Utf8               ()I
-  #52 = Utf8               (I)I
-  #53 = Methodref          #60.#70        //  java/lang/Integer.intValue:()I
-  #54 = Methodref          #44.#15        //  java/io/PrintStream.println:(I)V
-  #55 = Utf8               get
-  #56 = Utf8               (Ljava/lang/String;)Ljava/lang/String;
-  #57 = Utf8               java/util/ArrayList
-  #58 = Utf8               Setup
-  #59 = Utf8               (D)V
-  #60 = Class              #4             //  java/lang/Integer
-  #61 = Utf8               Ljava/io/PrintStream;
-  #62 = Utf8               intValue
-  #63 = NameAndType        #9:#46         //  "<init>":()V
-  #64 = NameAndType        #19:#23        //  add:(Ljava/lang/Object;)Z
-  #65 = Methodref          #28.#63        //  HOME."<init>":()V
-  #66 = Utf8               Great Success!!
-  #67 = Utf8               (D)D
-  #68 = Methodref          #44.#27        //  java/io/PrintStream.println:(D)V
-  #69 = Utf8               out
-  #70 = NameAndType        #62:#51        //  intValue:()I
-  #71 = Methodref          #20.#63        //  java/lang/Object."<init>":()V
-  #72 = Class              #10            //  java/lang/System
-  #73 = Utf8               PrintInteger
+  #27 = NameAndType        #16:#61        //  println:(D)V
+  #28 = Class              #43            //  HOME
+  #29 = NameAndType        #70:#72        //  wat:Ljava/util/ArrayList;
+  #30 = Methodref          #28.#37        //  HOME.PrintInteger:(I)I
+  #31 = Methodref          #28.#3         //  HOME.Setup:()V
+  #32 = Utf8               PrintDecimal
+  #33 = NameAndType        #73:#63        //  out:Ljava/io/PrintStream;
+  #34 = NameAndType        #21:#44        //  valueOf:(I)Ljava/lang/Integer;
+  #35 = Utf8               java/lang/Object
+  #36 = Utf8               java/util/List
+  #37 = NameAndType        #77:#54        //  PrintInteger:(I)I
+  #38 = Methodref          #51.#65        //  java/util/ArrayList."<init>":()V
+  #39 = Methodref          #51.#11        //  java/util/ArrayList.get:(I)Ljava/lang/Object;
+  #40 = Utf8               Code
+  #41 = Fieldref           #28.#29        //  HOME.wat:Ljava/util/ArrayList;
+  #42 = Utf8               (I)Ljava/lang/Object;
+  #43 = Utf8               HOME
+  #44 = Utf8               (I)Ljava/lang/Integer;
+  #45 = String             #68            //  Great Success!!
+  #46 = Class              #52            //  java/io/PrintStream
+  #47 = NameAndType        #16:#13        //  println:(Z)V
+  #48 = Utf8               ()V
+  #49 = Utf8               (I)V
+  #50 = Utf8               ([Ljava/lang/String;)V
+  #51 = Class              #59            //  java/util/ArrayList
+  #52 = Utf8               java/io/PrintStream
+  #53 = Utf8               ()I
+  #54 = Utf8               (I)I
+  #55 = Methodref          #62.#74        //  java/lang/Integer.intValue:()I
+  #56 = Methodref          #46.#15        //  java/io/PrintStream.println:(I)V
+  #57 = Utf8               get
+  #58 = Utf8               (Ljava/lang/String;)Ljava/lang/String;
+  #59 = Utf8               java/util/ArrayList
+  #60 = Utf8               Setup
+  #61 = Utf8               (D)V
+  #62 = Class              #4             //  java/lang/Integer
+  #63 = Utf8               Ljava/io/PrintStream;
+  #64 = Utf8               intValue
+  #65 = NameAndType        #9:#48         //  "<init>":()V
+  #66 = NameAndType        #19:#23        //  add:(Ljava/lang/Object;)Z
+  #67 = Methodref          #28.#65        //  HOME."<init>":()V
+  #68 = Utf8               Great Success!!
+  #69 = Utf8               (D)D
+  #70 = Utf8               wat
+  #71 = Methodref          #46.#27        //  java/io/PrintStream.println:(D)V
+  #72 = Utf8               Ljava/util/ArrayList;
+  #73 = Utf8               out
+  #74 = NameAndType        #64:#53        //  intValue:()I
+  #75 = Methodref          #20.#65        //  java/lang/Object."<init>":()V
+  #76 = Class              #10            //  java/lang/System
+  #77 = Utf8               PrintInteger
 {
+  public java.util.ArrayList wat;
+    flags: ACC_PUBLIC
+
+
   public HOME();
     flags: ACC_PUBLIC
     Code:
-      stack=32, locals=1, args_size=1
+      stack=32, locals=4, args_size=1
          0: aload_0       
-         1: invokespecial #71                 // Method java/lang/Object."<init>":()V
-         4: return        
+         1: invokespecial #75                 // Method java/lang/Object."<init>":()V
+         4: aload_0       
+         5: new           #51                 // class java/util/ArrayList
+         8: dup           
+         9: invokespecial #38                 // Method java/util/ArrayList."<init>":()V
+        12: astore        1
+        14: new           #51                 // class java/util/ArrayList
+        17: dup           
+        18: invokespecial #38                 // Method java/util/ArrayList."<init>":()V
+        21: astore        2
+        23: aload         2
+        25: bipush        1
+        27: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        30: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        35: pop           
+        36: aload         2
+        38: bipush        2
+        40: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        43: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        48: pop           
+        49: aload         2
+        51: bipush        3
+        53: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        56: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        61: pop           
+        62: aload         1
+        64: aload         2
+        66: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        71: pop           
+        72: new           #51                 // class java/util/ArrayList
+        75: dup           
+        76: invokespecial #38                 // Method java/util/ArrayList."<init>":()V
+        79: astore        3
+        81: aload         3
+        83: bipush        7
+        85: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        88: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        93: pop           
+        94: aload         3
+        96: bipush        8
+        98: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       101: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       106: pop           
+       107: aload         3
+       109: bipush        9
+       111: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       114: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       119: pop           
+       120: aload         1
+       122: aload         3
+       124: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       129: pop           
+       130: aload         1
+       132: putfield      #41                 // Field wat:Ljava/util/ArrayList;
+       135: return        
 
   public void Setup();
     flags: ACC_PUBLIC
     Code:
-      stack=32, locals=4, args_size=1
-         0: new           #49                 // class java/util/ArrayList
-         3: dup           
-         4: invokespecial #37                 // Method java/util/ArrayList."<init>":()V
-         7: astore        1
-         9: new           #49                 // class java/util/ArrayList
-        12: dup           
-        13: invokespecial #37                 // Method java/util/ArrayList."<init>":()V
-        16: astore        2
-        18: aload         2
-        20: bipush        1
-        22: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        25: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-        30: pop           
-        31: aload         2
-        33: bipush        2
-        35: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        38: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-        43: pop           
-        44: aload         2
-        46: bipush        3
-        48: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        51: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-        56: pop           
-        57: aload         1
-        59: aload         2
-        61: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-        66: pop           
-        67: new           #49                 // class java/util/ArrayList
-        70: dup           
-        71: invokespecial #37                 // Method java/util/ArrayList."<init>":()V
-        74: astore        3
-        76: aload         3
-        78: bipush        7
-        80: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        83: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-        88: pop           
-        89: aload         3
-        91: bipush        8
-        93: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        96: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-       101: pop           
-       102: aload         3
-       104: bipush        9
-       106: invokestatic  #17                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-       109: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-       114: pop           
-       115: aload         1
-       117: aload         3
-       119: invokeinterface #7,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
-       124: pop           
-       125: aload_0       
-       126: aload         1
-       128: bipush        1
-       130: invokevirtual #38                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
-       133: checkcast     #49                 // class java/util/ArrayList
-       136: bipush        1
-       138: invokevirtual #38                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
-       141: checkcast     #60                 // class java/lang/Integer
-       144: invokevirtual #53                 // Method java/lang/Integer.intValue:()I
-       147: invokevirtual #29                 // Method PrintInteger:(I)I
-       150: pop           
-       151: getstatic     #24                 // Field java/lang/System.out:Ljava/io/PrintStream;
-       154: ldc           #43                 // String Great Success!!
-       156: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-       159: return        
+      stack=32, locals=2, args_size=1
+         0: aload_0       
+         1: getfield      #41                 // Field wat:Ljava/util/ArrayList;
+         4: bipush        1
+         6: invokevirtual #39                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
+         9: checkcast     #51                 // class java/util/ArrayList
+        12: astore        1
+        14: aload_0       
+        15: aload_0       
+        16: getfield      #41                 // Field wat:Ljava/util/ArrayList;
+        19: bipush        1
+        21: invokevirtual #39                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
+        24: checkcast     #51                 // class java/util/ArrayList
+        27: bipush        1
+        29: invokevirtual #39                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
+        32: checkcast     #62                 // class java/lang/Integer
+        35: invokevirtual #55                 // Method java/lang/Integer.intValue:()I
+        38: invokevirtual #30                 // Method PrintInteger:(I)I
+        41: pop           
+        42: aload_0       
+        43: aload         1
+        45: bipush        2
+        47: invokevirtual #39                 // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
+        50: checkcast     #62                 // class java/lang/Integer
+        53: invokevirtual #55                 // Method java/lang/Integer.intValue:()I
+        56: invokevirtual #30                 // Method PrintInteger:(I)I
+        59: pop           
+        60: getstatic     #24                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        63: ldc           #45                 // String Great Success!!
+        65: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        68: return        
 
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
@@ -166,8 +192,8 @@ Constant pool:
       stack=32, locals=1, args_size=1
          0: new           #28                 // class HOME
          3: dup           
-         4: invokespecial #65                 // Method "<init>":()V
-         7: invokespecial #30                 // Method Setup:()V
+         4: invokespecial #67                 // Method "<init>":()V
+         7: invokespecial #31                 // Method Setup:()V
         10: return        
 
   public java.lang.String PrintString(java.lang.String);
@@ -188,7 +214,7 @@ Constant pool:
          0: iload         1
          2: getstatic     #24                 // Field java/lang/System.out:Ljava/io/PrintStream;
          5: iload         1
-         7: invokevirtual #54                 // Method java/io/PrintStream.println:(I)V
+         7: invokevirtual #56                 // Method java/io/PrintStream.println:(I)V
         10: ireturn       
 
   public double PrintDecimal(double);
@@ -198,7 +224,7 @@ Constant pool:
          0: dload         1
          2: getstatic     #24                 // Field java/lang/System.out:Ljava/io/PrintStream;
          5: dload         1
-         7: invokevirtual #68                 // Method java/io/PrintStream.println:(D)V
+         7: invokevirtual #71                 // Method java/io/PrintStream.println:(D)V
         10: dreturn       
 
   public boolean PrintBoolean(boolean);

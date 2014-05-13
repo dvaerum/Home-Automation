@@ -717,7 +717,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return innerType;
 
         if (!Main.symbolTable.types.symbolExists(typeName))
-            Main.symbolTable.types.addSymbol(typeName, new CollectionType(typeName, t, innerType));
+            Main.symbolTable.types.addSymbol(typeName, new CollectionType(typeName, t, innerType, t.bytecode));
 
         return Main.symbolTable.types.getSymbol(typeName);
     }
@@ -772,6 +772,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return stmtsType;
 
         Main.symbolTable.closeScope();
+
 
         if(ctx.elseIfStmt().size() > 0)
         {

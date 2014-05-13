@@ -1,17 +1,13 @@
 .source                  HOME.java
 .class                   public HOME
 .super                   java/lang/Object
+.field public wat Ljava/util/ArrayList;
 .method public <init>()V
     .limit stack 32
-    .limit locals 1
+    .limit locals 4
     aload_0
     invokespecial java/lang/Object/<init>()V
-return
-.end method
-
-.method public Setup()V
-    .limit stack 32
-    .limit locals 4
+    aload_0
     new java/util/ArrayList
     dup
     invokespecial java/util/ArrayList.<init>()V
@@ -62,12 +58,35 @@ return
     aload 3
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    aload_0
     aload 1
+    putfield HOME/wat Ljava/util/ArrayList;
+return
+.end method
+
+.method public Setup()V
+    .limit stack 32
+    .limit locals 2
+    aload_0
+    getfield HOME/wat Ljava/util/ArrayList;
+    bipush 1
+    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
+    checkcast java/util/ArrayList
+    astore 1
+    aload_0
+    aload_0
+    getfield HOME/wat Ljava/util/ArrayList;
     bipush 1
     invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
     checkcast java/util/ArrayList
     bipush 1
+    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
+    checkcast java/lang/Integer
+    invokevirtual java/lang/Integer/intValue()I
+    invokevirtual HOME/PrintInteger(I)I
+    pop
+    aload_0
+    aload 1
+    bipush 2
     invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
     checkcast java/lang/Integer
     invokevirtual java/lang/Integer/intValue()I

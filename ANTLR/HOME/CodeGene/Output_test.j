@@ -12,7 +12,7 @@ return
 .method public Setup()V
     .limit stack 32
     .limit locals 5
-    .line 2
+.line 2
     new java/util/HashMap
     dup
     invokespecial java/util/HashMap.<init>()V
@@ -29,14 +29,14 @@ return
     invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/Map.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
     pop
-    .line 3
+.line 3
     aload 1
     ldc "hej"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/lang/Integer
     invokevirtual java/lang/Integer/intValue()I
     istore 2
-    .line 4
+.line 4
     new java/util/ArrayList
     dup
     invokespecial java/util/ArrayList.<init>()V
@@ -51,7 +51,7 @@ return
     invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    .line 5
+.line 5
     aload 3
     bipush 1
     invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;

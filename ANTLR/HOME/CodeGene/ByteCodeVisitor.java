@@ -240,6 +240,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public CollectionType visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts, Boolean assign)
     {
+        return visitListIndex(ctx, stmts, assign, false);
+    }
+
+    public CollectionType visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts, Boolean assign, boolean convertFlag)
+    {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.IdentifierExact().getText());
         CollectionType type = ((CollectionType) symbolInfo.var.type);
         for (int i = 0; i < ctx.expression().size(); i++)
@@ -269,7 +274,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         stmts.addStatement(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.bytecode)); // TODO replace '%r' if this doesn't work for everything
                         break;
                     case "Dictionary":
-                        stmts.addStatement(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.dictionary.getClassByteCode(), Main.integer.bytecode)); // TODO replace '%r' if this doesn't work for everything
+                        stmts.addStatement(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.dictionary.getClassByteCode(), "Ljava/lang/Object;")); // TODO replace '%r' if this doesn't work for everything
                         break;
                 }
                 stmts.addStatement("checkcast " + type.innerType.getClassByteCode());
@@ -280,6 +285,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 if (type.innerType.equals(Main.bool))
                     stmts.addStatement("invokevirtual java/lang/Boolean/booleanValue()Z");
 
+                if(convertFlag)
+                    stmts.addStatement("i2d");
 
                 try
                 {
@@ -310,8 +317,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(ctx.getText(), type);
     }
 
-    List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
-
     public String getNegate(HOMEParser.ExpressionContext expressionContext)
     {
         if (expressionContext.expression().size() == 1)
@@ -337,6 +342,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     {
         forkReturnStack.newStack();
         forkReturnStack.addFork();
+        int tempReturns = 0;
+        boolean usingEndLabel = false;
 
         String ifLabel = symbolTable.newLabel();
 
@@ -357,24 +364,48 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         if (ctx.elseStmt() != null)
         {
+            forkReturnStack.addFork();
+            tempReturns = forkReturnStack.getReturns();
+
             visitStmts(ctx.elseStmt().stmts(), stmts);
 
-            forkReturnStack.addFork();
         }
-        stmts.addStatement("goto " + endLabel);
+
+        if (forkReturnStack.getReturns() == tempReturns || ctx.elseStmt() == null)
+        {
+            stmts.addStatement("goto " + endLabel);
+            usingEndLabel = true;
+        }
+
+        tempReturns = forkReturnStack.getReturns();
 
         stmts.addStatement(ifLabel + ":");
         visitStmts(ctx.stmts(), stmts);
-        stmts.addStatement("goto " + endLabel);
+
+        if (forkReturnStack.getReturns() == tempReturns)
+        {
+            stmts.addStatement("goto " + endLabel);
+            usingEndLabel = true;
+        }
 
         for (int i = 0; i < elseif.size(); i++)
         {
+            tempReturns = forkReturnStack.getReturns();
+
             stmts.addStatement(elseifLabel.get(i) + ":");
             visitStmts(elseif.get(i).stmts(), stmts);
-            stmts.addStatement("goto " + endLabel);
+
+            if (forkReturnStack.getReturns() == tempReturns)
+            {
+                stmts.addStatement("goto " + endLabel);
+                usingEndLabel = true;
+            }
         }
 
-        stmts.addStatement(endLabel + ":");
+        if (usingEndLabel)
+        {
+            stmts.addStatement(endLabel + ":");
+        }
 
         if (forkReturnStack.closed() && ctx.elseStmt() != null)
         {
@@ -709,17 +740,22 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (ctx.listIndex() != null)
         {
             // list[0][0] = 77
-            CollectionType type;
-            if (ctx.ASSIGN() != null)
-            {
-                type = visitListIndex(ctx.listIndex(), stmts, true);
+            CollectionType type = (CollectionType)symbolTable.variables.getType(ctx.listIndex().getChild(0).getText());
+            SymbolInfo symbol = symbolTable.variables.getSymbol(ctx.listIndex().getChild(0).getText());
+            stmts.addStatement("aload " + symbol.var.location);
+
+            List<HOMEParser.ExpressionContext> expressionContexts = ctx.listIndex().expression();
+            for(Integer i = 0; i < expressionContexts.size() - 1; i++){
+                visitExpression(expressionContexts.get(i), stmts);
+                stmts.addStatement("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;");
+                stmts.addStatement("checkcast java/util/ArrayList");
+                type = (CollectionType)type.innerType;
             }
-            else
-            {
-                type = visitListIndex(ctx.listIndex(), stmts, false);
-            }
+            HOMEParser.ExpressionContext exp = expressionContexts.get(expressionContexts.size() - 1);
+            visitExpression(exp, stmts);
+
             visitExpression(ctx.expression(), stmts);
-            switch (type.primaryType.name)
+            switch (type.innerType.name)
             {
                 case "String":
                     break;
@@ -737,7 +773,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 case "Dictionary":
                     break;
             }
-            stmts.addStatement("invokeinterface java/util/List.set(ILjava/lang/Object;)Ljava/lang/Object; 3");
+            switch (type.primaryType.name)
+            {
+                case "List":
+                    stmts.addStatement(String.format("invokevirtual %s.set(%sLjava/lang/Object;)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode())); // TODO replace '%r' if this doesn't work for everything
+                    break;
+                case "Dictionary":
+                    stmts.addStatement(String.format("invokevirtual %s.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", Main.dictionary.getClassByteCode())); // TODO replace '%r' if this doesn't work for everything
+                    break;
+            }
             stmts.addStatement("pop");
         }
         else if (ctx.field() != null)
@@ -1322,8 +1366,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             ExpressionReturn r1, r2;
 
-            r1 = visitExpression(ctx.expression(0), stmts, label, convertingFlag);
-            r2 = visitExpression(ctx.expression(1), stmts, label, convertingFlag);
+            r1 = visitExpression(ctx.expression(0), stmts, null, convertingFlag);
+            r2 = visitExpression(ctx.expression(1), stmts, null, convertingFlag);
 
             Type type = compareTypes(r1, r2);
 
@@ -1349,7 +1393,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             // Is expression doesn't contain any expressions, use below
             if (ctx.funcCall() != null)
             {
-                return visitFuncCall(ctx.funcCall(), stmts, false);
+                //Converting flag not used for anything here
+                return visitFuncCall(ctx.funcCall(), stmts, convertingFlag);
             }
             else if (ctx.literal() != null)
             {
@@ -1365,7 +1410,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             }
             else if (ctx.listIndex() != null)
             {
-                visitListIndex(ctx.listIndex(), stmts, false);
+                CollectionType tmp = visitListIndex(ctx.listIndex(), stmts, false, convertingFlag);
+                return new ExpressionReturn(tmp.getInnermostType(), "");
             }
             else if (ctx.field() != null)
             {

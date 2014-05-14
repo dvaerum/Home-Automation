@@ -1,8 +1,5 @@
 package HOME;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by Kentora on 20-03-14.
@@ -10,22 +7,29 @@ import java.util.Iterator;
 public class ForkReturnStack{
     private Deque<ForkReturnCheck> stack = new ArrayDeque<ForkReturnCheck>();
     public void newStack(){
-        stack.add(new ForkReturnCheck());
+        stack.push(new ForkReturnCheck());
+        ArrayList<String> hej = new ArrayList<String>();
+        hej.add("d");
+        hej.set(0, "s");
     }
 
     public void addFork(){
-        stack.peekLast().addFork();
+        stack.peek().addFork();
+    }
+
+    public int getReturns() {
+        return stack.peek().getReturn();
     }
 
     public void addReturn(){
-        stack.peekLast().addReturn();
+        stack.peek().addReturn();
     }
 
     public boolean closed(){
-        return stack.peekLast().closed();
+        return stack.peek().closed();
     }
 
     public void dispose(){
-        stack.removeLast();
+        stack.pop();
     }
 }

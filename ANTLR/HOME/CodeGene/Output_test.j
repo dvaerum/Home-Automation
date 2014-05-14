@@ -11,7 +11,53 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 1
+    .limit locals 5
+    .line 2
+    new java/util/HashMap
+    dup
+    invokespecial java/util/HashMap.<init>()V
+    astore 1
+    aload 1
+    ldc "hej"
+    bipush 1
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/Map.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
+    pop
+    aload 1
+    ldc "lol"
+    bipush 2
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/Map.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
+    pop
+    .line 3
+    aload 1
+    ldc "hej"
+    invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
+    checkcast java/lang/Integer
+    invokevirtual java/lang/Integer/intValue()I
+    istore 2
+    .line 4
+    new java/util/ArrayList
+    dup
+    invokespecial java/util/ArrayList.<init>()V
+    astore 3
+    aload 3
+    bipush 1
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 3
+    bipush 2
+    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    .line 5
+    aload 3
+    bipush 1
+    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
+    checkcast java/lang/Integer
+    invokevirtual java/lang/Integer/intValue()I
+    istore 4
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc "Great Success!!"
     invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -26,32 +72,5 @@ return
     invokespecial HOME/<init>()V
     invokespecial HOME/Setup()V
     return
-.end method
-
-.method public returnForkTest2()I
-    .limit stack 11
-    .limit locals 1
-    .line 7
-    bipush 3
-    bipush 4
-    if_icmpeq Label1
-    bipush 5
-    bipush 6
-    if_icmpeq Label2
-    .line 8
-    bipush 8
-    ireturn
-    goto Label3
-    Label1:
-    .line 9
-    bipush 6
-    ireturn
-    goto Label3
-    Label2:
-    .line 10
-    bipush 7
-    ireturn
-    goto Label3
-    Label3:
 .end method
 

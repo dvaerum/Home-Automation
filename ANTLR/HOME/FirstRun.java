@@ -42,7 +42,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         Type returnType = Main.nothing;
         Type blockType;
 
-        //Checks if function already exist
+        //Checks if function exists
         if(ctx.function() != null)
         {
             returnType = visitFunction(ctx.function());
@@ -66,7 +66,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         //Checks if "setup" function has been found
         if(!Main.symbolTable.functions.symbolExists("Setup"))
         {
-            returnType = new ErrorType("No \"Setup\" function found, please provide one.");
+            returnType = new ErrorType("No \"Setup\" function found, please provide one.", false);
             System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType));
         }
 
@@ -85,7 +85,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         else if(ctx.nothing() != null)
             returns = Main.nothing;
         else //otherwise return error if other unexpected type
-            returns = new ErrorType("Error");
+            returns = new ErrorType("Error", false);
 
         if(returns instanceof  ErrorType)
             return returns;
@@ -105,14 +105,14 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         if(funcName.equals("Setup"))
             if(paramTypes.size() > 0)
-                return new ErrorType("Function \"Setup\" doesn't accept any parameters, please remove these.");
+                return new ErrorType("Function \"Setup\" doesn't accept any parameters, please remove these.", false);
             else if(!returns.equals(Main.nothing))
-                return new ErrorType("Function \"Setup\" can't return anything but nothing");
+                return new ErrorType("Function \"Setup\" can't return anything but nothing", false);
 
         //adds function + parameter types to symbol table.
         if(!Main.symbolTable.functions.addSymbol(funcName, symbol))
             returnType = new ErrorType(String.format("Function \"%s\" already exists.",
-                    funcName, ctx.getStart().getLine()));
+                    funcName, ctx.getStart().getLine()), false);
         else
             returnType = Main.nothing;
 
@@ -153,7 +153,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             return Main.symbolTable.types.getSymbol(className);
         }
 
-        return new ErrorType(String.format("Undefined Class \"%s\" isn't defined", className));
+        return new ErrorType(String.format("Undefined Class \"%s\" isn't defined", className), false);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         else if (primaryTypeText.equals("Dictionary"))
             t = Main.dictionary;
         else
-            return new ErrorType("Invalid collection Type");
+            return new ErrorType("Invalid collection Type", false);
 
         if (Main.symbolTable.types.symbolExists(typeName))
             return Main.symbolTable.types.getSymbol(typeName);

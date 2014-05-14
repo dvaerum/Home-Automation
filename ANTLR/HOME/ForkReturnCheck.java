@@ -14,6 +14,10 @@ public class ForkReturnCheck {
         returns++;
     }
 
+    public int getReturn(){
+        return returns;
+    }
+
     public boolean closed(){
         return forks == returns;
     }

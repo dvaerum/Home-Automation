@@ -10,7 +10,8 @@ public class SymbolInfo
     public int depth;
 
 
-    public SymbolInfo() {
+    public SymbolInfo()
+    {
     }
 
     public SymbolInfo(String name, Type type, int depth)
@@ -39,9 +40,27 @@ public class SymbolInfo
                 typePrefix = "i";
             } else {
                 typePrefix = "a";
-            }
+        }
             stmts.addStatement(typePrefix + "store " + var.location);
         }
+    }
 
+    public void load(Statements stmts) {
+        if (depth == 0) {
+            stmts.addStatement("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+        } else {
+            String typePrefix = "";
+
+            if (var.type.equals(Main.integer)) {
+                typePrefix = "i";
+            } else if (var.type.equals(Main.decimal)) {
+                typePrefix = "d";
+            } else if (var.type.equals(Main.bool)) {
+                typePrefix = "i";
+            } else {
+                typePrefix = "a";
+        }
+            stmts.addStatement(typePrefix + "load " + var.location);
+        }
     }
 }

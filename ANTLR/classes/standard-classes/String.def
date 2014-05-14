@@ -3,6 +3,7 @@ class String
     endfields
 
     constructor
+        - String()
     endconstructor
 
     methods

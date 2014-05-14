@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  * Created by Frederik on 09-04-2014.
  */
 
-public class Type {
-    public boolean isFinal = true;
+public class Type
+{
     public String name;
     public List<Variable> fields = new ArrayList<>();
     public Function constructor;
@@ -32,7 +32,6 @@ public class Type {
     }
 
     public Type(String name) {
-        this.isFinal = false;
         this.name = name;
     }
 
@@ -42,8 +41,8 @@ public class Type {
         return list;
     }
 
-    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception {
-        this.isFinal = true;
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
+    {
         //Add classname into name field
         this.name = name;
 
@@ -60,8 +59,11 @@ public class Type {
         }
 
         //--------------Constructor parsing---------------------
-        if (constructorName != null) {
+        if(constructorName != null)
             constructorName = constructorName.replaceAll("- ", "");
+
+        if(constructorName.equals(name))
+        {
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
             //Prepares list of parameters for constructor.
@@ -81,6 +83,9 @@ public class Type {
             //Create function-type
             //And insert into constructor field
         }
+        else
+            System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
+
 
 
         //--------------Method parsing---------------------

@@ -62,7 +62,7 @@ public class Type
         if(constructorName != null)
             constructorName = constructorName.replaceAll("- ", "");
 
-        if(constructorName.equals(name))
+        if(constructorName != null && constructorName.equals(name))
         {
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
@@ -83,7 +83,7 @@ public class Type
             //Create function-type
             //And insert into constructor field
         }
-        else
+        else if(constructorName != null)
             System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
 
 

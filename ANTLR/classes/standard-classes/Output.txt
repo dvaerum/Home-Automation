@@ -138,3 +138,19 @@ function testtt() returns Nothing
         n = n == false
     endrepeat
 endfunction
+
+/*
+function Setup() returns Nothing
+    Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
+
+    dic["dic1"]["two"] *= 203
+
+    repeat foreach(Integer x in dic["dic1"])
+        Print(x)
+    endrepeat
+endfunction
+
+function Print(Integer x) returns Integer
+    return x
+endfunction
+*/

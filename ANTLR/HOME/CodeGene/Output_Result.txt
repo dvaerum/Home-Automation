@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
-  Last modified May 15, 2014; size 506 bytes
-  MD5 checksum ad9733f69e18bb36687378f1ae9adb84
+  Last modified May 15, 2014; size 1251 bytes
+  MD5 checksum 0d899f2d5949d765e8770e71329caa60
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -8,83 +8,216 @@ public class HOME
   major version: 45
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
-   #1 = Class              #17            //  HOME
-   #2 = Methodref          #1.#19         //  HOME."<init>":()V
-   #3 = Utf8               ()V
-   #4 = Utf8               main
-   #5 = Utf8               java/lang/Object
-   #6 = Utf8               I
-   #7 = Fieldref           #34.#11        //  classes/standard/Input.x:I
-   #8 = Class              #5             //  java/lang/Object
-   #9 = Utf8               (D)V
-  #10 = Methodref          #34.#19        //  classes/standard/Input."<init>":()V
-  #11 = NameAndType        #25:#6         //  x:I
-  #12 = Utf8               LineNumberTable
-  #13 = Methodref          #20.#23        //  java/io/PrintStream.println:(D)V
-  #14 = Utf8               java/lang/System
-  #15 = Class              #14            //  java/lang/System
-  #16 = Utf8               classes/standard/Input
-  #17 = Utf8               HOME
-  #18 = Utf8               ([Ljava/lang/String;)V
-  #19 = NameAndType        #24:#3         //  "<init>":()V
-  #20 = Class              #36            //  java/io/PrintStream
-  #21 = Utf8               SourceFile
-  #22 = Utf8               println
-  #23 = NameAndType        #22:#9         //  println:(D)V
-  #24 = Utf8               <init>
-  #25 = Utf8               x
-  #26 = NameAndType        #27:#37        //  out:Ljava/io/PrintStream;
-  #27 = Utf8               out
-  #28 = Methodref          #8.#19         //  java/lang/Object."<init>":()V
-  #29 = Utf8               HOME.java
-  #30 = Methodref          #1.#31         //  HOME.Setup:()V
-  #31 = NameAndType        #33:#3         //  Setup:()V
-  #32 = Fieldref           #15.#26        //  java/lang/System.out:Ljava/io/PrintStream;
-  #33 = Utf8               Setup
-  #34 = Class              #16            //  classes/standard/Input
-  #35 = Utf8               Code
-  #36 = Utf8               java/io/PrintStream
-  #37 = Utf8               Ljava/io/PrintStream;
+   #1 = String             #50            //  four
+   #2 = Utf8               HOME.java
+   #3 = NameAndType        #68:#55        //  Setup:()V
+   #4 = Utf8               java/lang/Integer
+   #5 = Methodref          #12.#74        //  java/util/HashMap."<init>":()V
+   #6 = Methodref          #52.#8         //  java/io/PrintStream.println:(Ljava/lang/String;)V
+   #7 = Utf8               SourceFile
+   #8 = NameAndType        #18:#28        //  println:(Ljava/lang/String;)V
+   #9 = Utf8               <init>
+  #10 = Utf8               java/lang/System
+  #11 = NameAndType        #79:#15        //  put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #12 = Class              #23            //  java/util/HashMap
+  #13 = Utf8               one
+  #14 = Methodref          #12.#29        //  java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+  #15 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #16 = Class              #26            //  java/util/Iterator
+  #17 = Utf8               Print
+  #18 = Utf8               println
+  #19 = Methodref          #70.#39        //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #20 = Utf8               main
+  #21 = Class              #40            //  java/lang/Object
+  #22 = Utf8               valueOf
+  #23 = Utf8               java/util/HashMap
+  #24 = String             #13            //  one
+  #25 = NameAndType        #17:#61        //  Print:(I)I
+  #26 = Utf8               java/util/Iterator
+  #27 = Fieldref           #86.#38        //  java/lang/System.out:Ljava/io/PrintStream;
+  #28 = Utf8               (Ljava/lang/String;)V
+  #29 = NameAndType        #66:#43        //  get:(Ljava/lang/Object;)Ljava/lang/Object;
+  #30 = Utf8               values
+  #31 = InterfaceMethodref #16.#64        //  java/util/Iterator.next:()Ljava/lang/Object;
+  #32 = Class              #45            //  HOME
+  #33 = Utf8               three
+  #34 = Class              #77            //  java/util/Collection
+  #35 = Methodref          #32.#3         //  HOME.Setup:()V
+  #36 = String             #88            //  dic2
+  #37 = String             #89            //  dic1
+  #38 = NameAndType        #82:#72        //  out:Ljava/io/PrintStream;
+  #39 = NameAndType        #22:#47        //  valueOf:(I)Ljava/lang/Integer;
+  #40 = Utf8               java/lang/Object
+  #41 = NameAndType        #75:#80        //  iterator:()Ljava/util/Iterator;
+  #42 = Utf8               two
+  #43 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+  #44 = Utf8               Code
+  #45 = Utf8               HOME
+  #46 = Utf8               ()Ljava/lang/Object;
+  #47 = Utf8               (I)Ljava/lang/Integer;
+  #48 = String             #42            //  two
+  #49 = String             #78            //  Great Success!!
+  #50 = Utf8               four
+  #51 = Utf8               ()Z
+  #52 = Class              #59            //  java/io/PrintStream
+  #53 = Utf8               next
+  #54 = Methodref          #32.#25        //  HOME.Print:(I)I
+  #55 = Utf8               ()V
+  #56 = Utf8               ([Ljava/lang/String;)V
+  #57 = Utf8               hasNext
+  #58 = InterfaceMethodref #16.#71        //  java/util/Iterator.hasNext:()Z
+  #59 = Utf8               java/io/PrintStream
+  #60 = Utf8               ()I
+  #61 = Utf8               (I)I
+  #62 = Methodref          #70.#84        //  java/lang/Integer.intValue:()I
+  #63 = Utf8               LineNumberTable
+  #64 = NameAndType        #53:#46        //  next:()Ljava/lang/Object;
+  #65 = NameAndType        #30:#69        //  values:()Ljava/util/Collection;
+  #66 = Utf8               get
+  #67 = Methodref          #12.#65        //  java/util/HashMap.values:()Ljava/util/Collection;
+  #68 = Utf8               Setup
+  #69 = Utf8               ()Ljava/util/Collection;
+  #70 = Class              #4             //  java/lang/Integer
+  #71 = NameAndType        #57:#51        //  hasNext:()Z
+  #72 = Utf8               Ljava/io/PrintStream;
+  #73 = Utf8               intValue
+  #74 = NameAndType        #9:#55         //  "<init>":()V
+  #75 = Utf8               iterator
+  #76 = Methodref          #32.#74        //  HOME."<init>":()V
+  #77 = Utf8               java/util/Collection
+  #78 = Utf8               Great Success!!
+  #79 = Utf8               put
+  #80 = Utf8               ()Ljava/util/Iterator;
+  #81 = InterfaceMethodref #34.#41        //  java/util/Collection.iterator:()Ljava/util/Iterator;
+  #82 = Utf8               out
+  #83 = Methodref          #12.#11        //  java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #84 = NameAndType        #73:#60        //  intValue:()I
+  #85 = Methodref          #21.#74        //  java/lang/Object."<init>":()V
+  #86 = Class              #10            //  java/lang/System
+  #87 = String             #33            //  three
+  #88 = Utf8               dic2
+  #89 = Utf8               dic1
 {
   public HOME();
     flags: ACC_PUBLIC
     Code:
       stack=32, locals=1, args_size=1
          0: aload_0       
-         1: invokespecial #28                 // Method java/lang/Object."<init>":()V
+         1: invokespecial #85                 // Method java/lang/Object."<init>":()V
          4: return        
 
   public void Setup();
     flags: ACC_PUBLIC
     Code:
-      stack=32, locals=4, args_size=1
-         0: new           #34                 // class classes/standard/Input
+      stack=32, locals=7, args_size=1
+         0: new           #12                 // class java/util/HashMap
          3: dup           
-         4: invokespecial #10                 // Method classes/standard/Input."<init>":()V
+         4: invokespecial #5                  // Method java/util/HashMap."<init>":()V
          7: astore        1
          9: aload         1
-        11: bipush        34
-        13: putfield      #7                  // Field classes/standard/Input.x:I
-        16: aload         1
-        18: getfield      #7                  // Field classes/standard/Input.x:I
-        21: i2d           
-        22: dstore        2
-        24: getstatic     #32                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        27: dload         2
-        29: invokevirtual #13                 // Method java/io/PrintStream.println:(D)V
-        32: return        
+        11: ldc           #37                 // String dic1
+        13: new           #12                 // class java/util/HashMap
+        16: dup           
+        17: invokespecial #5                  // Method java/util/HashMap."<init>":()V
+        20: astore        2
+        22: aload         2
+        24: ldc           #24                 // String one
+        26: bipush        1
+        28: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        31: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        34: pop           
+        35: aload         2
+        37: ldc           #48                 // String two
+        39: bipush        2
+        41: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        44: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        47: pop           
+        48: aload         2
+        50: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        53: pop           
+        54: aload         1
+        56: ldc           #36                 // String dic2
+        58: new           #12                 // class java/util/HashMap
+        61: dup           
+        62: invokespecial #5                  // Method java/util/HashMap."<init>":()V
+        65: astore        3
+        67: aload         3
+        69: ldc           #87                 // String three
+        71: bipush        3
+        73: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        76: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        79: pop           
+        80: aload         3
+        82: ldc           #1                  // String four
+        84: bipush        4
+        86: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        89: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        92: pop           
+        93: aload         3
+        95: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        98: pop           
+        99: aload         1
+       101: ldc           #37                 // String dic1
+       103: invokevirtual #14                 // Method java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       106: checkcast     #12                 // class java/util/HashMap
+       109: dup           
+       110: ldc           #48                 // String two
+       112: swap          
+       113: ldc           #48                 // String two
+       115: invokevirtual #14                 // Method java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       118: checkcast     #70                 // class java/lang/Integer
+       121: invokevirtual #62                 // Method java/lang/Integer.intValue:()I
+       124: sipush        203
+       127: imul          
+       128: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       131: invokevirtual #83                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       134: pop           
+       135: aload         1
+       137: ldc           #37                 // String dic1
+       139: invokevirtual #14                 // Method java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       142: checkcast     #12                 // class java/util/HashMap
+       145: invokevirtual #67                 // Method java/util/HashMap.values:()Ljava/util/Collection;
+       148: invokeinterface #81,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+       153: astore        4
+       155: aload         4
+       157: invokeinterface #58,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       162: ifeq          190
+       165: aload         4
+       167: invokeinterface #31,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       172: checkcast     #70                 // class java/lang/Integer
+       175: invokevirtual #62                 // Method java/lang/Integer.intValue:()I
+       178: istore        5
+       180: aload_0       
+       181: iload         5
+       183: invokevirtual #54                 // Method Print:(I)I
+       186: pop           
+       187: goto          155
+       190: getstatic     #27                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       193: ldc           #49                 // String Great Success!!
+       195: invokevirtual #6                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       198: return        
       LineNumberTable:
         line 2: 0
-        line 3: 9
-        line 4: 16
+        line 3: 99
+        line 4: 135
+        line 5: 180
 
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
     Code:
       stack=32, locals=1, args_size=1
-         0: new           #1                  // class HOME
+         0: new           #32                 // class HOME
          3: dup           
-         4: invokespecial #2                  // Method "<init>":()V
-         7: invokespecial #30                 // Method Setup:()V
+         4: invokespecial #76                 // Method "<init>":()V
+         7: invokespecial #35                 // Method Setup:()V
         10: return        
+
+  public int Print(int);
+    flags: ACC_PUBLIC
+    Code:
+      stack=11, locals=2, args_size=2
+         0: iload         1
+         2: ireturn       
+      LineNumberTable:
+        line 20: 0
 }

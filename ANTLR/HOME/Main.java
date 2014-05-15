@@ -81,12 +81,18 @@ public class Main
         //Firstrun is the first pass in the compiler, and this reads the functions and global variables, and adds to symboltable
         FirstRun firstVisit = new FirstRun();
 
-        //Visit globals
-        Type returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext) tree).global());
+        //Visit functions
+        Type returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext)tree).block());
 
-        //Check if errors, if not visitblock
+        //Check if errors, if not visitGlobal
         if (!(returnType instanceof ErrorType))
-            returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext) tree).block());
+            returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext)tree).global());
+
+        if(returnType instanceof ErrorType)
+        {
+            System.out.println("Error, halting!");
+            System.exit(1);
+        }
 
         System.out.println("-----------------------------Typechecker-----------------------");
         Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
@@ -205,8 +211,8 @@ public class Main
 
         // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
-        lol.inspect(parser);
+//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
+//        lol.inspect(parser);
 //=================================================================================
 
     }

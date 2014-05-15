@@ -25,7 +25,14 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         {
             returnType = Main.typeChecker.visitDeclaration(ctx.declaration());
             if(returnType instanceof ErrorType)
+            {
+                if(!((ErrorType) returnType).isPrinted)
+                {
+                    System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType));
+                    ((ErrorType) returnType).isPrinted = true;
+                }
                 return returnType;
+            }
 
             if(ctx.global() != null)
                 returnType = visitGlobal(ctx.global());
@@ -181,10 +188,4 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         return t;
     }
-
-//    @Override
-//    public HOME.Type visitPrimitiveType(@NotNull HOMEParser.PrimitiveTypeContext ctx)
-//    {
-//        return new HOME.Type(ctx.getText());
-//    }
 }

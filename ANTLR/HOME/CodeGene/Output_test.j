@@ -11,53 +11,22 @@ return
 
 .method public Setup()V
     .limit stack 32
-    .limit locals 5
+    .limit locals 2
 .line 2
-    new java/util/HashMap
+    new classes/standard/Input
     dup
-    invokespecial java/util/HashMap.<init>()V
+    invokespecial classes/standard/Input.<init>()V
     astore 1
-    aload 1
-    ldc "hej"
-    bipush 1
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/Map.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
-    pop
-    aload 1
-    ldc "lol"
-    bipush 2
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/Map.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
-    pop
 .line 3
-    aload 1
-    ldc "hej"
-    invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
-    checkcast java/lang/Integer
-    invokevirtual java/lang/Integer/intValue()I
-    istore 2
+    aload_0
+    bipush 34
+    bipush 43
+    invokevirtual classes/turnOnLamp(II)V
 .line 4
-    new java/util/ArrayList
-    dup
-    invokespecial java/util/ArrayList.<init>()V
-    astore 3
-    aload 3
-    bipush 1
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
-    aload 3
-    bipush 2
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
-.line 5
-    aload 3
-    bipush 1
-    invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;
-    checkcast java/lang/Integer
-    invokevirtual java/lang/Integer/intValue()I
-    istore 4
+    aload 1
+    ldc ONTOGGLED
+    ldc turnOnLamp2
+    invokevirtual classes/standard/Input/registerEvent(Ljava/lang/String;Ljava/lang/String;)V
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc "Great Success!!"
     invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -71,6 +40,26 @@ return
     dup
     invokespecial HOME/<init>()V
     invokespecial HOME/Setup()V
+    return
+.end method
+
+.method public turnOnLamp(II)V
+    .limit stack 11
+    .limit locals 3
+.line 13
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    ldc "Great Success!!"
+    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
+    return
+.end method
+
+.method public turnOnLamp2()V
+    .limit stack 11
+    .limit locals 1
+.line 18
+    getstatic java/lang/System/out Ljava/io/PrintStream;
+    ldc "Great Success!!"
+    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
     return
 .end method
 

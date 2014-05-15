@@ -1,8 +1,9 @@
 class Input
     fields
         - Integer x
-        - Decimal y
+        - Integer port
         - String  name
+        - Event ONTOGGLED
     endfields
 
     constructor
@@ -14,6 +15,6 @@ class Input
         - ultraLol(Integer) > Integer
     endmethods
     bytecode
-        - Input
+        - standard/Input
     endbytecode
 endclass

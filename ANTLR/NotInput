@@ -1,9 +1,0 @@
-function Setup() returns Nothing
-    Dictionary<Integer> derp = { "hej"=1, "lol"=2 }
-    Integer x = derp["hej"]
-    //derp["hej"] = 7
-
-    List<Integer> herb = {1, 2}
-    Integer xjjjj = herb[1]
-    //herb[1] = 7
-endfunction

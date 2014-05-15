@@ -570,7 +570,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 symbolTable.variables.addSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
                 stmts.addStatement("new " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode());
                 stmts.addStatement("dup");
-                stmts.addStatement("invokespecial " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode() + ".<init>()V");
+                StringBuilder parameters = new StringBuilder("");
+                for (Type parameter : symbol.constructor.parameters)
+                {
+                    parameters.append(parameter.bytecode);
+                }
+                stmts.addStatement("invokespecial " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode() + ".<init>( " + parameters.toString() + ")V");
                 stmts.addStatement("astore " + stmts.currentLocal());
                 break;
         }

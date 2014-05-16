@@ -330,17 +330,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             String parameters;
             Statements stmts = new Statements(1);
             parameters = visitDeclarationParameters(ctx.declarationParameters(), stmts);
-            String returnType;
-            if (ctx.nothing() != null)
-            {
-                returnType = "V";
-            }
-            else
-            {
-                Type t = symbolTable.types.getSymbol(ctx.type().getText());
-                returnType = t.getSimpleByteCode();
-            }
-            func = new Function(".method public " + funcName + "(" + parameters + ")" + returnType, ".end method");
+
+            Type type = symbolTable.types.getSymbol(ctx.type().getText());
+            String returnsType = returnTypeForFunction2(type);
+
+            func = new Function(".method public " + funcName + "(" + parameters + ")" + returnsType, ".end method");
             func.stmts = stmts;
 
             visitStmts(ctx.stmts(), func.stmts);
@@ -355,6 +349,54 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         forkReturnStack.dispose();
 
         return super.visitFunction(ctx);
+    }
+
+    public String returnTypeForFunction(Type type)
+    {
+        String returnsType = "";
+
+        if (type.equals(Main.nothing))
+        {
+            returnsType = "V";
+        }
+        else
+        {
+            //Type type = symbolTable.types.getSymbol(ctx.getText());
+            String tempClosing = "";
+
+            if (type instanceof CollectionType)
+            {
+                while (type instanceof CollectionType)
+                {
+                    returnsType += "L" + ((CollectionType) type).primaryType.getClassByteCode() + "<";
+                    type = ((CollectionType) type).innerType;
+                    if (!(type instanceof CollectionType))
+                    {
+                        returnsType += type.getObjectByteCode();
+                    }
+                    tempClosing += ">;";
+                }
+                returnsType += tempClosing;
+            }
+            else
+            {
+                returnsType = type.getSimpleByteCode();
+            }
+        }
+
+        return returnsType;
+    }
+
+    public String returnTypeForFunction2(Type type)
+    {
+        if (type instanceof CollectionType)
+        {
+            return ((CollectionType) type).primaryType.getObjectByteCode();
+        }
+        else
+        {
+            return type.getObjectByteCode();
+        }
     }
 
 //region Stmts
@@ -571,23 +613,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 symbolTable.variables.addSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
                 SymbolInfo symbolInfoClass = symbolTable.variables.getSymbol(ctx.identifier().getText());
 
-                stmts.addStatement("new " + symbolInfoClass.var.type.getClassByteCode());
-                stmts.addStatement("dup");
-
                 if (ctx.expression() != null)
                 {
-                    for (int i = 0; ctx.expression().funcCall().funcParameters().expression().size() > i; i++)
-                    {
-                        visitExpression(ctx.expression().funcCall().funcParameters().expression(i), stmts);
-                    }
+                    visitExpression(ctx.expression(), stmts);
                 }
-
-                StringBuilder parameters = new StringBuilder("");
-                for (int i = 0; symbol.constructor.parameters.size() > i; i++)
+                else
                 {
-                    parameters.append(symbol.constructor.parameters.get(i).getSimpleByteCode());
+                    stmts.addStatement("aconst_null");
                 }
-                stmts.addStatement("invokespecial " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode() + ".<init>(" + parameters.toString() + ")V");
 
                 symbolInfoClass.store(stmts);
 
@@ -1099,24 +1132,53 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public ExpressionReturn visitFuncCallNormal(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
     {
-        stmts.addStatement("aload_0");
+        HOME.Type.Function function = symbolTable.functions.getSymbol(ctx.identifier().getText());
+
+        if (function.name.equals(function.returnType.name))
+        {
+            stmts.addStatement("new " + function.returnType.getClassByteCode());
+            stmts.addStatement("dup");
+        }
+        else
+        {
+            stmts.addStatement("aload_0");
+        }
+
         for (HOMEParser.ExpressionContext expressionContext : ctx.funcParameters().expression())
         {
             visitExpression(expressionContext, stmts);
         }
 
-        HOME.Type.Function function = symbolTable.functions.getSymbol(ctx.identifier().getText());
-        String code = "invokevirtual ";
+        String bytecode;
+        if (function.name.equals(function.returnType.name))
+        {
+            bytecode = "invokespecial ";
+            bytecode += function.returnType.getClassByteCode();
+            bytecode += ".<init>(";
+        }
+        else
+        {
+            bytecode = "invokevirtual ";
+            // TODO This is hard coded, nono
+            bytecode += "HOME/";
+            bytecode += function.name + "(";
+        }
 
-        // TODO This is hard coded, nono
-        code += "HOME/";
-        code += function.name + "(";
         for (Type parameter : function.parameters)
         {
-            code += parameter.bytecode;
+            bytecode += parameter.getSimpleByteCode();
         }
-        code += ")" + function.returnType.getSimpleByteCode();
-        stmts.addStatement(code);
+
+        if (function.name.equals(function.returnType.name))
+        {
+            bytecode += ")" + Main.nothing.getSimpleByteCode();
+        }
+        else
+        {
+            bytecode += ")" + returnTypeForFunction2(function.returnType);
+        }
+
+        stmts.addStatement(bytecode);
         if (pop && !function.returnType.equals(Main.nothing))
         {
             if (function.returnType.equals(Main.decimal))
@@ -1138,7 +1200,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         symbolInfo.load(stmts);
         stmts.addStatement("ldc " + "\"" + ctx.funcParameters().expression(0).field().IdentifierExact().getText() + "\"");
-        stmts.addStatement("ldc " + "\"" + ctx.funcParameters().expression(1).identifier().getText() + "\"" );
+        stmts.addStatement("ldc " + "\"" + ctx.funcParameters().expression(1).identifier().getText() + "\"");
 
         String bytecode = "invokevirtual ";
 
@@ -1227,7 +1289,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     if (ctx.expression().identifier() != null)
                     {
                         symbol.load(stmts);
-                    } else
+                    }
+                    else
                     {
                         stmts.addStatement("bipush " + ctx.expression().literal().getText());
                     }
@@ -1244,7 +1307,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     if (ctx.expression().identifier() != null)
                     {
                         symbol.load(stmts);
-                    } else
+                    }
+                    else
                     {
                         stmts.addStatement("ldc " + ctx.expression().literal().getText());
                     }
@@ -1261,7 +1325,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     if (ctx.expression().identifier() != null)
                     {
                         symbol.load(stmts);
-                    } else
+                    }
+                    else
                     {
                         stmts.addStatement("bipush " + ctx.expression().literal().getText());
                     }
@@ -1278,10 +1343,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 default:
                     // TODO: Remove debug
                     //region Debug
+/*
                     stmts.addStatement("dup");
                     stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
                     stmts.addStatement("swap");
                     stmts.addStatement("invokevirtual java/io/PrintStream/println(" + Main.symbolTable.types.getSymbol(type).getObjectByteCode() + ")V");
+*/
                     //endregion
 
                     stmts.addStatement("areturn");

@@ -81,13 +81,14 @@ function Setup() returns Nothing
     **Everything below***
     ********************/
 
+
     Input inputParam = TESTER2
-    Print(inputParam.port)
+    PrintI(inputParam.port)
 
     inputParam = returnTest2()
-    Print(inputParam.port)
+    PrintI(inputParam.port)
     inputParam.setPort(666)
-    Print(inputParam.getPort())
+    PrintI(inputParam.getPort())
 
     returnForkTest1()
     returnForkTest2()
@@ -99,10 +100,6 @@ function returnTest2() returns Input
     Input testingObject = Input(333, "King")
  return testingObject
 endfunction
-
-/******************************************************
-**Ikke sikker paa funktionerne nedenunder skal fungere*
-******************************************************/
 
 function returnForkTest1() returns Integer
     if(3==3)
@@ -132,14 +129,14 @@ function returnForkTest3() returns Integer
     return 0
 endfunction
 
-
 function hej() returns String
     String sf = "HEJ"
     return sf
 endfunction
 
 function hejz() returns List<List<String>>
-    return {{"lol2"}}
+    List<List<String>> tester = {{"lol2"}}
+    return tester
 endfunction
 
 function not() returns Nothing
@@ -150,7 +147,6 @@ endfunction
 function not2() returns String
     return hej()
 endfunction
-
 
 function testtt() returns Nothing
     Boolean n = false

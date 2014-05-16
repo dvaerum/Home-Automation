@@ -1,3 +1,5 @@
+Input TESTER = Input(32, "Stue")
+
 function Setup() returns Nothing
     Integer x = 3
     Decimal y = -24.3
@@ -40,6 +42,17 @@ function Setup() returns Nothing
         endrepeat
     endrepeat
 
+    /************
+    *Dictionary**
+    ************/
+    Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
+
+    dic["dic1"]["two"] *= 203
+
+    repeat foreach(Integer x in dic["dic1"])
+        Print(x)
+    endrepeat
+
     /***********
     *List init**
     ***********/
@@ -54,19 +67,19 @@ function Setup() returns Nothing
     ****Classes****
     **************/
 
-    Input TestingObj = Input(42, "Stue")
-    TestingObj.getPort()
+    TESTER.port = 4
+    Print(TESTER.getPort())
+
+    TESTER.setPort(1337)
+    Print(TESTER.port)
 
 
     /********************
     *Function call tests*
     **Everything below***
     ********************/
-    //nothingtest1()
-    //nothingtest2(32, 55)
-    //nothingtest3(123, 32.4, "sfsdf", false);
-    Input inputParam
-    //nothingtest4(inputParam)
+
+    //Input inputParam
     //returnTest()
     //returnTest2()
     returnForkTest1()
@@ -79,7 +92,6 @@ function returnTest2() returns Input
     Input testingObject
  return testingObject
 endfunction
-
 
 /******************************************************
 **Ikke sikker paa funktionerne nedenunder skal fungere*
@@ -115,22 +127,25 @@ endfunction
 
 
 function hej() returns String
-    String sf
-    return hej()
+    String sf = "HEJ"
+    return sf
 endfunction
 
+/*
 function hejz() returns List<List<String>>
-    return {{"lol2", "lol3"}, {"lol", "lol2"}, {"lolll", "afd" } }
+    return {{"lol2"}}
 endfunction
+*/
 
 function not() returns Nothing
     not2()
     return
 endfunction
 
-function not2() returns Nothing
+function not2() returns String
     return hej()
 endfunction
+
 
 function testtt() returns Nothing
     Boolean n = false
@@ -139,18 +154,6 @@ function testtt() returns Nothing
     endrepeat
 endfunction
 
-/*
-function Setup() returns Nothing
-    Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
-
-    dic["dic1"]["two"] *= 203
-
-    repeat foreach(Integer x in dic["dic1"])
-        Print(x)
-    endrepeat
-endfunction
-
 function Print(Integer x) returns Integer
     return x
 endfunction
-*/

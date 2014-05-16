@@ -47,6 +47,7 @@ public class SymbolInfo
 
     public void load(Statements stmts) {
         if (depth == 0) {
+            stmts.addStatement("aload_0");
             stmts.addStatement("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
         } else {
             String typePrefix = "";

@@ -1,3 +1,5 @@
+Input TESTER = Input()
+
 function Setup() returns Nothing
     Integer x = 3
     Decimal y = -24.3
@@ -54,7 +56,8 @@ function Setup() returns Nothing
     ****Classes****
     **************/
 
-    Input TestingObj = Input(42, "Stue")
+//    Input TestingObj = Input(42, "Stue")
+    Input TestingObj = Input()
     TestingObj.getPort()
 
 
@@ -115,8 +118,8 @@ endfunction
 
 
 function hej() returns String
-    String sf
-    return hej()
+    String sf = "HEJ"
+    return sf
 endfunction
 
 function hejz() returns List<List<String>>
@@ -128,7 +131,7 @@ function not() returns Nothing
     return
 endfunction
 
-function not2() returns Nothing
+function not2() returns String
     return hej()
 endfunction
 

@@ -105,7 +105,11 @@ public class Type
                 //Get method returnType
                 String returnTypeString = methodMatcher.group(3);
                 Type returnType;
-                if (!Main.symbolTable.types.symbolExists(returnTypeString))
+
+                // Todo Fix "Nothing"
+                if (returnTypeString.equals("Nothing"))
+                    returnType = Main.nothing;
+                else if (!Main.symbolTable.types.symbolExists(returnTypeString))
                     throw new Exception(String.format("Class %s didn't exist!", returnTypeString));
                 else
                     returnType = Main.symbolTable.types.getSymbol(returnTypeString);

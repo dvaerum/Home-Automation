@@ -337,15 +337,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             }
             else
             {
-                SymbolTable symbolTable = Main.symbolTable;
                 Type t = symbolTable.types.getSymbol(ctx.type().getText());
                 returnType = t.getSimpleByteCode();
             }
-            func = new Function(".method public ".concat(funcName).concat("(").concat(parameters).concat(")".concat(returnType)), ".end method");
+            func = new Function(".method public " + funcName + "(" + parameters + ")" + returnType, ".end method");
             func.stmts = stmts;
 
             visitStmts(ctx.stmts(), func.stmts);
-
+            new ArrayList<HashMap<String, Integer>>();
             this.functions.add(func);
         }
 
@@ -423,6 +422,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         // TODO check if there is are any expressions on Declaration
         CollectionType symbolType;
         SymbolInfo variable;
+
         switch (type)
         {
             case "Integer":
@@ -464,7 +464,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 }
                 else
                 {
-                    stmts.addStatement("ldc ");
+                    stmts.addStatement("ldc \"\"");
                 }
                 stmts.addStatement("astore " + stmts.currentLocal());
                 break;
@@ -567,16 +567,30 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.addLocal(1);
                 String className = ctx.type().getText();
                 Type symbol = symbolTable.types.getSymbol(className);
+
                 symbolTable.variables.addSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
-                stmts.addStatement("new " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode());
+                SymbolInfo symbolInfoClass = symbolTable.variables.getSymbol(ctx.identifier().getText());
+
+                stmts.addStatement("new " + symbolInfoClass.var.type.getClassByteCode());
                 stmts.addStatement("dup");
-                StringBuilder parameters = new StringBuilder("");
-                for (Type parameter : symbol.constructor.parameters)
+
+                if (ctx.expression() != null)
                 {
-                    parameters.append(parameter.bytecode);
+                    for (int i = 0; ctx.expression().funcCall().funcParameters().expression().size() > i; i++)
+                    {
+                        visitExpression(ctx.expression().funcCall().funcParameters().expression(i), stmts);
+                    }
                 }
-                stmts.addStatement("invokespecial " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode() + ".<init>( " + parameters.toString() + ")V");
-                stmts.addStatement("astore " + stmts.currentLocal());
+
+                StringBuilder parameters = new StringBuilder("");
+                for (int i = 0; symbol.constructor.parameters.size() > i; i++)
+                {
+                    parameters.append(symbol.constructor.parameters.get(i).getSimpleByteCode());
+                }
+                stmts.addStatement("invokespecial " + symbolTable.variables.getSymbol(ctx.identifier().getText()).var.type.getClassByteCode() + ".<init>(" + parameters.toString() + ")V");
+
+                symbolInfoClass.store(stmts);
+
                 break;
         }
     }
@@ -624,6 +638,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (type)
             {
                 case "Integer":
+                case "Boolean":
                     if (ctx.AnyAssign() != null)
                     {
                         variable.load(stmts);
@@ -706,40 +721,51 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 visitExpression(expressionContexts.get(i), stmts);
                 String typeText;
                 String argumentText;
-                if(type.equals(Main.list)){
+                if (type.equals(Main.list))
+                {
                     typeText = "ArrayList";
                     argumentText = "I";
-                } else {
+                }
+                else
+                {
                     typeText = "HashMap";
                     argumentText = "Ljava/lang/Object;";
                 }
                 stmts.addStatement(";debug");
                 stmts.addStatement("invokevirtual java/util/" + typeText + "/get(" + argumentText + ")Ljava/lang/Object;");
                 type = (CollectionType) type.innerType;
-                if(type.equals(Main.list)){
+                if (type.equals(Main.list))
+                {
                     typeText = "ArrayList";
-                } else {
+                }
+                else
+                {
                     typeText = "HashMap";
-            }
+                }
                 stmts.addStatement("checkcast java/util/" + typeText);
             }
             HOMEParser.ExpressionContext exp = expressionContexts.get(expressionContexts.size() - 1);
             if (ctx.AnyAssign() != null)
             {
                 stmts.addStatement("dup");
-            visitExpression(exp, stmts);
+                visitExpression(exp, stmts);
                 stmts.addStatement("swap");
                 visitExpression(exp, stmts);
-                if(type.equals(Main.list)){
+                if (type.equals(Main.list))
+                {
                     stmts.addStatement("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;");
-                } else {
+                }
+                else
+                {
                     stmts.addStatement("invokevirtual java/util/HashMap/get(Ljava/lang/Object;)Ljava/lang/Object;");
                 }
                 stmts.addStatement("checkcast java/lang/Integer"); // TODO: real class pls
                 stmts.addStatement("invokevirtual java/lang/Integer/intValue()I"); // TODO: real class pls
                 visitExpression(ctx.expression(), stmts);
                 visitAnyAssign(ctx.AnyAssign(), symbol, stmts);
-            } else {
+            }
+            else
+            {
                 visitExpression(exp, stmts);
                 visitExpression(ctx.expression(), stmts);
             }
@@ -762,27 +788,30 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 case "Dictionary":
                     break;
             }
-            if(type.equals(Main.list)){
+            if (type.equals(Main.list))
+            {
                 stmts.addStatement("invokeinterface java/util/List.set(ILjava/lang/Object;)Ljava/lang/Object; 3");
-            } else {
+            }
+            else
+            {
                 stmts.addStatement("invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
             }
             stmts.addStatement("pop");
         }
         else if (ctx.field() != null)
         {
-            SymbolInfo variable = symbolTable.variables.getSymbol(ctx.field().identifier().getText());
+            SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.field().identifier().getText());
+            Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.field().IdentifierExact().getText()).type;
+            String fieldname = ctx.field().IdentifierExact().getText();
 
-            String objectname = variable.var.name;
-            stmts.addStatement("aload " + stmts.currentLocal());
+            symbolClassInfo.load(stmts);
 
             visitExpression(ctx.expression(), stmts);
 
-            String className = symbolTable.variables.getSymbol(objectname).var.type.toString();
-            String fieldname = ctx.field().IdentifierExact().getText();
-            String type = variable.var.type.getFieldByName(ctx.field().IdentifierExact().getText()).type.getSimpleByteCode();
-
-            stmts.addStatement("putfield " + className + "/" + fieldname + " " + type);
+            stmts.addStatement(String.format("putfield %s/%s %s",
+                    symbolClassInfo.var.type.getClassByteCode(),
+                    fieldname,
+                    fieldType.getSimpleByteCode()));
         }
     }
 
@@ -1061,7 +1090,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         if (ctx.identifier().getText().equals("RegisterEvent"))
         {
             return visitFuncCallRegisterEvent(ctx, stmts, pop);
-            //return visitFuncCallNormal(ctx, stmts, pop);
         }
         else
         {
@@ -1087,7 +1115,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             code += parameter.bytecode;
         }
-        code += ")" + function.returnType.bytecode;
+        code += ")" + function.returnType.getSimpleByteCode();
         stmts.addStatement(code);
         if (pop && !function.returnType.equals(Main.nothing))
         {
@@ -1109,8 +1137,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.funcParameters().expression(0).field().identifier().getText());
 
         symbolInfo.load(stmts);
-        stmts.addStatement("ldc " + ctx.funcParameters().expression(0).field().IdentifierExact().getText());
-        stmts.addStatement("ldc " + ctx.funcParameters().expression(1).identifier().getText());
+        stmts.addStatement("ldc " + "\"" + ctx.funcParameters().expression(0).field().IdentifierExact().getText() + "\"");
+        stmts.addStatement("ldc " + "\"" + ctx.funcParameters().expression(1).identifier().getText() + "\"" );
 
         String bytecode = "invokevirtual ";
 
@@ -1180,99 +1208,81 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             // TODO: MAKE USE OF visitExpression
             SymbolInfo symbol = null;
-            String type;
+            if (ctx.expression().identifier() != null)
+            {
+                symbol = symbolTable.variables.getSymbol(ctx.expression().identifier().getText());
+            }
 
+            String type;
             ExpressionReturn _return = visitExpression(ctx.expression(), stmts);
             type = _return.actualType.name;
+
             switch (type)
             {
                 case "Integer":
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("iload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
-//                    }
-                    // TODO: Remove debug
-                    //stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
 
-
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("iload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
-//                    }
-
-                    // stmts.addStatement("invokevirtual java/io/PrintStream/println(I)V");
+                    //TODO: Remove debug
+                    //region Debug
+                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    if (ctx.expression().identifier() != null)
+                    {
+                        symbol.load(stmts);
+                    } else
+                    {
+                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
+                    }
+                    stmts.addStatement("invokevirtual java/io/PrintStream/println(I)V");
+                    //endregion
 
                     stmts.addStatement("ireturn");
                     break;
                 case "Decimal":
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("dload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
-//                    }
-//                    // TODO: Remove debug
-//                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
-//
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("dload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
-//                    }
-//
-//                    stmts.addStatement("invokevirtual java/io/PrintStream/println(D)V");
+
+                    // TODO: Remove debug
+                    //region Debug
+                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    if (ctx.expression().identifier() != null)
+                    {
+                        symbol.load(stmts);
+                    } else
+                    {
+                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
+                    }
+                    stmts.addStatement("invokevirtual java/io/PrintStream/println(D)V");
+                    //endregion
 
                     stmts.addStatement("dreturn");
                     break;
+
                 case "Boolean":
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("iload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
-//                    }
-//                    // TODO: Remove debug
-//                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
-//
-//
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("iload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
-//                    }
-//
-//                    stmts.addStatement("invokevirtual java/io/PrintStream/println(Z)V");
+                    //TODO: Remove debug
+                    //region Debug
+                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    if (ctx.expression().identifier() != null)
+                    {
+                        symbol.load(stmts);
+                    } else
+                    {
+                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
+                    }
+                    stmts.addStatement("invokevirtual java/io/PrintStream/println(Z)V");
+                    //endregion
 
                     stmts.addStatement("ireturn");
                     break;
+
                 case "Nothing":
                     stmts.addStatement("return");
                     break;
+
                 default:
-//                    if (ctx.expression().identifier() != null)
-//                    {
-//                        stmts.addStatement("aload " + symbol.var.location);
-//                    } else
-//                    {
-//                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
-//                    }
-//                    // TODO: Remove debug
-//                    stmts.addStatement("dup");
-//                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
-//                    stmts.addStatement("swap");
-//                    stmts.addStatement("invokevirtual java/io/PrintStream/println(" + Main.symbolTable.types.getSymbol(type).getObjectByteCode() + ")V");
+                    // TODO: Remove debug
+                    //region Debug
+                    stmts.addStatement("dup");
+                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
+                    stmts.addStatement("swap");
+                    stmts.addStatement("invokevirtual java/io/PrintStream/println(" + Main.symbolTable.types.getSymbol(type).getObjectByteCode() + ")V");
+                    //endregion
 
                     stmts.addStatement("areturn");
                     break;
@@ -1490,7 +1500,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.IdentifierExact().getText()).type;
         String fieldname = ctx.IdentifierExact().getText();
 
-        stmts.addStatement("aload " + symbolClassInfo.var.location);
+        visitIdentifier(ctx.identifier(), stmts, convertingFlag);
 
         stmts.addStatement(String.format("getfield %s/%s %s",
                 symbolClassInfo.var.type.getClassByteCode(),
@@ -1553,9 +1563,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         String typeName;
 
-        if(variable.var.type instanceof CollectionType){
-            typeName = ((CollectionType)variable.var.type).getInnermostType().name;
-        } else {
+        if (variable.var.type instanceof CollectionType)
+        {
+            typeName = ((CollectionType) variable.var.type).getInnermostType().name;
+        }
+        else
+        {
             typeName = variable.var.type.name;
         }
 

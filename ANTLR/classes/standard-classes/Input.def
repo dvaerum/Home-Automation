@@ -7,12 +7,13 @@ class Input
     endfields
 
     constructor
-        - Input(Integer, Decimal)
+        - Input(Integer, String)
     endconstructor
 
     methods
         - toString(Integer, Decimal) > String
-        - ultraLol(Integer) > Integer
+        - getPort() > Integer
+        - setPort(Integer) > Nothing
     endmethods
     bytecode
         - standard/Input

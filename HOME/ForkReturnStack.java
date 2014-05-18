@@ -10,22 +10,22 @@ import java.util.Iterator;
 public class ForkReturnStack{
     private Deque<ForkReturnCheck> stack = new ArrayDeque<ForkReturnCheck>();
     public void newStack(){
-        stack.add(new ForkReturnCheck());
+        stack.push(new ForkReturnCheck());
     }
 
     public void addFork(){
-        stack.peekLast().addFork();
+        stack.peek().addFork();
     }
 
     public void addReturn(){
-        stack.peekLast().addReturn();
+        stack.peek().addReturn();
     }
 
     public boolean closed(){
-        return stack.peekLast().closed();
+        return stack.peek().closed();
     }
 
     public void dispose(){
-        stack.removeLast();
+        stack.pop();
     }
 }

@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 public class Type
 {
-    public boolean isFinal = true;
     public String name;
     public List<Variable> fields = new ArrayList<>();
     public Function constructor;
@@ -35,7 +34,6 @@ public class Type
     }
 
     public Type(String name) {
-        this.isFinal = false;
         this.name = name;
     }
 
@@ -48,7 +46,6 @@ public class Type
 
     public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
     {
-        this.isFinal = true;
         //Add classname into name field
         this.name = name;
 
@@ -69,7 +66,7 @@ public class Type
         if(constructorName != null)
             constructorName = constructorName.replaceAll("- ", "");
 
-        if(constructorName.equals(name))
+        if(constructorName != null && constructorName.equals(name))
         {
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
@@ -91,7 +88,7 @@ public class Type
             //Create function-type
             //And insert into constructor field
         }
-        else
+        else if(constructorName != null)
             System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
 
 
@@ -116,7 +113,10 @@ public class Type
                 String returnTypeString = methodMatcher.group(3);
                 Type returnType;
                 if(!Main.symbolTable.types.symbolExists(returnTypeString))
-                    throw new Exception(String.format("Class %s didn't exist!", returnTypeString));
+                    if (returnTypeString.equals("Nothing"))
+                        returnType = Main.nothing;
+                    else
+                        throw new Exception(String.format("Class %s didn't exist!", returnTypeString));
                 else
                     returnType = Main.symbolTable.types.getSymbol(returnTypeString);
 

@@ -1,28 +1,9 @@
+Input i = Input(1,2.3)
+
 function Setup() returns Nothing
-    List<Integer> PORT = {0,1,2,3,4,5,6,7,8,9}
-
-    Input i = Input(PORT[1])
-    Integer d = 5
-
-    if(true)
-        String i = "Hej"
-    endif
-
-    RegisterEvent(i.ONTOGGLED, hej)
-    //detp(i,i,i,i)
-
-    repeat foreach(Integer i in {1,2,3,4})
-        repeat foreach(Integer i in {1,2,3,4})
-            hejf()
-        endrepeat
-    endrepeat
-
+    RegisterEvent(i.ONTOGGLED, test)
 endfunction
 
-function detp(Integer i, Decimal j, Boolean b, Input g) returns Nothing
-
-endfunction
-
-function hej() returns Nothing
-
+function test() returns Nothing
+    return test()
 endfunction

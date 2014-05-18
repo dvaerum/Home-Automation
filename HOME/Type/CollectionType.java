@@ -14,11 +14,12 @@ public class CollectionType extends Type
     public Type primaryType;
     public Type innerType;
 
-    public CollectionType(String name, Type primaryType, Type innerType)
+    public CollectionType(String name, Type primaryType, Type innerType, String byteCode)
     {
         this.name = name;
         this.primaryType = primaryType;
         this.innerType = innerType;
+        this.bytecode = byteCode;
 
         // Copy methods
         for(Function meth : primaryType.methods)

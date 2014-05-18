@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.tree.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by Jacob on 12-03-14.
@@ -36,7 +37,14 @@ public class Main
     {
         HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
+
         ParseTree tree = parser.program();
+
+        if(parser.getNumberOfSyntaxErrors() > 0)
+        {
+            System.out.println("Syntax error, please check your program, and correct the errors above.");
+            Runtime.getRuntime().exit(1);
+        }
 
         //Read files, to include classes
         FileReader fileR = new FileReader();
@@ -51,6 +59,7 @@ public class Main
 
         //Create generic list and dictionary
         list = new Type("List");
+        list.bytecode = "LJava/Lang/ArrayList;";
         list.methods.add(new Function("add", nothing, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
         list.methods.add(new Function("lol", integer, new ArrayList<Type>()));
@@ -69,23 +78,25 @@ public class Main
         //Firstrun is the first pass in the compiler, and this reads the functions and global variables, and adds to symboltable
         FirstRun firstVisit = new FirstRun();
 
-        //Visit globals
-        Type returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext)tree).global());
+        //Visit functions
+        Type returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext)tree).block());
 
-        //Check if errors, if not visitblock
+        //Check if errors, if not visitGlobal
         if(!(returnType instanceof ErrorType))
-            returnType = firstVisit.visitBlock(((HOMEParser.ProgramContext)tree).block());
+            returnType = firstVisit.visitGlobal(((HOMEParser.ProgramContext)tree).global());
 
-        //If error print it, if not visit typechecker
-        if (!(returnType instanceof ErrorType))
+        if(returnType instanceof ErrorType)
         {
-            System.out.println("-----------------------------Typechecker-----------------------");
-            Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
-            if(type instanceof ErrorType)
-                System.out.println("Error, halting!");
-            else
-                System.out.println("Success");
+            System.out.println("Error, halting!");
+            System.exit(1);
         }
+
+        System.out.println("-----------------------------Typechecker-----------------------");
+        Type type = typeChecker.visitBlock(((HOMEParser.ProgramContext) tree).block());
+        if(type instanceof ErrorType)
+            System.out.println("Error, halting!");
+        else
+            System.out.println("Success");
 
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
 //        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);

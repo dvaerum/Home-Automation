@@ -6,15 +6,15 @@ class Input
     endfields
 
     constructor
-        - Input(Integer)
+        - Input(Integer, Decimal)
     endconstructor
 
     methods
         - toString(Integer, Decimal) > String
-        - ultraLol(Integer) > Integer
+        - ultraLol(Integer) > Nothing
     endmethods
 
     bytecode
-        - Ljava/lang/Integer;
+        - Input
     endbytecode
 endclass

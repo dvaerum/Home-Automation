@@ -117,11 +117,8 @@ public class FileReader {
         //Convert the file of multiple lines into a single string
         str = new Scanner(new File(fullPath)).useDelimiter("\\Z").next();
 
-        //TODO: Regex changes:
-        //TODO: Add PORTx into regex
-        //TODO: Add generic types
         //Define the pattern, that is used to recognize the class.def file
-        Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z0-9_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)\\sendmethods\\sbytecode\\s((?:\\-\\s.+;\\s*)*)\\sendbytecode\\sendclass");
+        Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z0-9_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[A-Z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)endmethods\\sbytecode\\s((?:\\-\\s.+\\s*)*)\\sendbytecode\\sendclass");
         //Convert multiple whitespaces into single whitesspaces, and remove newline and caret return to ease the regex
         str = str.replaceAll("\\s+", " ");
         str = str.replaceAll("[\\n|\\r]]", "");
@@ -158,4 +155,3 @@ public class FileReader {
 
     }
 }
-

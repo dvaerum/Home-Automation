@@ -1,6 +1,7 @@
 package HOME.SymbolTable; /**
  * Created by Frederik on 09-04-2014.
  */
+import HOME.Main;
 import HOME.Type.*;
 
 import java.lang.Boolean;
@@ -35,5 +36,10 @@ public class FunctionTable
     public Function getSymbol(String symbol)
     {
         return table.get(symbol);
+    }
+
+    public boolean isFunctionConstructor(String symbol)
+    {
+        return Main.symbolTable.types.symbolExists(symbol);
     }
 }

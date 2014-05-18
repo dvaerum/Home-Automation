@@ -1,9 +1,9 @@
 Input i = Input(1,2.3)
 
 function Setup() returns Nothing
-    RegisterEvent(i.ONTOGGLED, test)
+
 endfunction
 
-function test() returns Nothing
-    return test()
+function Integer1() returns Nothing
+    return Integer1()
 endfunction

@@ -1,5 +1,6 @@
 package HOME;
 import HOME.Grammar.*;
+import HOME.SymbolTable.SymbolTable;
 import HOME.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -98,6 +99,9 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             return returns;
 
         String funcName = ctx.getChild(1).getText();
+
+        if(Main.symbolTable.functions.isFunctionConstructor(funcName))
+            return new ErrorType(String.format("This function \"%s\" is reserved for a constructor. Please pick another name.", funcName), false);
 
         //Gets the types of the parameters
         ArrayList<Type> paramTypes = getFunctionParameters(ctx.declarationParameters());

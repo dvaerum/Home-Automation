@@ -1,9 +1,22 @@
 Input TESTER = Input(32, "Stue")
 Input TESTER2 = returnTest2()
+List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
+Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
 
 function Setup() returns Nothing
     Integer x = 3
     Decimal y = -24.3
+
+
+    /*******************
+    ****field          *
+    *******************/
+
+    Input abe_0 = abe1[1][0]
+    PrintI(abe_0.getPort())
+
+    abe_0 = abe2["dic1"]["dic2"]
+    PrintI(abe_0.getPort())
 
     /*******************
     *****if/elseif/else*
@@ -46,6 +59,18 @@ function Setup() returns Nothing
     endrepeat
 
     //PrintD(y)
+
+    /************
+    *  List    **
+    ************/
+
+    List<List<Integer>> list_2 = {{11,22,33}, {44,55,66}, {77,88,99}}
+
+    repeat foreach(List<Integer> list in list_2)
+        repeat foreach(Integer xxx in list)
+            PrintI(xxx)
+        endrepeat
+    endrepeat
 
     /************
     *Dictionary**

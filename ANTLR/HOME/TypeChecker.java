@@ -102,6 +102,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         if(returnType instanceof ErrorType)
         {
+            if(!((ErrorType) returnType).isPrinted)
+            {
+                System.out.println(String.format("ERROR line %d: %s", ctx.getStart().getLine(), returnType.toString()));
+                ((ErrorType) returnType).isPrinted = true;
+            }
             return returnType;
         }
 
@@ -210,7 +215,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else
             returnType = Main.nothing;
 
-//        scope.addSymbol(name, returnType);
         Main.symbolTable.openScope();
 
         //Initializes stack for counting returns
@@ -225,6 +229,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         //Checks for stmts before visiting
         if(ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
+        else if(!returnType.equals(Main.nothing))
+        {
+            return new ErrorType(String.format("The function \"%s\" isn't complete, please provide a return statement.", name), false);
+        }
 
         if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
@@ -234,7 +242,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 //forks=returns. We have a return statement
                 System.out.println(String.format("Info at line %d: Yay, return!", ctx.getStart().getLine()));
             } else {
-                System.out.println(String.format("Warning at line %d: Function doesn't contain any return statement", ctx.getStart().getLine()));
+                return new ErrorType(String.format("Function doesn't contain sufficient return statements", ctx.getStart().getLine()), false);
             }
         }
         else if(stmtsType instanceof ErrorType)
@@ -380,6 +388,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
             if(expressionType instanceof ErrorType)
                 return expressionType;
+
+            //Check that the user don't call a function that returns Nothing. This isn't logical.
+            if(functionType.equals(Main.nothing) && expressionType.equals(Main.nothing) && ctx.expression() != null)
+                return new ErrorType("Cant call a function that returns Nothing inside a return-statement", false);
+
             if(functionType.equals(expressionType)){
                 returnType = functionType;
                 forkReturnStack.addReturn();

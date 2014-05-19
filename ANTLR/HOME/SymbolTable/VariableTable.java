@@ -39,14 +39,18 @@ public class VariableTable
     // Returns false if the symbol already exists in the current scope.
     public Boolean addSymbol(String symbol, Type type) {
         SymbolInfo info = new SymbolInfo(symbol, type, currentScope);
-        Deque<SymbolInfo> stack;
+        return addSymbol(symbol, info);
+    }
 
-        if (table.containsKey(symbol))
-            stack = table.get(symbol);
-        else {
-            stack = new ArrayDeque<SymbolInfo>();
-            table.put(symbol, stack);
-        }
+    // Returns false if the symbol already exists in the current scope.
+    public Boolean addSymbol(String symbol, Type type, int location) {
+        SymbolInfo info = new SymbolInfo(symbol, type, location, currentScope);
+        return addSymbol(symbol, info);
+    }
+
+    private boolean addSymbol(String symbol, SymbolInfo info){
+        Deque<SymbolInfo> stack = addSymbolIfNotExisting(symbol);
+
         if (stack.peek() != null && stack.peek().depth == currentScope)
         {
             // Symbol already exists in current scope;
@@ -56,24 +60,22 @@ public class VariableTable
         return true;
     }
 
-    // Returns false if the symbol already exists in the current scope.
-    public Boolean addSymbol(String symbol, Type type, int location) {
-        SymbolInfo info = new SymbolInfo(symbol, type, location, currentScope);
+    private Deque<SymbolInfo> addSymbolIfNotExisting(String symbol){
         Deque<SymbolInfo> stack;
-
         if (table.containsKey(symbol))
-            stack = table.get(symbol);
+            return table.get(symbol);
         else {
             stack = new ArrayDeque<SymbolInfo>();
             table.put(symbol, stack);
+            return stack;
         }
-        if (stack.peek() != null && stack.peek().depth == currentScope)
-        {
-            // Symbol already exists in current scope;
-            return false;
-        }
+    }
+
+    public SymbolInfo addAndGetSymbol(String symbol, Type type, int location){
+        SymbolInfo info = new SymbolInfo(symbol, type, location, currentScope);
+        Deque<SymbolInfo> stack = addSymbolIfNotExisting(symbol);
         stack.push(info);
-        return true;
+        return stack.peek();
     }
 
     // Returns false if the symbol already exists in the current scope.

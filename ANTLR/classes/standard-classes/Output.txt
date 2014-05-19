@@ -44,6 +44,15 @@ function Setup() returns Nothing
     endrepeat
 
     /************
+    *  List    **
+    ************/
+    List<List<Integer>> list = {{11,22,33}, {44,55,66}, {77,88,99}}
+
+    repeat foreach(Integer x in list[1])
+        Print(x)
+    endrepeat
+
+    /************
     *Dictionary**
     ************/
     Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
@@ -126,7 +135,6 @@ function returnForkTest3() returns Integer
             endif
         endif
     endif
-    return 0
 endfunction
 
 function hej() returns String

@@ -750,24 +750,47 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.listIndex() != null)
         {
-            // list[0][0] = 77
-            CollectionType type = (CollectionType) symbolTable.variables.getType(ctx.listIndex().IdentifierExact().getText());
             SymbolInfo symbol = symbolTable.variables.getSymbol(ctx.listIndex().IdentifierExact().getText());
+            CollectionType type = (CollectionType) symbolTable.variables.getType(ctx.listIndex().IdentifierExact().getText());
 
-//            symbol.load(stmts);
+            symbol.load(stmts);
 
-            /*List<HOMEParser.ExpressionContext> expressionContexts = ctx.listIndex().expression();
+            List<HOMEParser.ExpressionContext> expressionContexts = ctx.listIndex().expression();
             for (Integer i = 0; i < expressionContexts.size() - 1; i++)
             {
                 visitExpression(expressionContexts.get(i), stmts);
-                stmts.addStatement("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;");
-                stmts.addStatement("checkcast java/util/ArrayList");
+                switch (type.primaryType.name)
+                {
+                    case "List":
+                        stmts.addStatement(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.bytecode));
+                        break;
+                    case "Dictionary":
+                        stmts.addStatement(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.dictionary.getClassByteCode(), Main.object.bytecode));
+                        break;
+                }
+                stmts.addStatement("checkcast " + type.primaryType.getClassByteCode());
                 type = (CollectionType) type.innerType;
             }
             HOMEParser.ExpressionContext exp = expressionContexts.get(expressionContexts.size() - 1);
-            visitExpression(exp, stmts);*/
-
+            if (ctx.AnyAssign() != null)
+            {
+                stmts.addStatement("dup");
+            visitExpression(exp, stmts);
+                stmts.addStatement("swap");
+                visitExpression(exp, stmts);
+                if(type.primaryType.equals(Main.list)){
+                    stmts.addStatement("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;");
+                } else {
+                    stmts.addStatement("invokevirtual java/util/HashMap/get(Ljava/lang/Object;)Ljava/lang/Object;");
+                }
+                stmts.addStatement("checkcast java/lang/Integer"); // TODO: real class pls
+                stmts.addStatement("invokevirtual java/lang/Integer/intValue()I"); // TODO: real class pls
             visitExpression(ctx.expression(), stmts);
+                visitAnyAssign(ctx.AnyAssign(), symbol, stmts);
+            } else {
+                visitExpression(exp, stmts);
+                visitExpression(ctx.expression(), stmts);
+            }
 
             switch (type.innerType.name)
             {
@@ -935,7 +958,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             symbolInfoOfVariable = symbolTable.variables.getSymbol(ctx.expression().identifier().getText());
         }
 
-        Type realType = symbolInfoOfVariable.var.type;
+        Type realType = ((CollectionType) symbolInfoOfVariable.var.type).primaryType;
 
         if (realType.equals(Main.list))
         {

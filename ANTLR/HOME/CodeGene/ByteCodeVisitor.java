@@ -116,6 +116,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             this.limit_locale = 0;
         }
 
+        public void insertBeforeLastStatement(String statement)
+        {
+            this.statements.add(this.statements.size()-1, statement);
+        }
+
         public void addStatement(String statement)
         {
             this.statements.add(statement);
@@ -442,7 +447,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             case "Integer":
                 stmts.addLocal(1);
-                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.integer, stmts.currentLocal());
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.integer, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts); // TODO Add visitExpression
@@ -451,13 +456,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.addStatement("iconst_0");
                 }
-                variable = symbolTable.variables.getSymbol(ctx.identifier().getText());
                 variable.store(stmts);
                 break;
 
             case "Decimal":
                 stmts.addLocal(1);
-                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.decimal, stmts.currentLocal());
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.decimal, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts);
@@ -466,13 +470,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.addStatement("dconst_0");
                 }
-                stmts.addStatement("dstore " + stmts.currentLocal());
+                variable.store(stmts);
                 stmts.addLocal(1);
                 break;
 
             case "String":
                 stmts.addLocal(1);
-                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.string, stmts.currentLocal());
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.string, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts);
@@ -481,12 +485,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.addStatement("ldc \"\"");
                 }
-                stmts.addStatement("astore " + stmts.currentLocal());
+                variable.store(stmts);
                 break;
 
             case "Boolean":
                 stmts.addLocal(1);
-                symbolTable.variables.addSymbol(ctx.identifier().getText(), Main.bool, stmts.currentLocal());
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.bool, stmts.currentLocal());
 
                 if (ctx.expression() != null)
                 {
@@ -496,7 +500,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.addStatement("iconst_0");
                 }
-                stmts.addStatement("istore " + stmts.currentLocal());
+                variable.store(stmts);
                 break;
 
             case "List":
@@ -649,7 +653,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     visitExpression(ctx.expression(), stmts);
                     visitAnyAssign(ctx.AnyAssign(), variable, stmts);
-                    stmts.addStatement("istore " + variable.var.location);
+                    variable.store(stmts);
                     break;
                 case "Decimal":
                     if (ctx.AnyAssign() != null)
@@ -658,10 +662,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     visitExpression(ctx.expression(), stmts);
                     visitAnyAssign(ctx.AnyAssign(), variable, stmts);
-                    stmts.addStatement("dstore " + variable.var.location);
+                    variable.store(stmts);
                     break;
                 case "String":
                     visitExpression(ctx.expression(), stmts);
+                    variable.store(stmts);
 
                     break;
                 case "List":
@@ -794,8 +799,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             switch (type.innerType.name)
             {
-                case "String":
-                    break;
                 case "Integer":
                     stmts.addStatement("invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
                     break;
@@ -804,10 +807,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     break;
                 case "Boolean":
                     stmts.addStatement("invokestatic java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
-                    break;
-                case "List":
-                    break;
-                case "Dictionary":
                     break;
             }
             switch (type.primaryType.name)
@@ -1690,6 +1689,31 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         String operator = getOperator(ctx);
 
+        if (type.equals(Main.string))
+        {
+            switch (operator)
+            {
+                case "+":
+                    stmts.addLocal(1);
+                    stmts.addStatement("astore " + (stmts.currentLocal() + 1));
+                    stmts.addStatement("astore " + stmts.currentLocal());
+                    stmts.addStatement("new java/lang/StringBuilder");
+                    stmts.addStatement("dup");
+                    stmts.addStatement("invokespecial java/lang/StringBuilder.<init>()V");
+                    stmts.addStatement("aload " + stmts.currentLocal());
+                    stmts.addStatement("invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+                    stmts.addStatement("aload " + (stmts.currentLocal() + 1));
+                    stmts.addStatement("invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+                    stmts.addStatement("invokevirtual java/lang/StringBuilder.toString()Ljava/lang/String;");
+                    stmts.addLocal(1);
+                    return type;
+
+                case "==":
+                    stmts.addStatement("invokevirtual java/lang/String.equals(Ljava/lang/Object;)Z");
+                    return Main.bool;
+            }
+        }
+
         String typePrefix = "";
         if (type.equals(Main.integer))
         {
@@ -1836,30 +1860,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             stmts.addStatement(label2 + ":");
                             return Main.bool;
                         //endregion
-                    }
-                }
-                else if (type.equals(Main.string))
-                {
-                    switch (operator)
-                    {
-                        case "+":
-                            stmts.addLocal(1);
-                            stmts.addStatement("astore " + (stmts.currentLocal() + 1));
-                            stmts.addStatement("astore " + stmts.currentLocal());
-                            stmts.addStatement("new java/lang/StringBuilder");
-                            stmts.addStatement("dup");
-                            stmts.addStatement("invokespecial java/lang/StringBuilder.<init>()V");
-                            stmts.addStatement("aload " + stmts.currentLocal());
-                            stmts.addStatement("invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-                            stmts.addStatement("aload " + (stmts.currentLocal() + 1));
-                            stmts.addStatement("invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-                            stmts.addStatement("invokevirtual java/lang/StringBuilder.toString()Ljava/lang/String;");
-                            stmts.addLocal(1);
-                            return type;
-
-                        case "==":
-                            stmts.addStatement("invokevirtual java/lang/String.equals(Ljava/lang/Object;)Z");
-                            return Main.bool;
                     }
                 }
 
@@ -2196,15 +2196,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             else if (expressionContext.literal().listLiteral() == null && expressionContext.literal().dictionaryLiteral() == null)
             {
                 stmts.addStatement("aload " + stmts.currentLocal());
-                visitExpression(expressionContext, stmts);
-                if (expressionContext.literal().IntegerLiteral() != null)
-                {
-                    stmts.addStatement("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
-                }
-                else if (expressionContext.literal().DecimalLiteral() != null)
-                {
-                    stmts.addStatement("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
-                }
+                ExpressionReturn returnExpression =  visitExpression(expressionContext, stmts);
+
+                returnExpression.invokeToObject(stmts);
+
                 stmts.addStatement("invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2");
                 stmts.addStatement("pop");
             }
@@ -2263,14 +2258,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             {
                 if (expressionContext.literal().dictionaryLiteral() == null && expressionContext.literal().listLiteral() == null)
                 {
-                    if (expressionContext.literal().IntegerLiteral() != null)
-                    {
-                        stmts.addStatement("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
-                    }
-                    else if (expressionContext.literal().DecimalLiteral() != null)
-                    {
-                        stmts.addStatement("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
-                    }
+                    expressionReturn.invokeToObject(stmts);
+
                     stmts.addStatement("invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
                     stmts.addStatement("pop");
                 }

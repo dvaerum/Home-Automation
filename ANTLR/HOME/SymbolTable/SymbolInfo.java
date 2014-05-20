@@ -26,42 +26,86 @@ public class SymbolInfo
         this.depth = depth;
     }
 
-    public void store(Statements stmts) {
-        if (depth == 0) {
+    public void store(Statements stmts)
+    {
+        if (depth == 0)
+        {
+            if (var.type.equals(Main.decimal))
+            {
+                stmts.addLocal(1);
+                storeOptimaze(stmts);
+                stmts.addStatement("aload_0");
+                loadOptimaze(stmts);
+            }
+            else
+            {
+                stmts.addStatement("aload_0");
+                stmts.addStatement("swap");
+            }
             stmts.addStatement("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
-        } else {
-            String typePrefix = "";
-
-            if (var.type.equals(Main.integer)) {
-                typePrefix = "i";
-            } else if (var.type.equals(Main.decimal)) {
-                typePrefix = "d";
-            } else if (var.type.equals(Main.bool)) {
-                typePrefix = "i";
-            } else {
-                typePrefix = "a";
         }
-            stmts.addStatement(typePrefix + "store " + var.location);
+        else
+        {
+            storeOptimaze(stmts);
         }
     }
 
-    public void load(Statements stmts) {
-        if (depth == 0) {
+    private void storeOptimaze(Statements stmts)
+    {
+        String typePrefix = "";
+
+        if (var.type.equals(Main.integer))
+        {
+            typePrefix = "i";
+        }
+        else if (var.type.equals(Main.decimal))
+        {
+            typePrefix = "d";
+        }
+        else if (var.type.equals(Main.bool))
+        {
+            typePrefix = "i";
+        }
+        else
+        {
+            typePrefix = "a";
+        }
+        stmts.addStatement(typePrefix + "store " + var.location);
+    }
+
+    public void load(Statements stmts)
+    {
+        if (depth == 0)
+        {
             stmts.addStatement("aload_0");
             stmts.addStatement("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
-        } else {
-            String typePrefix = "";
+        }
+        else
+        {
+            loadOptimaze(stmts);
+        }
+    }
 
-            if (var.type.equals(Main.integer)) {
-                typePrefix = "i";
-            } else if (var.type.equals(Main.decimal)) {
-                typePrefix = "d";
-            } else if (var.type.equals(Main.bool)) {
-                typePrefix = "i";
-            } else {
-                typePrefix = "a";
+    private void loadOptimaze(Statements stmts)
+    {
+        String typePrefix = "";
+
+        if (var.type.equals(Main.integer))
+        {
+            typePrefix = "i";
         }
-            stmts.addStatement(typePrefix + "load " + var.location);
+        else if (var.type.equals(Main.decimal))
+        {
+            typePrefix = "d";
         }
+        else if (var.type.equals(Main.bool))
+        {
+            typePrefix = "i";
+        }
+        else
+        {
+            typePrefix = "a";
+        }
+        stmts.addStatement(typePrefix + "load " + var.location);
     }
 }

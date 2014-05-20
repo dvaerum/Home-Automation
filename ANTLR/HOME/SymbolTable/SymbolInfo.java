@@ -30,18 +30,9 @@ public class SymbolInfo
     {
         if (depth == 0)
         {
-            if (var.type.equals(Main.decimal))
-            {
-                stmts.addLocal(1);
-                storeOptimaze(stmts);
-                stmts.addStatement("aload_0");
-                loadOptimaze(stmts);
-            }
-            else
-            {
-                stmts.addStatement("aload_0");
-                stmts.addStatement("swap");
-            }
+            var.type.invokeToObject(stmts);
+            stmts.addStatement("aload_0");
+            stmts.addStatement("swap");
             stmts.addStatement("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
         }
         else
@@ -79,6 +70,7 @@ public class SymbolInfo
         {
             stmts.addStatement("aload_0");
             stmts.addStatement("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+            var.type.invokeToSimpleType(stmts);
         }
         else
         {

@@ -1,9 +1,27 @@
 Input TESTER = Input(32, "Stue")
 Input TESTER2 = returnTest2()
+List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
+Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
+List<Boolean> listBool = {true, false, true, true}
+String t = "hej" + " " + "med" + " " + "dig"
+
+    Decimal y = -24.3
 
 function Setup() returns Nothing
     Integer x = 3
-    Decimal y = -24.3
+
+    t = t + " " + "Master"
+    PrintS(t)
+
+    /*******************
+    ****field          *
+    *******************/
+
+    Input abe_0 = abe1[1][0]
+    PrintI(abe_0.getPort())
+
+    abe_0 = abe2["dic1"]["dic2"]
+    PrintI(abe_0.getPort())
 
     /*******************
     *****if/elseif/else*
@@ -25,6 +43,8 @@ function Setup() returns Nothing
         endif
     endif
 
+    PrintI(x)
+
     /**********
     **Repeats**
     **********/
@@ -43,13 +63,18 @@ function Setup() returns Nothing
         endrepeat
     endrepeat
 
+    //PrintD(y)
+
     /************
     *  List    **
     ************/
-    List<List<Integer>> list = {{11,22,33}, {44,55,66}, {77,88,99}}
 
-    repeat foreach(Integer x in list[1])
-        Print(x)
+    List<List<Integer>> list_2 = {{11,22,33}, {44,55,66}, {77,88,99}}
+
+    repeat foreach(List<Integer> list in list_2)
+        repeat foreach(Integer xxx in list)
+            PrintI(xxx)
+        endrepeat
     endrepeat
 
     /************
@@ -57,11 +82,13 @@ function Setup() returns Nothing
     ************/
     Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
 
-    dic["dic1"]["two"] *= 203
+    dic["dic1"]["two"] = dic["dic1"]["two"] * 203
+    dic["dic1"]["one"] -= 202
 
     repeat foreach(Integer x in dic["dic1"])
-        Print(x)
+        PrintI(x)
     endrepeat
+
 
     /***********
     *List init**
@@ -73,23 +100,24 @@ function Setup() returns Nothing
     Boolean booltest3 = ((((((((((true))))))OR false))))
     String f = "asdf"
 
+    PrintS(f)
+
     /**************
     ****Classes****
     **************/
 
-    Print(TESTER.getPort())
+    PrintI(TESTER.getPort())
     TESTER.port = 4
-    Print(TESTER.getPort())
+    PrintI(TESTER.getPort())
 
     TESTER.setPort(1337)
-    Print(TESTER.port)
+    PrintI(TESTER.port)
 
 
     /********************
     *Function call tests*
     **Everything below***
     ********************/
-
 
     Input inputParam = TESTER2
     PrintI(inputParam.port)
@@ -99,10 +127,12 @@ function Setup() returns Nothing
     inputParam.setPort(666)
     PrintI(inputParam.getPort())
 
+
     returnForkTest1()
     returnForkTest2()
     returnForkTest3()
 
+    hejz()
 endfunction
 
 function returnTest2() returns Input
@@ -115,6 +145,11 @@ function returnForkTest1() returns Integer
         return 5
     endif
     return 3
+endfunction
+
+function hej() returns String
+    String sf = "HEJ"
+    return sf
 endfunction
 
 function returnForkTest2() returns Integer
@@ -135,11 +170,7 @@ function returnForkTest3() returns Integer
             endif
         endif
     endif
-endfunction
-
-function hej() returns String
-    String sf = "HEJ"
-    return sf
+    return 0
 endfunction
 
 function hejz() returns List<List<String>>
@@ -163,6 +194,14 @@ function testtt() returns Nothing
     endrepeat
 endfunction
 
-function Print(Integer x) returns Integer
+function PrintI(Integer x) returns Integer
+    return x
+endfunction
+
+function PrintD(Decimal x) returns Decimal
+    return x
+endfunction
+
+function PrintS(String x) returns String
     return x
 endfunction

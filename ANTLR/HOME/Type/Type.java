@@ -1,6 +1,7 @@
 package HOME.Type;
 
 import HOME.*;
+import HOME.CodeGene.ByteCodeVisitor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -196,6 +197,38 @@ public class Type
     @Override
     public String toString() {
         return name;
+    }
+
+    public void invokeToObject(ByteCodeVisitor.Statements stmts)
+    {
+        switch (this.name)
+        {
+            case "Integer":
+                stmts.addStatement("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
+                break;
+            case "Decimal":
+                stmts.addStatement("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
+                break;
+            case "Boolean":
+                stmts.addStatement("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
+                break;
+        }
+    }
+
+    public void invokeToSimpleType(ByteCodeVisitor.Statements stmts)
+    {
+        switch (this.name)
+        {
+            case "Integer":
+                stmts.addStatement("invokevirtual java/lang/Integer.intValue()I");
+                break;
+            case "Decimal":
+                stmts.addStatement("invokevirtual  java/lang/Double.doubleValue()D");
+                break;
+            case "Boolean":
+                stmts.addStatement("invokevirtual  java/lang/Boolean.booleanValue()Z");
+                break;
+        }
     }
 
     public String getObjectByteCode() {

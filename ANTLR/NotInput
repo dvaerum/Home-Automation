@@ -5,9 +5,20 @@ Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"di
 List<Boolean> listBool = {true, false, true, true}
 String t = "hej" + " " + "med" + " " + "dig"
 
-function Setup() returns Nothing
-    Integer x = 3
     Decimal y = -24.3
+    Integer z = 3
+
+function Setup() returns Nothing
+    y++
+    z++
+    PrintD(y)
+    PrintI(z)
+    y--
+    z--
+    PrintD(y)
+    PrintI(z)
+
+    Integer x = 3
 
     t = t + " " + "Master"
     PrintS(t)

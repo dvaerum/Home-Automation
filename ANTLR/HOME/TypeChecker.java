@@ -20,6 +20,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = null;
 
+        if(ctx.stmt() == null)
+            return Main.nothing;
+
         if(ctx.stmt().declaration() != null)
             returnType = visitDeclaration(ctx.stmt().declaration());
         else if(ctx.stmt().assign() != null)
@@ -821,8 +824,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
+        Type stmtsType = null;
+
         if(ctx.stmts() != null)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
 
         Main.symbolTable.closeScope();
         return returnType;
@@ -836,8 +844,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Type returnType = Main.bool;
 
+        Type stmtsType = null;
         if(ctx.stmts() != null)
-            visitStmts(ctx.stmts());
+            stmtsType = visitStmts(ctx.stmts());
+
+        if(stmtsType instanceof ErrorType)
+            return stmtsType;
 
         Main.symbolTable.closeScope();
         return returnType;

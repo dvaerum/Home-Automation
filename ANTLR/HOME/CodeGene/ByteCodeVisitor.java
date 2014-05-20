@@ -194,24 +194,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             String typeName;
             if (this.type == Main.variable)
             {
-                typeName = this.actualType.name;
+                this.actualType.invokeToObject(stmts);
             }
             else
             {
-                typeName = this.type.name;
-            }
-
-            switch (typeName)
-            {
-                case "Integer":
-                    stmts.addStatement("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
-                    break;
-                case "Decimal":
-                    stmts.addStatement("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
-                    break;
-                case "Boolean":
-                    stmts.addStatement("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
-                    break;
+                this.type.invokeToObject(stmts);
             }
         }
     }
@@ -285,7 +272,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             Type symbolType = symbolTable.types.getSymbol(ctx.declaration().type().getText());
             String identifier = ctx.declaration().identifier().getText();
-            String declaration = String.format(".field public %s %s", identifier, returnTypeForFunction(symbolType));// = <value>";
+            String declaration = String.format(".field public %s %s", identifier, returnTypeForFunctionObject(symbolType));// = <value>";
 
             globalVariables.fields.add(declaration);
             globalVariables.stmts.addStatement("aload_0");
@@ -345,7 +332,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             else
             {
                 Type type = symbolTable.types.getSymbol(ctx.type().getText());
-                returnsType = returnTypeForFunction(type);
+                returnsType = returnTypeForFunctionSimple(type);
             }
 
             func = new Function(".method public " + funcName + "(" + parameters + ")" + returnsType, ".end method");
@@ -365,7 +352,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return super.visitFunction(ctx);
     }
 
-    public String returnTypeForFunction(Type type)
+    public String returnTypeForFunctionSimple(Type type)
     {
         if (type instanceof CollectionType)
         {
@@ -374,6 +361,18 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else
         {
             return type.getSimpleByteCode();
+        }
+    }
+
+    public String returnTypeForFunctionObject(Type type)
+    {
+        if (type instanceof CollectionType)
+        {
+            return ((CollectionType) type).primaryType.getObjectByteCode();
+        }
+        else
+        {
+            return type.getObjectByteCode();
         }
     }
 
@@ -1143,7 +1142,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else
         {
-            bytecode += ")" + returnTypeForFunction(function.returnType);
+            bytecode += ")" + returnTypeForFunctionSimple(function.returnType);
         }
 
         stmts.addStatement(bytecode);
@@ -1338,44 +1337,36 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public Object visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements stmts)
+    public void visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements stmts)
     {
         // TODO Identifier, check local or field
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
         int location = symbolInfo.var.location;
         Type type = symbolInfo.var.type;
 
+        String typePrefix = "";
+        if (type.equals(Main.integer))
+        {
+            typePrefix = "i";
+        }
+        else if (type.equals(Main.decimal))
+        {
+            typePrefix = "d";
+        }
+
+        symbolInfo.load(stmts);
+        stmts.addStatement(typePrefix + "const_1");
 
         if (ctx.INC() != null)
         {
-            if (type.equals(Main.integer))
-            {
-                stmts.addStatement("iinc " + location + " 1");
-            }
-            else if (type.equals(Main.decimal))
-            {
-                symbolInfo.load(stmts);
-                stmts.addStatement("dconst_1");
-                stmts.addStatement("dadd");
-                symbolInfo.store(stmts);
-            }
+            stmts.addStatement(typePrefix + "add");
         }
         else if (ctx.DEC() != null)
         {
-            if (type.equals(Main.integer))
-            {
-                stmts.addStatement("iinc " + location + " -1");
-            }
-            else if (type.equals(Main.decimal))
-            {
-                symbolInfo.load(stmts);
-                stmts.addStatement("dconst_1");
-                stmts.addStatement("dsub");
-                symbolInfo.store(stmts);
-            }
+            stmts.addStatement(typePrefix + "sub");
         }
 
-        return super.visitIncDec(ctx);
+        symbolInfo.store(stmts);
     }
 
 //endregion

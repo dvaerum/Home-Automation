@@ -9,3 +9,5 @@
 .directory
 out
 ANTLR/ANTLR.iml
+ANTLR/out
+ANTLR/gen

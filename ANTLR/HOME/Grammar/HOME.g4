@@ -18,7 +18,7 @@ block
     ;
 
 function
-    : 'function' identifier declarationParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
+    : 'function' identifier functionParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
        stmts
       'endfunction'
     ;
@@ -30,10 +30,12 @@ moreFunctions
     | newline*
 	;
 
-//-----------------Parameters----------------
+functionParameters
+    : LPAREN ( funcParamDeclaration(',' funcParamDeclaration)*)? RPAREN
+    ;
 
-declarationParameters
-    : LPAREN (declaration (',' declaration)*)? RPAREN
+funcParamDeclaration
+    : type identifier
     ;
 
 //------------------Statement---------------------
@@ -260,14 +262,9 @@ UNDERSCORE      : '_';
 // Operators
 
 BANG            : '!';
-//TILDE           : '~';
-//QUESTION        : '?';
-//COLON           : ':';
 SEMICOLON       : ';';
 
 //Logical operators
-//logicalOperator : (EQUAL|GT|LT|LE|GE|NOTEQUAL|'AND'|'OR');
-
 and             : 'AND';
 or              : 'OR';
 NOTEQUAL        : '!=';
@@ -276,8 +273,6 @@ GT              : '>';
 LT              : '<';
 LE              : '<=';
 GE              : '>=';
-//AND             : 'AND';
-//OR              : 'OR';
 
 //Numerical operations
 INC             : '++';
@@ -289,11 +284,8 @@ SUB             : '-';
 MUL             : '*';
 DIV             : '/';
 MOD             : '%';
-//BITAND          : '&';
-//BITOR           : '|';
-//CARET           : '^';
 
-//seperators
+//Seperators
 LPAREN          : '(';
 RPAREN          : ')';
 
@@ -304,10 +296,6 @@ SUB_ASSIGN      : '-=';
 MUL_ASSIGN      : '*=';
 DIV_ASSIGN      : '/=';
 MOD_ASSIGN      : '%=';
-
-//AND_ASSIGN      : '&=';
-//OR_ASSIGN       : '|=';
-//XOR_ASSIGN      : '^=';
 
 //
 // Whitespace and comments

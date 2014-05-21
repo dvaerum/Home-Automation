@@ -156,6 +156,14 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -181,14 +189,6 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitStmt(@NotNull HOMEParser.StmtContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -236,7 +236,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitProgram(@NotNull HOMEParser.ProgramContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -244,7 +244,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitProgram(@NotNull HOMEParser.ProgramContext ctx) { return visitChildren(ctx); }
+	@Override public T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -268,6 +268,14 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitFuncParamDeclaration(@NotNull HOMEParser.FuncParamDeclarationContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitFuncParameters(@NotNull HOMEParser.FuncParametersContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -284,7 +292,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -292,7 +300,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

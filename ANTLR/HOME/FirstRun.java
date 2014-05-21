@@ -94,7 +94,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
             return new ErrorType(String.format("This function \"%s\" is reserved for a constructor. Please pick another name.", funcName), false);
 
         //Gets the types of the parameters
-        ArrayList<Type> paramTypes = getFunctionParameters(ctx.declarationParameters());
+        ArrayList<Type> paramTypes = getFunctionParameters(ctx.functionParameters());
         for(Type t : paramTypes)
         {
             if(t instanceof ErrorType)
@@ -120,11 +120,11 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         return returnType;
     }
 
-    public ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
+    public ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
     {
         ArrayList<Type> returnLIst = new ArrayList<>();
 
-        for(HOMEParser.DeclarationContext currCtx : ctx.declaration())
+        for(HOMEParser.FuncParamDeclarationContext currCtx : ctx.funcParamDeclaration())
         {
             returnLIst.add(visitType(currCtx.type()));
         }

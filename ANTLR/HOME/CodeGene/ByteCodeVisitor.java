@@ -539,7 +539,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             String parameters;
             Statements stmts = new Statements();
-            parameters = visitDeclarationParameters(ctx.declarationParameters(), stmts);
+            parameters = visitFunctionParameters(ctx.functionParameters(), stmts);
 
             String returnsType;
             if (ctx.nothing() != null)
@@ -815,7 +815,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public String visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx, Statements stmts)
+    public String visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx, Statements stmts)
     {
         if (ctx == null)
         {
@@ -823,8 +823,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
 
         StringBuilder sb = new StringBuilder();
-
-        for (HOMEParser.DeclarationContext dec : ctx.declaration())
+        for (HOMEParser.FuncParamDeclarationContext dec : ctx.funcParamDeclaration())
         {
             String t = dec.type().getText().trim();
             Type type = Main.symbolTable.types.getSymbol(t);

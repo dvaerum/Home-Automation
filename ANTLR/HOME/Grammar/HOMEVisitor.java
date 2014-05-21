@@ -133,6 +133,13 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HOMEParser#functionParameters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HOMEParser#declaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -159,13 +166,6 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStmt(@NotNull HOMEParser.StmtContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#declarationParameters}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#booleanLiteral}.
@@ -203,18 +203,18 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitNewline(@NotNull HOMEParser.NewlineContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HOMEParser#elseIfStmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link HOMEParser#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitProgram(@NotNull HOMEParser.ProgramContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#elseIfStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#returnFunction}.
@@ -231,6 +231,13 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitNothing(@NotNull HOMEParser.NothingContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link HOMEParser#funcParamDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncParamDeclaration(@NotNull HOMEParser.FuncParamDeclarationContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link HOMEParser#funcParameters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -245,18 +252,18 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	T visitIncDec(@NotNull HOMEParser.IncDecContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link HOMEParser#funcCall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link HOMEParser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#funcCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#moreFunctions}.

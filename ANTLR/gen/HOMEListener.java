@@ -181,6 +181,16 @@ public interface HOMEListener extends ParseTreeListener {
 	 */
 	void exitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link HOMEParser#functionParameters}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#functionParameters}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link HOMEParser#declaration}.
 	 * @param ctx the parse tree
 	 */
@@ -220,16 +230,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStmt(@NotNull HOMEParser.StmtContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#declarationParameters}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#declarationParameters}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#booleanLiteral}.
 	 * @param ctx the parse tree
@@ -281,16 +281,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 */
 	void exitNewline(@NotNull HOMEParser.NewlineContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link HOMEParser#elseIfStmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#elseIfStmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link HOMEParser#program}.
 	 * @param ctx the parse tree
 	 */
@@ -300,6 +290,16 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitProgram(@NotNull HOMEParser.ProgramContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#elseIfStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#elseIfStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#returnFunction}.
 	 * @param ctx the parse tree
@@ -321,6 +321,16 @@ public interface HOMEListener extends ParseTreeListener {
 	 */
 	void exitNothing(@NotNull HOMEParser.NothingContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link HOMEParser#funcParamDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncParamDeclaration(@NotNull HOMEParser.FuncParamDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#funcParamDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncParamDeclaration(@NotNull HOMEParser.FuncParamDeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link HOMEParser#funcParameters}.
 	 * @param ctx the parse tree
 	 */
@@ -341,16 +351,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 */
 	void exitIncDec(@NotNull HOMEParser.IncDecContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link HOMEParser#funcCall}.
-	 * @param ctx the parse tree
-	 */
-	void enterFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#funcCall}.
-	 * @param ctx the parse tree
-	 */
-	void exitFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link HOMEParser#identifier}.
 	 * @param ctx the parse tree
 	 */
@@ -360,6 +360,16 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIdentifier(@NotNull HOMEParser.IdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#funcCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#funcCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncCall(@NotNull HOMEParser.FuncCallContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#moreFunctions}.
 	 * @param ctx the parse tree

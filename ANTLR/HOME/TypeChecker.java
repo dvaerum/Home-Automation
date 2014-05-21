@@ -225,7 +225,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         forkReturnStack.addFork();
 
         //Adds parameters to current function. Can now be used in scope of function.
-        visitDeclarationParameters(ctx.declarationParameters());
+        visitFunctionParameters(ctx.functionParameters());
 
         Type stmtsType = null;
 
@@ -360,12 +360,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnList;
     }
 
-    @Override
-    public Type visitDeclarationParameters(@NotNull HOMEParser.DeclarationParametersContext ctx)
+    public Type visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
     {
         Type returnType = Main.nothing;
 
-        for(HOMEParser.DeclarationContext currCtx : ctx.declaration())
+        for(HOMEParser.FuncParamDeclarationContext currCtx : ctx.funcParamDeclaration())
         {
             Main.symbolTable.variables.addSymbol(currCtx.identifier().getText(), visitType(currCtx.type()));
         }

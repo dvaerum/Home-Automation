@@ -23,19 +23,18 @@ function
       'endfunction'
     ;
 
+// Morefunctions ensures the uniqueness of the first function, the Setup function,
+// and also allows gives the option of only having the setup function without any newlines following it.
 moreFunctions
     : newline+ block
     | newline*
 	;
-//---------------End test terminals----------------
 
 //-----------------Parameters----------------
 
 declarationParameters
     : LPAREN (declaration (',' declaration)*)? RPAREN
     ;
-
-//----------------End Parameters------------------
 
 //------------------Statement---------------------
 
@@ -53,11 +52,6 @@ stmt
     | variableMethodCall
     | returnFunction
     | incDec
-    ;
-
-incDec
-    : (identifier|listIndex|field) INC
-    | (identifier|listIndex|field) DEC
     ;
 
 //--------------End Statements-----------------
@@ -106,6 +100,7 @@ loopForeach
        'endrepeat'
     ;
 
+// calls
 funcCall
     :  identifier funcParameters
     ;
@@ -122,8 +117,9 @@ returnFunction
     : 'return' expression? // TODO change when identifierOrListIndex can be digits
     ;
 
-identifier
-    : IdentifierExact
+incDec
+    : (identifier|listIndex|field) INC
+    | (identifier|listIndex|field) DEC
     ;
 
 listIndex
@@ -132,6 +128,10 @@ listIndex
 
 field
     : identifier DOT IdentifierExact
+    ;
+
+identifier
+    : IdentifierExact
     ;
 
 IdentifierExact
@@ -149,13 +149,9 @@ expression
     | expression (EQUAL | NOTEQUAL) expression
     | expression and expression
     | expression or expression
-//    | expression logicalOperator expression
-//    | expression and expression
-//    | expression or expression
     | funcCall
     | literal
     | int2dec
-//    | collectionInit
     | variableMethodCall
     | identifier|listIndex|field
     | LPAREN expression RPAREN

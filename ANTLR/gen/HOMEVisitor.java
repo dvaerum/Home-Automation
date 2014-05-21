@@ -176,17 +176,17 @@ public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNewline(@NotNull HOMEParser.NewlineContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link HOMEParser#program}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProgram(@NotNull HOMEParser.ProgramContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link HOMEParser#elseIfStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#program}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProgram(@NotNull HOMEParser.ProgramContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#returnFunction}.
 	 * @param ctx the parse tree

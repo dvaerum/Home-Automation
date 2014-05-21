@@ -281,16 +281,6 @@ public interface HOMEListener extends ParseTreeListener {
 	 */
 	void exitNewline(@NotNull HOMEParser.NewlineContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link HOMEParser#program}.
-	 * @param ctx the parse tree
-	 */
-	void enterProgram(@NotNull HOMEParser.ProgramContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#program}.
-	 * @param ctx the parse tree
-	 */
-	void exitProgram(@NotNull HOMEParser.ProgramContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link HOMEParser#elseIfStmt}.
 	 * @param ctx the parse tree
 	 */
@@ -300,6 +290,16 @@ public interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#program}.
+	 * @param ctx the parse tree
+	 */
+	void enterProgram(@NotNull HOMEParser.ProgramContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#program}.
+	 * @param ctx the parse tree
+	 */
+	void exitProgram(@NotNull HOMEParser.ProgramContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#returnFunction}.
 	 * @param ctx the parse tree

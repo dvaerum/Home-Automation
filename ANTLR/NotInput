@@ -6,7 +6,7 @@ List<Boolean> listBool = {true, false, true, true}
 String t = "hej" + " " + "med" + " " + "dig"
 
     Decimal y = -24.3
-    Integer z = 3.
+    Integer z = 3
 
 function Setup() returns Nothing
     y++

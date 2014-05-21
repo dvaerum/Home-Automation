@@ -1,8 +1,21 @@
-class ([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor
-class ([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\s*([a-z_]\w*)\(((?:\w(?:, )?)*)\) > (\w+)\n*\t*endmethods
-/class\s*([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\n*\t*((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\n*\t*)*)\n*\t*endmethods\n*\t*endclass/g
-class\s*([a-zA-Z0-9_]+)\n*\t*fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\n*\t*((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\s+>\s+(\w+)\n*\t*)*)\n*\t*endmethods\n*\t*endclass
+class Output
+    fields
+        - Integer x
+        - Integer port
+        - String  name
+        - Event ONTOGGLED
+    endfields
 
-class\s([a-zA-Z0-9_]+)\sfields\s((?:[\w]+\s+\w+\s)*)\sendfields\sconstructor\s([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\sendconstructor\smethods\s((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\s+>\s+(\w+)\s*)*)\sendmethods\sendclass
-class\s([a-zA-Z0-9_]+)fields\s*((?:[\w]+\s+\w+\n*\t*)*)\n*\t*endfields\n*\t*constructor\s*([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\n*\t*endconstructor\n*\t*methods\n*\t*((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\s+>\s+(\w+)\n*\t*)*)\n*\t*endmethods\n*\t*endclass
-class\s([a-zA-Z0-9_]+)\sfields\s((?:[\w]+\s\w+\s)*)endfields\sconstructor\s([A-Z_]\w*)\(((?:\w(?:, )?)*)\)\sendconstructor\smethods\s((?:(?:[a-zA-Z0-9_]+)\((?:(?:\w(?:, )?)*)\)\s+>\s+(\w+)\s*)*)\sendmethods\sendclass
+    constructor
+        - Output(Integer, String)
+    endconstructor
+
+    methods
+        - toString(Integer, Decimal) > String
+        - getPort() > Integer
+        - setPort(Integer) > Nothing
+    endmethods
+    bytecode
+        - standard/Output
+    endbytecode
+endclass

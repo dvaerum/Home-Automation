@@ -3,6 +3,7 @@ package HOME.SymbolTable;
 import HOME.Main;
 import HOME.Type.*;
 import HOME.CodeGene.ByteCodeVisitor.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 public class SymbolInfo
 {
@@ -26,22 +27,22 @@ public class SymbolInfo
         this.depth = depth;
     }
 
-    public void store(Statements stmts)
+    public void store(ParserRuleContext ctx, Statements stmts)
     {
         if (depth == 0)
         {
-            var.type.invokeToObject(stmts);
-            stmts.add("aload_0");
-            stmts.add("swap");
-            stmts.add("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+            var.type.invokeToObject(ctx, stmts);
+            stmts.add("aload_0", ctx);
+            stmts.add("swap", ctx);
+            stmts.add("putfield HOME/" + var.name + " " + var.type.getObjectByteCode(), ctx);
         }
         else
         {
-            storeOptimaze(stmts);
+            storeOptimaze(ctx, stmts);
         }
     }
 
-    private void storeOptimaze(Statements stmts)
+    private void storeOptimaze(ParserRuleContext ctx, Statements stmts)
     {
         String typePrefix = "";
 
@@ -61,24 +62,24 @@ public class SymbolInfo
         {
             typePrefix = "a";
         }
-        stmts.add(typePrefix + "store " + var.location);
+        stmts.add(typePrefix + "store " + var.location, ctx);
     }
 
-    public void load(Statements stmts)
+    public void load(ParserRuleContext ctx, Statements stmts)
     {
         if (depth == 0)
         {
-            stmts.add("aload_0");
-            stmts.add("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
-            var.type.invokeToSimpleType(stmts);
+            stmts.add("aload_0", ctx);
+            stmts.add("getfield HOME/" + var.name + " " + var.type.getObjectByteCode(), ctx);
+            var.type.invokeToSimpleType(ctx, stmts);
         }
         else
         {
-            loadOptimaze(stmts);
+            loadOptimaze(ctx, stmts);
         }
     }
 
-    private void loadOptimaze(Statements stmts)
+    private void loadOptimaze(ParserRuleContext ctx, Statements stmts)
     {
         String typePrefix = "";
 
@@ -98,6 +99,6 @@ public class SymbolInfo
         {
             typePrefix = "a";
         }
-        stmts.add(typePrefix + "load " + var.location);
+        stmts.add(typePrefix + "load " + var.location, ctx);
     }
 }

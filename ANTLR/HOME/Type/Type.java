@@ -2,6 +2,7 @@ package HOME.Type;
 
 import HOME.*;
 import HOME.CodeGene.ByteCodeVisitor;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -199,34 +200,34 @@ public class Type
         return name;
     }
 
-    public void invokeToObject(ByteCodeVisitor.Statements stmts)
+    public void invokeToObject(ParserRuleContext ctx, ByteCodeVisitor.Statements stmts)
     {
         switch (this.name)
         {
             case "Integer":
-                stmts.add("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
+                stmts.add("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;", ctx);
                 break;
             case "Decimal":
-                stmts.add("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
+                stmts.add("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;", ctx);
                 break;
             case "Boolean":
-                stmts.add("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
+                stmts.add("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;", ctx);
                 break;
         }
     }
 
-    public void invokeToSimpleType(ByteCodeVisitor.Statements stmts)
+    public void invokeToSimpleType(ParserRuleContext ctx, ByteCodeVisitor.Statements stmts)
     {
         switch (this.name)
         {
             case "Integer":
-                stmts.add("invokevirtual java/lang/Integer.intValue()I");
+                stmts.add("invokevirtual java/lang/Integer.intValue()I", ctx);
                 break;
             case "Decimal":
-                stmts.add("invokevirtual java/lang/Double.doubleValue()D");
+                stmts.add("invokevirtual java/lang/Double.doubleValue()D", ctx);
                 break;
             case "Boolean":
-                stmts.add("invokevirtual java/lang/Boolean.booleanValue()Z");
+                stmts.add("invokevirtual java/lang/Boolean.booleanValue()Z", ctx);
                 break;
         }
     }

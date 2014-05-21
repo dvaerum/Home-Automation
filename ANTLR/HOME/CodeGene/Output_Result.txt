@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
-  Last modified May 21, 2014; size 5078 bytes
-  MD5 checksum cb05f6fe3c51a85c0cca3171ac192c53
+  Last modified May 21, 2014; size 5134 bytes
+  MD5 checksum b22f588fdb749ba6e58e4eb44755a235
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -490,6 +490,15 @@ Constant pool:
        434: swap          
        435: putfield      #229                // Field z:Ljava/lang/Integer;
        438: return        
+      LineNumberTable:
+        line 1: 4
+        line 2: 21
+        line 3: 31
+        line 4: 134
+        line 5: 237
+        line 6: 302
+        line 8: 414
+        line 9: 427
 
   public void Setup();
     flags: ACC_PUBLIC
@@ -1049,59 +1058,60 @@ Constant pool:
         line 17: 75
         line 18: 92
         line 19: 104
-        line 20: 116
-        line 21: 120
-        line 22: 181
-        line 23: 190
-        line 24: 212
-        line 25: 222
-        line 26: 244
-        line 27: 254
-        line 28: 269
-        line 29: 279
-        line 30: 288
-        line 31: 298
-        line 32: 308
-        line 33: 322
-        line 34: 331
-        line 35: 354
-        line 36: 361
-        line 37: 364
-        line 42: 378
-        line 43: 401
-        line 48: 421
-        line 49: 424
-        line 50: 427
-        line 63: 465
-        line 64: 648
-        line 65: 679
-        line 66: 713
-        line 73: 726
-        line 74: 825
-        line 75: 869
-        line 76: 905
-        line 77: 950
-        line 80: 960
-        line 81: 973
-        line 82: 1008
-        line 83: 1038
-        line 84: 1057
-        line 85: 1061
-        line 86: 1068
-        line 87: 1080
-        line 88: 1089
-        line 89: 1101
-        line 90: 1111
-        line 91: 1123
-        line 92: 1129
-        line 93: 1139
-        line 94: 1145
-        line 95: 1155
-        line 96: 1163
-        line 97: 1173
-        line 98: 1178
-        line 99: 1183
-        line 100: 1188
+        line 21: 116
+        line 23: 120
+        line 24: 181
+        line 30: 190
+        line 31: 212
+        line 33: 222
+        line 34: 244
+        line 40: 254
+        line 42: 262
+        line 45: 269
+        line 41: 279
+        line 43: 288
+        line 48: 298
+        line 49: 308
+        line 52: 322
+        line 50: 331
+        line 56: 354
+        line 62: 361
+        line 63: 364
+        line 66: 378
+        line 67: 401
+        line 70: 421
+        line 71: 424
+        line 72: 427
+        line 82: 465
+        line 84: 648
+        line 85: 679
+        line 86: 713
+        line 93: 726
+        line 95: 825
+        line 96: 869
+        line 98: 905
+        line 99: 950
+        line 107: 960
+        line 108: 973
+        line 109: 1008
+        line 110: 1038
+        line 111: 1057
+        line 113: 1061
+        line 119: 1068
+        line 120: 1080
+        line 121: 1089
+        line 123: 1101
+        line 124: 1111
+        line 132: 1123
+        line 133: 1129
+        line 135: 1139
+        line 136: 1145
+        line 137: 1155
+        line 138: 1163
+        line 141: 1173
+        line 142: 1178
+        line 143: 1183
+        line 145: 1188
 
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
@@ -1112,6 +1122,8 @@ Constant pool:
          4: invokespecial #228                // Method "<init>":()V
          7: invokespecial #45                 // Method Setup:()V
         10: return        
+      LineNumberTable:
+        line 11: 0
 
   public classes.standard.Input returnTest2();
     flags: ACC_PUBLIC
@@ -1126,8 +1138,8 @@ Constant pool:
         14: aload         1
         16: areturn       
       LineNumberTable:
-        line 221: 0
-        line 222: 14
+        line 149: 0
+        line 150: 14
 
   public int returnForkTest1();
     flags: ACC_PUBLIC
@@ -1148,9 +1160,9 @@ Constant pool:
         28: invokevirtual #17                 // Method java/io/PrintStream.println:(I)V
         31: ireturn       
       LineNumberTable:
-        line 228: 0
-        line 229: 10
-        line 230: 21
+        line 154: 0
+        line 155: 10
+        line 157: 21
 
   public java.lang.String hej();
     flags: ACC_PUBLIC
@@ -1165,8 +1177,8 @@ Constant pool:
         11: invokevirtual #199                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         14: areturn       
       LineNumberTable:
-        line 238: 0
-        line 239: 4
+        line 161: 0
+        line 162: 4
 
   public int returnForkTest2();
     flags: ACC_PUBLIC
@@ -1194,10 +1206,11 @@ Constant pool:
         43: invokevirtual #17                 // Method java/io/PrintStream.println:(I)V
         46: ireturn       
       LineNumberTable:
-        line 245: 0
-        line 246: 14
-        line 247: 25
-        line 248: 36
+        line 166: 0
+        line 168: 7
+        line 171: 14
+        line 167: 25
+        line 169: 36
 
   public int returnForkTest3();
     flags: ACC_PUBLIC
@@ -1228,11 +1241,11 @@ Constant pool:
         54: invokevirtual #17                 // Method java/io/PrintStream.println:(I)V
         57: ireturn       
       LineNumberTable:
-        line 259: 0
-        line 260: 10
-        line 261: 20
-        line 262: 30
-        line 263: 47
+        line 176: 0
+        line 177: 10
+        line 178: 20
+        line 179: 30
+        line 183: 47
 
   public java.util.ArrayList hejz();
     flags: ACC_PUBLIC
@@ -1257,8 +1270,8 @@ Constant pool:
         38: aload         1
         40: areturn       
       LineNumberTable:
-        line 275: 0
-        line 276: 38
+        line 187: 0
+        line 188: 38
 
   public void not();
     flags: ACC_PUBLIC
@@ -1272,8 +1285,7 @@ Constant pool:
         10: invokevirtual #199                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         13: return        
       LineNumberTable:
-        line 282: 0
-        line 283: 5
+        line 192: 0
 
   public java.lang.String not2();
     flags: ACC_PUBLIC
@@ -1287,7 +1299,7 @@ Constant pool:
          9: invokevirtual #199                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         12: areturn       
       LineNumberTable:
-        line 289: 0
+        line 197: 0
 
   public void testtt();
     flags: ACC_PUBLIC
@@ -1311,9 +1323,9 @@ Constant pool:
         30: invokevirtual #199                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         33: return        
       LineNumberTable:
-        line 294: 0
-        line 295: 3
-        line 296: 9
+        line 201: 0
+        line 202: 3
+        line 203: 9
 
   public int PrintI(int);
     flags: ACC_PUBLIC
@@ -1325,7 +1337,7 @@ Constant pool:
          7: invokevirtual #17                 // Method java/io/PrintStream.println:(I)V
         10: ireturn       
       LineNumberTable:
-        line 308: 0
+        line 208: 0
 
   public double PrintD(double);
     flags: ACC_PUBLIC
@@ -1337,7 +1349,7 @@ Constant pool:
          7: invokevirtual #147                // Method java/io/PrintStream.println:(D)V
         10: dreturn       
       LineNumberTable:
-        line 313: 0
+        line 212: 0
 
   public java.lang.String PrintS(java.lang.String);
     flags: ACC_PUBLIC
@@ -1350,5 +1362,5 @@ Constant pool:
          7: invokevirtual #199                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         10: areturn       
       LineNumberTable:
-        line 318: 0
+        line 216: 0
 }

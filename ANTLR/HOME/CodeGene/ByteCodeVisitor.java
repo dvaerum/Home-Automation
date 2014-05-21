@@ -137,6 +137,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
                 case "checkcast":
                 case "dneg":
+                case "ineg":
                 case "goto":
                 case "Label":
                 case "return":
@@ -149,12 +150,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 case "bipush":
                 case "sipush":
                 case "ldc":
+                case "aconst":
                 case "new":
                 case "dup":
                     stackInc();
                     break;
 
-                case "pop":
                 case "astore":
                 case "istore":
                     stackDec();
@@ -168,6 +169,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 case "iadd":
                 case "isub":
                 case "imul":
+                case "idiv":
+                case "irem":
+                case "pop":
                     stackDec();
                     break;
 
@@ -179,6 +183,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
                 case "if":
                     stackDec(2);
+                    break;
+
+                case "i2d":
+                    stackDec();
+                    stackInc(2);
                     break;
 
                 case "ifeq":
@@ -203,6 +212,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
                 case "dadd":
                 case "dsub":
+                case "dmul":
+                case "ddiv":
+                case "drem":
                 case "pop2":
                     stackDec(2);
                     break;
@@ -1204,12 +1216,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             stmts.addStatement("aload " + iterator);
             stmts.addStatement("invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1");
             stmts.addStatement("checkcast " + innerType.getClassByteCode());
-            if (innerType.equals(Main.integer))
-                stmts.addStatement("invokevirtual java/lang/Integer/intValue()I");
-            if (innerType.equals(Main.decimal))
-                stmts.addStatement("invokevirtual java/lang/Double/doubleValue()D");
-            if (innerType.equals(Main.bool))
-                stmts.addStatement("invokevirtual java/lang/Boolean/booleanValue()Z");
+
+            innerType.invokeToSimpleType(stmts);
 
             stmts.addLocal(1);
             SymbolInfo symbolInfo = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), innerType, stmts.currentLocal());
@@ -1241,33 +1249,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             stmts.addStatement("aload " + iterator);
             stmts.addStatement("invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1");
             stmts.addStatement("checkcast " + innerType.getClassByteCode());
-            if (innerType.equals(Main.integer))
-                stmts.addStatement("invokevirtual java/lang/Integer/intValue()I");
-            if (innerType.equals(Main.decimal))
-                stmts.addStatement("invokevirtual java/lang/Double/doubleValue()D");
-            if (innerType.equals(Main.bool))
-                stmts.addStatement("invokevirtual java/lang/Boolean/booleanValue()Z");
+
+            innerType.invokeToSimpleType(stmts);;
 
             stmts.addLocal(1);
-            symbolTable.variables.addSymbol(ctx.identifier().getText(), innerType, stmts.currentLocal());
+            SymbolInfo symbolInfo = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), innerType, stmts.currentLocal());
 
             String storeCode;
 
-            switch (innerType.name)
-            {
-                case "Integer":
-                case "Boolean":
-                    storeCode = "istore";
-                    break;
-                case "Decimal":
-                    storeCode = "dstore";
-                    break;
-                default:
-                    storeCode = "astore";
-                    break;
-            }
-
-            stmts.addStatement(storeCode + " " + stmts.currentLocal());
+            symbolInfo.store(stmts);
 
             visitStmts(ctx.stmts(), stmts);
 
@@ -1487,7 +1477,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        stmts.addStatement("bipush " + ctx.expression().literal().getText());
+                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
                     }
                     stmts.addStatement("invokevirtual java/io/PrintStream/println(I)V");
                     //endregion
@@ -1505,7 +1495,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        stmts.addStatement("ldc " + ctx.expression().literal().getText());
+                        stmts.addStatement("ldc2_w " + ctx.expression().literal().getText());
                     }
                     stmts.addStatement("invokevirtual java/io/PrintStream/println(D)V");
                     //endregion
@@ -1549,15 +1539,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     break;
 
                 default:
-                    // TODO: Remove debug
-                    //region Debug
-/*
-                    stmts.addStatement("dup");
-                    stmts.addStatement("getstatic java/lang/System/out Ljava/io/PrintStream;");
-                    stmts.addStatement("swap");
-                    stmts.addStatement("invokevirtual java/io/PrintStream/println(" + Main.symbolTable.types.getSymbol(type).getObjectByteCode() + ")V");
-*/
-                    //endregion
 
                     stmts.addStatement("areturn");
                     break;
@@ -1719,12 +1700,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             stmts.addStatement("checkcast " + type.innerType.getClassByteCode());
 
-            if (type.innerType.equals(Main.integer))
-                stmts.addStatement("invokevirtual java/lang/Integer/intValue()I");
-            if (type.innerType.equals(Main.decimal))
-                stmts.addStatement("invokevirtual java/lang/Double/doubleValue()D");
-            if (type.innerType.equals(Main.bool))
-                stmts.addStatement("invokevirtual java/lang/Boolean/booleanValue()Z");
+            type.innerType.invokeToSimpleType(stmts);
 
             if (convertingFlag)
             {

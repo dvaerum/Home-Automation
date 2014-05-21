@@ -220,7 +220,7 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 5
+    .limit stack 8
     .limit locals 30
 .line 12
     aload_0
@@ -589,7 +589,7 @@ return
     aload 13
     invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
     checkcast java/lang/Integer
-    invokevirtual java/lang/Integer/intValue()I
+    invokevirtual java/lang/Integer.intValue()I
     istore 14
 .line 66
     aload_0
@@ -660,7 +660,7 @@ return
     ldc "two"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/lang/Integer
-    invokevirtual java/lang/Integer/intValue()I
+    invokevirtual java/lang/Integer.intValue()I
     sipush 203
     imul
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
@@ -698,7 +698,7 @@ return
     aload 18
     invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
     checkcast java/lang/Integer
-    invokevirtual java/lang/Integer/intValue()I
+    invokevirtual java/lang/Integer.intValue()I
     istore 19
 .line 77
     aload_0
@@ -900,14 +900,14 @@ return
 .line 229
     bipush 5
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 5
+    ldc 5
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
     Label35:
 .line 230
     bipush 3
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 3
+    ldc 3
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
 .end method
@@ -940,21 +940,21 @@ return
 .line 246
     bipush 8
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 8
+    ldc 8
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
     Label36:
 .line 247
     bipush 6
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 6
+    ldc 6
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
     Label37:
 .line 248
     bipush 7
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 7
+    ldc 7
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
 .end method
@@ -983,7 +983,7 @@ return
 .line 262
     bipush 7
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 7
+    ldc 7
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
     Label44:
@@ -994,7 +994,7 @@ return
 .line 263
     bipush 0
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    bipush 0
+    ldc 0
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
 .end method

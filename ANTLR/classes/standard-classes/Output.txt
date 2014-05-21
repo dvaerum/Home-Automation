@@ -1,4 +1,4 @@
-Input TESTER = Input (32, "Stue")
+Input TESTER = Input(32, "Stue")
 Input TESTER2 = returnTest2()
 List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
 Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
@@ -43,15 +43,6 @@ function Setup() returns Nothing
         x = x + 123
     else
         x=x+4
-    endif
-
-    Boolean XXX = true
-    if (XXX)
-        PrintS("if(XXX) - Virker")
-    elseif (XXX)
-        PrintS("if(XXX) - Noget Virker")
-    else
-        PrintS("if(XXX) - Intet virker")
     endif
 
     if(x == 3)

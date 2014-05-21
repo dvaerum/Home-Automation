@@ -1,4 +1,2 @@
-#!/bin/bash
-
-java -jar ./jar/antlr-4.2-complete.jar Hello.g4
+java -jar ./jar/antlr-4.2-complete.jar ./Grammar/HOME.g4 -visitor
 exit

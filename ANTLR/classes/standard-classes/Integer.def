@@ -1,0 +1,18 @@
+class Integer
+    fields
+    endfields
+
+    constructor
+        - Integer()
+    endconstructor
+
+    methods
+        - toString() > String
+        - getValue() > Integer
+        - equals(Integer) > Boolean
+    endmethods
+
+    bytecode
+        - I
+    endbytecode
+endclass

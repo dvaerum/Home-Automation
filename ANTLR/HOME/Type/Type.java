@@ -204,13 +204,13 @@ public class Type
         switch (this.name)
         {
             case "Integer":
-                stmts.addStatement("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
+                stmts.add("invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;");
                 break;
             case "Decimal":
-                stmts.addStatement("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
+                stmts.add("invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;");
                 break;
             case "Boolean":
-                stmts.addStatement("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
+                stmts.add("invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;");
                 break;
         }
     }
@@ -220,13 +220,13 @@ public class Type
         switch (this.name)
         {
             case "Integer":
-                stmts.addStatement("invokevirtual java/lang/Integer.intValue()I");
+                stmts.add("invokevirtual java/lang/Integer.intValue()I");
                 break;
             case "Decimal":
-                stmts.addStatement("invokevirtual java/lang/Double.doubleValue()D");
+                stmts.add("invokevirtual java/lang/Double.doubleValue()D");
                 break;
             case "Boolean":
-                stmts.addStatement("invokevirtual java/lang/Boolean.booleanValue()Z");
+                stmts.add("invokevirtual java/lang/Boolean.booleanValue()Z");
                 break;
         }
     }

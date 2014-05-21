@@ -31,9 +31,9 @@ public class SymbolInfo
         if (depth == 0)
         {
             var.type.invokeToObject(stmts);
-            stmts.addStatement("aload_0");
-            stmts.addStatement("swap");
-            stmts.addStatement("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+            stmts.add("aload_0");
+            stmts.add("swap");
+            stmts.add("putfield HOME/" + var.name + " " + var.type.getObjectByteCode());
         }
         else
         {
@@ -61,15 +61,15 @@ public class SymbolInfo
         {
             typePrefix = "a";
         }
-        stmts.addStatement(typePrefix + "store " + var.location);
+        stmts.add(typePrefix + "store " + var.location);
     }
 
     public void load(Statements stmts)
     {
         if (depth == 0)
         {
-            stmts.addStatement("aload_0");
-            stmts.addStatement("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
+            stmts.add("aload_0");
+            stmts.add("getfield HOME/" + var.name + " " + var.type.getObjectByteCode());
             var.type.invokeToSimpleType(stmts);
         }
         else
@@ -98,6 +98,6 @@ public class SymbolInfo
         {
             typePrefix = "a";
         }
-        stmts.addStatement(typePrefix + "load " + var.location);
+        stmts.add(typePrefix + "load " + var.location);
     }
 }

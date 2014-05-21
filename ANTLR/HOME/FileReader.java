@@ -86,7 +86,8 @@ public class FileReader {
             //Check if java .class file for the type exists, if not give a warning
             if(! classfile.exists() && !classfile.isDirectory() )
             {
-                System.out.println(String.format("Warning: The class %s doesn't have a .class file", fileName));
+                System.out.println(String.format("Error: The class %s doesn't have a .class file", fileName));
+                System.exit(1);
             }
             else //read file if no problems
             {
@@ -97,7 +98,6 @@ public class FileReader {
                 catch (FileNotFoundException e)
                 {
                     System.err.println(e.initCause(e.getCause()));
-
                 }
             }
         }

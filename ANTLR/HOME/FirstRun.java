@@ -71,7 +71,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
 
         //TODO: Check if returning false positives
         //Checks if "setup" function has been found
-        if(!Main.symbolTable.functions.symbolExists("Setup"))
+        if(!Main.symbolTable.functions.symbolExists("Setup") && !(returnType instanceof ErrorType))
         {
             returnType = new ErrorType("No \"Setup\" function found, please provide one.", false);
             System.out.println(String.format("\tERROR line %d: %s", ctx.getStart().getLine(), returnType));

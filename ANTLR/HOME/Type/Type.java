@@ -57,7 +57,15 @@ public class Type
             if (field[0].equals("Event"))
                 this.fields.add(new Variable(field[1], Main.event));
             else
+            {
+                if(Main.symbolTable.types.symbolExists(field[0]))
                 this.fields.add(new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
+                else
+                {
+                    System.out.println(String.format("Error in \"%s\".def: Type \"%s\" doesn't exist, please change the type, or make it.", name, field[0]));
+                    System.exit(1);
+        }
+            }
         }
 
         //--------------Constructor parsing---------------------
@@ -77,7 +85,10 @@ public class Type
                 if (Main.symbolTable.types.symbolExists(paramStr))
                     constrParams.add(Main.symbolTable.types.getSymbol(paramStr));
                 else
-                    throw new Exception(String.format("Class %s didn't exist!", paramStr));
+                {
+                    System.out.println(String.format("Error in \"%s\".def: Class \"%s\" didn't exist!", name, paramStr));
+                    System.exit(1);
+            }
             }
 
             constructor = new Function(constructorName, this, constrParams);
@@ -86,7 +97,10 @@ public class Type
             //And insert into constructor field
         }
         else if(constructorName != null)
-            System.out.println(String.format("WARNING: The constructor \"%s\" for the class \"%s\" got a different name!", constructorName, name));
+        {
+            System.out.println(String.format("Error in \"%s\".def: The constructor \"%s\" for the class \"%s\" got a different name!", name, constructorName, name));
+            System.exit(1);
+        }
 
 
 
@@ -111,7 +125,11 @@ public class Type
                     if (returnTypeString.equals("Nothing"))
                         returnType = Main.nothing;
                     else
-                        throw new Exception(String.format("Class %s didn't exist!", returnTypeString));
+                    {
+                        returnType = null;
+                        System.out.println(String.format("Error in \"%s\".def: Class \"%s\" didn't exist!", name, returnTypeString));
+                        System.exit(1);
+                    }
                 else
                     returnType = Main.symbolTable.types.getSymbol(returnTypeString);
 
@@ -123,7 +141,10 @@ public class Type
                         continue;
 
                     if (!Main.symbolTable.types.symbolExists(paramType))
-                        throw new Exception(String.format("Class %s didn't exist!", paramType));
+                    {
+                        System.out.println(String.format("Error in \"%s\".def: Class \"%s\" didn't exist!", name, returnTypeString));
+                        System.exit(1);
+                    }
                     else
                         methodParams.add(Main.symbolTable.types.getSymbol(paramType));
                 }

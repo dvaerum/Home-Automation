@@ -777,6 +777,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
+        if(returnType instanceof ErrorType)
+            return returnType;
+
         if(!returnType.equals(Main.bool))
             return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType, false);
 
@@ -819,10 +822,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Main.symbolTable.openScope();
         Type returnType = null;
-//        System.out.println("\tIf statement: ");
 
         if(ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
+
+        if(returnType instanceof ErrorType)
+            return returnType;
 
         Type stmtsType = null;
 

@@ -10,9 +10,12 @@ import HOME.SymbolTable.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.String;
 import java.util.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ByteCodeVisitor extends HOMEBaseVisitor
 {
@@ -116,14 +119,235 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             this.limit_locale = 0;
         }
 
-        public void insertBeforeLastStatement(String statement)
-        {
-            this.statements.add(this.statements.size()-1, statement);
-        }
-
         public void addStatement(String statement)
         {
+            int _debug = limit_stack;
+
+            statement = statement.replaceAll("\\s+", " ");
+
+            String[] bytecode = statement.split(" ");
+
+            if (bytecode[0].contains("_"))
+            {
+                bytecode = statement.split("_");
+            }
+
+            if (bytecode[0].startsWith("Label"))
+            {
+                bytecode[0] = "Label";
+            }
+
+            switch (bytecode[0])
+            {
+                case ".line":
+
+                case "checkcast":
+                case "dneg":
+                case "goto":
+                case "Label":
+                case "return":
+                case "swap":
+                    break;
+
+                case "aload":
+                case "iload":
+                case "iconst":
+                case "bipush":
+                case "sipush":
+                case "ldc":
+                case "new":
+                case "dup":
+                    stackInc();
+                    break;
+
+                case "pop":
+                case "astore":
+                case "istore":
+                    stackDec();
+                    break;
+
+                case "areturn":
+                case "ireturn":
+                    stackDec();
+                    break;
+
+                case "iadd":
+                case "isub":
+                case "imul":
+                    stackDec();
+                    break;
+
+                case "dcmpg":
+                case "dcmpl":
+                    stackDec(2 + 2);
+                    stackInc();
+                    break;
+
+                case "if":
+                    stackDec(2);
+                    break;
+
+                case "ifeq":
+                case "ifge":
+                case "ifgt":
+                case "ifle":
+                case "iflt":
+                case "ifne":
+                    stackDec();
+                    break;
+
+                case "dstore":
+                case "dreturn":
+                    stackDec(2);
+                    break;
+
+                case "dconst":
+                case "ldc2":
+                case "dload":
+                    stackInc(2);
+                    break;
+
+                case "dadd":
+                case "dsub":
+                case "pop2":
+                    stackDec(2);
+                    break;
+
+                case "invokespecial":
+                case "invokevirtual":
+                    stackDec();
+                    invoke(bytecode);
+                    break;
+
+                case "invokeinterface":
+                    stackDec(Integer.parseInt(bytecode[2]));
+                    stackInc(wordSize(getReturnType(bytecode[1])));                    break;
+
+                case "invokestatic":
+                    invoke(bytecode);
+                    break;
+
+                case "getfield":
+                    stackDec();
+                    stackInc(wordSize(bytecode[2]));
+                    break;
+
+                case "putfield":
+                    stackDec();
+                    stackDec(wordSize(bytecode[2]));
+                    break;
+
+                case "getstatic":
+                    stackInc(wordSize(bytecode[2]));
+                    break;
+
+                default:
+                    System.out.println("Der bliver ikke taget højte for dette bytecode\n" + statement + "\nDette er måske fordi: " + bytecode[0]);
+                    System.exit(4);
+            }
+
+            _debug = limit_stack - _debug;
             this.statements.add(statement);
+            return;
+        }
+
+        private void invoke(String[] bytecode)
+        {
+            ArrayList<String> parametes = getParameterTypes(bytecode[1]);
+            if (parametes != null)
+            {
+                for (String str : parametes)
+                {
+                    stackDec(wordSize(str));
+                }
+            }
+
+            //String[] temp2 = bytecode[1].split(Pattern.quote(")"));
+            stackInc(wordSize(getReturnType(bytecode[1])));
+        }
+
+        private String getReturnType(String str){
+            String[] temp2 = str.split(Pattern.quote(")"));
+            return temp2[1];
+        }
+
+        private ArrayList<String> getParameterTypes(String s)
+        {
+            int startIndex = s.indexOf("(") + 1;
+            int endIndex = s.indexOf(")");
+
+            if (startIndex != endIndex)
+            {
+                ArrayList<String> parametes = new ArrayList<String>();
+
+                String temp = s.substring(startIndex, endIndex);
+
+                while (temp.length() > 0)
+                {
+                    if (temp.startsWith("L"))
+                    {
+                        endIndex = temp.indexOf(";");
+
+                        parametes.add(temp.substring(0, endIndex + 1));
+
+                        temp = temp.substring(endIndex + 1);
+                    }
+                    else
+                    {
+                        parametes.add(temp.substring(0, 1));
+
+                        temp = temp.substring(1);
+                    }
+                }
+
+                return parametes;
+            }
+            return null;
+        }
+
+        private int wordSize(String s)
+        {
+            if (s.startsWith("L") && s.endsWith(";"))
+            {
+                return 1;
+            }
+
+            switch (s)
+            {
+                case "V":
+                    return 0;
+
+                case "Z":
+                case "I":
+                    return 1;
+                case "D":
+                    return 2;
+
+                default:
+                    System.out.println("Der bliver ikke taget højte for denne type\n" + s);
+                    System.exit(4);
+                    return 1;
+            }
+        }
+
+        private void stackInc()
+        {
+            limit_stack++;
+        }
+
+        private void stackInc(int value)
+        {
+            limit_stack += value;
+        }
+
+        private void stackDec()
+        {
+            limit_stack--;
+        }
+
+        private void stackDec(int value)
+        {
+            limit_stack -= value;
         }
 
         public void addLocal(int limit)
@@ -779,19 +1003,24 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             if (ctx.AnyAssign() != null)
             {
                 stmts.addStatement("dup");
-            visitExpression(exp, stmts);
+                visitExpression(exp, stmts);
                 stmts.addStatement("swap");
                 visitExpression(exp, stmts);
-                if(type.primaryType.equals(Main.list)){
+                if (type.primaryType.equals(Main.list))
+                {
                     stmts.addStatement("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;");
-                } else {
+                }
+                else
+                {
                     stmts.addStatement("invokevirtual java/util/HashMap/get(Ljava/lang/Object;)Ljava/lang/Object;");
                 }
                 stmts.addStatement("checkcast java/lang/Integer"); // TODO: real class pls
                 stmts.addStatement("invokevirtual java/lang/Integer/intValue()I"); // TODO: real class pls
-            visitExpression(ctx.expression(), stmts);
+                visitExpression(ctx.expression(), stmts);
                 visitAnyAssign(ctx.AnyAssign(), symbol, stmts);
-            } else {
+            }
+            else
+            {
                 visitExpression(exp, stmts);
                 visitExpression(ctx.expression(), stmts);
             }
@@ -2187,7 +2416,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             else if (expressionContext.literal().listLiteral() == null && expressionContext.literal().dictionaryLiteral() == null)
             {
                 stmts.addStatement("aload " + stmts.currentLocal());
-                ExpressionReturn returnExpression =  visitExpression(expressionContext, stmts);
+                ExpressionReturn returnExpression = visitExpression(expressionContext, stmts);
 
                 returnExpression.invokeToObject(stmts);
 

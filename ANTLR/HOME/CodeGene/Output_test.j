@@ -10,7 +10,7 @@
 .field public y Ljava/lang/Double;
 .field public z Ljava/lang/Integer;
 .method public <init>()V
-    .limit stack 32
+    .limit stack 62
     .limit locals 22
     aload_0
     invokespecial java/lang/Object/<init>()V
@@ -132,22 +132,22 @@
     astore 9
     aload 9
     iconst_1
-    invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
+    invokestatic java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
     iconst_0
-    invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
+    invokestatic java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
     iconst_1
-    invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
+    invokestatic java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
     iconst_1
-    invokestatic  java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
+    invokestatic java/lang/Boolean.valueOf(Z)Ljava/lang/Boolean;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
@@ -206,13 +206,13 @@
     aload_0
     ldc2_w 24.3d
     dneg
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
     aload_0
     bipush 3
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     aload_0
     swap
     putfield HOME/z Ljava/lang/Integer;
@@ -220,15 +220,15 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 32
+    .limit stack 108
     .limit locals 30
 .line 12
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     dconst_1
     dadd
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
@@ -238,7 +238,7 @@ return
     invokevirtual java/lang/Integer.intValue()I
     iconst_1
     iadd
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     aload_0
     swap
     putfield HOME/z Ljava/lang/Integer;
@@ -246,7 +246,7 @@ return
     aload_0
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     invokevirtual HOME/PrintD(D)D
     pop2
 .line 15
@@ -259,10 +259,10 @@ return
 .line 16
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     dconst_1
     dsub
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
@@ -272,7 +272,7 @@ return
     invokevirtual java/lang/Integer.intValue()I
     iconst_1
     isub
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     aload_0
     swap
     putfield HOME/z Ljava/lang/Integer;
@@ -280,7 +280,7 @@ return
     aload_0
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     invokevirtual HOME/PrintD(D)D
     pop2
 .line 19
@@ -396,7 +396,7 @@ return
 .line 32
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     ldc2_w 3.3d
     dcmpl
     iflt Label6
@@ -410,10 +410,10 @@ return
 .line 34
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     dconst_1
     dadd
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
@@ -443,7 +443,7 @@ return
     iconst_1
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     ldc2_w 8.1d
     dcmpl
     ifle Label12
@@ -456,10 +456,10 @@ return
 .line 43
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     dconst_1
     dadd
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
@@ -474,10 +474,10 @@ return
 .line 50
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     dconst_1
     dadd
-    invokestatic  java/lang/Double.valueOf(D)Ljava/lang/Double;
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
@@ -488,7 +488,7 @@ return
     Label15:
     aload_0
     getfield HOME/y Ljava/lang/Double;
-    invokevirtual  java/lang/Double.doubleValue()D
+    invokevirtual java/lang/Double.doubleValue()D
     ldc2_w 3.2d
     dcmpl
     iflt Label14
@@ -503,17 +503,17 @@ return
     astore 8
     aload 8
     bipush 11
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 8
     bipush 22
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 8
     bipush 33
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 7
@@ -526,17 +526,17 @@ return
     astore 9
     aload 9
     bipush 44
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
     bipush 55
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
     bipush 66
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 7
@@ -549,17 +549,17 @@ return
     astore 10
     aload 10
     bipush 77
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 10
     bipush 88
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 10
     bipush 99
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 7
@@ -614,13 +614,13 @@ return
     aload 16
     ldc "one"
     bipush 1
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
     aload 16
     ldc "two"
     bipush 2
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
     aload 16
@@ -635,13 +635,13 @@ return
     aload 17
     ldc "three"
     bipush 3
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
     aload 17
     ldc "four"
     bipush 4
-    invokestatic  java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
     aload 17
@@ -864,7 +864,7 @@ return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-    .limit stack 32
+    .limit stack 34
     .limit locals 1
     new HOME
     dup
@@ -874,7 +874,7 @@ return
 .end method
 
 .method public returnTest2()Lclasses/standard/Input;
-    .limit stack 11
+    .limit stack 12
     .limit locals 2
 .line 221
     new classes/standard/Input
@@ -889,7 +889,7 @@ return
 .end method
 
 .method public returnForkTest1()I
-    .limit stack 11
+    .limit stack 13
     .limit locals 1
 .line 228
     bipush 3
@@ -913,7 +913,7 @@ return
 .end method
 
 .method public hej()Ljava/lang/String;
-    .limit stack 11
+    .limit stack 12
     .limit locals 2
 .line 238
     ldc "HEJ"
@@ -928,7 +928,7 @@ return
 .end method
 
 .method public returnForkTest2()I
-    .limit stack 11
+    .limit stack 14
     .limit locals 1
 .line 245
     bipush 3
@@ -960,7 +960,7 @@ return
 .end method
 
 .method public returnForkTest3()I
-    .limit stack 11
+    .limit stack 13
     .limit locals 1
 .line 259
     bipush 1
@@ -1025,7 +1025,7 @@ return
 .end method
 
 .method public not()V
-    .limit stack 11
+    .limit stack 13
     .limit locals 1
 .line 282
     aload_0
@@ -1039,7 +1039,7 @@ return
 .end method
 
 .method public not2()Ljava/lang/String;
-    .limit stack 11
+    .limit stack 13
     .limit locals 1
 .line 289
     aload_0
@@ -1052,7 +1052,7 @@ return
 .end method
 
 .method public testtt()V
-    .limit stack 11
+    .limit stack 13
     .limit locals 2
 .line 294
     iconst_0
@@ -1081,7 +1081,7 @@ return
 .end method
 
 .method public PrintI(I)I
-    .limit stack 11
+    .limit stack 12
     .limit locals 2
 .line 308
     iload 1
@@ -1092,7 +1092,7 @@ return
 .end method
 
 .method public PrintD(D)D
-    .limit stack 11
+    .limit stack 16
     .limit locals 3
 .line 313
     dload 1
@@ -1103,7 +1103,7 @@ return
 .end method
 
 .method public PrintS(Ljava/lang/String;)Ljava/lang/String;
-    .limit stack 11
+    .limit stack 12
     .limit locals 2
 .line 318
     aload 1

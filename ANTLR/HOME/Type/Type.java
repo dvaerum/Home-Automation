@@ -223,10 +223,10 @@ public class Type
                 stmts.addStatement("invokevirtual java/lang/Integer.intValue()I");
                 break;
             case "Decimal":
-                stmts.addStatement("invokevirtual  java/lang/Double.doubleValue()D");
+                stmts.addStatement("invokevirtual java/lang/Double.doubleValue()D");
                 break;
             case "Boolean":
-                stmts.addStatement("invokevirtual  java/lang/Boolean.booleanValue()Z");
+                stmts.addStatement("invokevirtual java/lang/Boolean.booleanValue()Z");
                 break;
         }
     }

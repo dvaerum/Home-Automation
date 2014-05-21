@@ -10,7 +10,6 @@ import HOME.SymbolTable.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.awt.*;
 import java.io.*;
 import java.lang.String;
 import java.util.*;
@@ -101,27 +100,22 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     // when travelling trough the visitor
     public class Statements
     {
-        private int limit_stack;
-        private int limit_locale;
+        private int limitStack;
+        private int limitStackCounts = 0;
+        private int limitLocale;
         private ArrayList<String> statements;
 
         public Statements()
         {
             this.statements = new ArrayList<>();
-            this.limit_stack = 32; // TODO change to improve performance
-            this.limit_locale = 0;
-        }
-
-        public Statements(int limit_stack)
-        {
-            this.statements = new ArrayList<>();
-            this.limit_stack = limit_stack;
-            this.limit_locale = 0;
+            this.limitStack = 0; // TODO change to improve performance
+            this.limitStackCounts = 0;
+            this.limitLocale = 0;
         }
 
         public void addStatement(String statement)
         {
-            int _debug = limit_stack;
+            int _debug = limitStackCounts;
 
             statement = statement.replaceAll("\\s+", " ");
 
@@ -246,7 +240,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     System.exit(4);
             }
 
-            _debug = limit_stack - _debug;
+            _debug = limitStackCounts - _debug;
+            if (limitStackCounts > limitStack){
+                limitStack = limitStackCounts;
+            }
+
             this.statements.add(statement);
             return;
         }
@@ -332,43 +330,44 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         private void stackInc()
         {
-            limit_stack++;
+            limitStackCounts++;
         }
 
         private void stackInc(int value)
         {
-            limit_stack += value;
+            limitStackCounts += value;
         }
 
         private void stackDec()
         {
-            limit_stack--;
+            limitStackCounts--;
         }
 
         private void stackDec(int value)
         {
-            limit_stack -= value;
+            limitStackCounts -= value;
         }
 
         public void addLocal(int limit)
         {
-            this.limit_locale += limit;
+            this.limitLocale += limit;
         }
 
         public int nextLocal()
         {
-            return this.limit_locale + 1;
+            return this.limitLocale + 1;
         }
 
         public int currentLocal()
         {
-            return this.limit_locale;
+            return this.limitLocale;
         }
 
         public void build()
         {
-            Write(String.format("    " + ".limit stack %d", this.limit_stack < 10 ? this.limit_stack + 10 : this.limit_stack));
-            Write(String.format("    " + ".limit locals %d", this.limit_locale + 1));
+            //Write(String.format("    " + ".limit stack %d", this.limitStack < 10 ? this.limitStack + 10 : this.limitStack));
+            Write(String.format("    " + ".limit stack %d", this.limitStack));
+            Write(String.format("    " + ".limit locals %d", this.limitLocale + 1));
             for (String statement : statements)
             {
                 if (statement.contains(".line"))
@@ -545,7 +544,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else
         {
             String parameters;
-            Statements stmts = new Statements(1);
+            Statements stmts = new Statements();
             parameters = visitDeclarationParameters(ctx.declarationParameters(), stmts);
 
             String returnsType;

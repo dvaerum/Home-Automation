@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Code-Gen/Home-Automation/ANTLR/HOME/CodeGene/HOME.class
   Last modified May 21, 2014; size 5048 bytes
-  MD5 checksum 05064139908bf29cb4682a0deea45135
+  MD5 checksum 7639762e568538344de2947956b23b3e
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -278,7 +278,7 @@ Constant pool:
   public HOME();
     flags: ACC_PUBLIC
     Code:
-      stack=62, locals=22, args_size=1
+      stack=10, locals=22, args_size=1
          0: aload_0       
          1: invokespecial #76                 // Method java/lang/Object."<init>":()V
          4: aload_0       
@@ -488,7 +488,7 @@ Constant pool:
   public void Setup();
     flags: ACC_PUBLIC
     Code:
-      stack=108, locals=30, args_size=1
+      stack=5, locals=30, args_size=1
          0: aload_0       
          1: getfield      #177                // Field y:Ljava/lang/Double;
          4: invokevirtual #69                 // Method java/lang/Double.doubleValue:()D
@@ -1100,7 +1100,7 @@ Constant pool:
   public static void main(java.lang.String[]);
     flags: ACC_PUBLIC, ACC_STATIC
     Code:
-      stack=34, locals=1, args_size=1
+      stack=2, locals=1, args_size=1
          0: new           #100                // class HOME
          3: dup           
          4: invokespecial #222                // Method "<init>":()V
@@ -1110,7 +1110,7 @@ Constant pool:
   public classes.standard.Input returnTest2();
     flags: ACC_PUBLIC
     Code:
-      stack=12, locals=2, args_size=1
+      stack=4, locals=2, args_size=1
          0: new           #33                 // class classes/standard/Input
          3: dup           
          4: sipush        333
@@ -1126,7 +1126,7 @@ Constant pool:
   public int returnForkTest1();
     flags: ACC_PUBLIC
     Code:
-      stack=13, locals=1, args_size=1
+      stack=3, locals=1, args_size=1
          0: bipush        3
          2: bipush        3
          4: if_icmpeq     10
@@ -1149,7 +1149,7 @@ Constant pool:
   public java.lang.String hej();
     flags: ACC_PUBLIC
     Code:
-      stack=12, locals=2, args_size=1
+      stack=3, locals=2, args_size=1
          0: ldc           #115                // String HEJ
          2: astore        1
          4: aload         1
@@ -1165,7 +1165,7 @@ Constant pool:
   public int returnForkTest2();
     flags: ACC_PUBLIC
     Code:
-      stack=14, locals=1, args_size=1
+      stack=3, locals=1, args_size=1
          0: bipush        3
          2: bipush        4
          4: if_icmpeq     25
@@ -1196,7 +1196,7 @@ Constant pool:
   public int returnForkTest3();
     flags: ACC_PUBLIC
     Code:
-      stack=13, locals=1, args_size=1
+      stack=3, locals=1, args_size=1
          0: bipush        1
          2: bipush        2
          4: if_icmpeq     10
@@ -1231,7 +1231,7 @@ Constant pool:
   public java.util.ArrayList hejz();
     flags: ACC_PUBLIC
     Code:
-      stack=11, locals=3, args_size=1
+      stack=2, locals=3, args_size=1
          0: new           #157                // class java/util/ArrayList
          3: dup           
          4: invokespecial #151                // Method java/util/ArrayList."<init>":()V
@@ -1257,7 +1257,7 @@ Constant pool:
   public void not();
     flags: ACC_PUBLIC
     Code:
-      stack=13, locals=1, args_size=1
+      stack=2, locals=1, args_size=1
          0: aload_0       
          1: invokevirtual #160                // Method not2:()Ljava/lang/String;
          4: pop           
@@ -1272,7 +1272,7 @@ Constant pool:
   public java.lang.String not2();
     flags: ACC_PUBLIC
     Code:
-      stack=13, locals=1, args_size=1
+      stack=3, locals=1, args_size=1
          0: aload_0       
          1: invokevirtual #136                // Method hej:()Ljava/lang/String;
          4: dup           
@@ -1286,7 +1286,7 @@ Constant pool:
   public void testtt();
     flags: ACC_PUBLIC
     Code:
-      stack=13, locals=2, args_size=1
+      stack=3, locals=2, args_size=1
          0: iconst_0      
          1: istore        1
          3: iload         1
@@ -1312,7 +1312,7 @@ Constant pool:
   public int PrintI(int);
     flags: ACC_PUBLIC
     Code:
-      stack=12, locals=2, args_size=2
+      stack=3, locals=2, args_size=2
          0: iload         1
          2: getstatic     #86                 // Field java/lang/System.out:Ljava/io/PrintStream;
          5: iload         1
@@ -1324,7 +1324,7 @@ Constant pool:
   public double PrintD(double);
     flags: ACC_PUBLIC
     Code:
-      stack=16, locals=3, args_size=2
+      stack=5, locals=3, args_size=2
          0: dload         1
          2: getstatic     #86                 // Field java/lang/System.out:Ljava/io/PrintStream;
          5: dload         1
@@ -1336,7 +1336,7 @@ Constant pool:
   public java.lang.String PrintS(java.lang.String);
     flags: ACC_PUBLIC
     Code:
-      stack=12, locals=2, args_size=2
+      stack=3, locals=2, args_size=2
          0: aload         1
          2: dup           
          3: getstatic     #86                 // Field java/lang/System.out:Ljava/io/PrintStream;

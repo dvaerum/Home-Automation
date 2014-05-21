@@ -10,7 +10,7 @@
 .field public y Ljava/lang/Double;
 .field public z Ljava/lang/Integer;
 .method public <init>()V
-    .limit stack 62
+    .limit stack 10
     .limit locals 22
     aload_0
     invokespecial java/lang/Object/<init>()V
@@ -220,7 +220,7 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 108
+    .limit stack 5
     .limit locals 30
 .line 12
     aload_0
@@ -864,7 +864,7 @@ return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-    .limit stack 34
+    .limit stack 2
     .limit locals 1
     new HOME
     dup
@@ -874,7 +874,7 @@ return
 .end method
 
 .method public returnTest2()Lclasses/standard/Input;
-    .limit stack 12
+    .limit stack 4
     .limit locals 2
 .line 221
     new classes/standard/Input
@@ -889,7 +889,7 @@ return
 .end method
 
 .method public returnForkTest1()I
-    .limit stack 13
+    .limit stack 3
     .limit locals 1
 .line 228
     bipush 3
@@ -913,7 +913,7 @@ return
 .end method
 
 .method public hej()Ljava/lang/String;
-    .limit stack 12
+    .limit stack 3
     .limit locals 2
 .line 238
     ldc "HEJ"
@@ -928,7 +928,7 @@ return
 .end method
 
 .method public returnForkTest2()I
-    .limit stack 14
+    .limit stack 3
     .limit locals 1
 .line 245
     bipush 3
@@ -960,7 +960,7 @@ return
 .end method
 
 .method public returnForkTest3()I
-    .limit stack 13
+    .limit stack 3
     .limit locals 1
 .line 259
     bipush 1
@@ -1000,7 +1000,7 @@ return
 .end method
 
 .method public hejz()Ljava/util/ArrayList;
-    .limit stack 11
+    .limit stack 2
     .limit locals 3
 .line 275
     new java/util/ArrayList
@@ -1025,7 +1025,7 @@ return
 .end method
 
 .method public not()V
-    .limit stack 13
+    .limit stack 2
     .limit locals 1
 .line 282
     aload_0
@@ -1039,7 +1039,7 @@ return
 .end method
 
 .method public not2()Ljava/lang/String;
-    .limit stack 13
+    .limit stack 3
     .limit locals 1
 .line 289
     aload_0
@@ -1052,7 +1052,7 @@ return
 .end method
 
 .method public testtt()V
-    .limit stack 13
+    .limit stack 3
     .limit locals 2
 .line 294
     iconst_0
@@ -1081,7 +1081,7 @@ return
 .end method
 
 .method public PrintI(I)I
-    .limit stack 12
+    .limit stack 3
     .limit locals 2
 .line 308
     iload 1
@@ -1092,7 +1092,7 @@ return
 .end method
 
 .method public PrintD(D)D
-    .limit stack 16
+    .limit stack 5
     .limit locals 3
 .line 313
     dload 1
@@ -1103,7 +1103,7 @@ return
 .end method
 
 .method public PrintS(Ljava/lang/String;)Ljava/lang/String;
-    .limit stack 12
+    .limit stack 3
     .limit locals 2
 .line 318
     aload 1

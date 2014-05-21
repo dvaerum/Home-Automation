@@ -38,10 +38,40 @@ public class Main
 
     public static void main(String[] args) throws IOException
     {
-        HOMELexer lexer = new HOMELexer(new ANTLRFileStream("NotInput"));
+        ANTLRFileStream stream = new ANTLRFileStream("NotInput");
+        HOMELexer lexer = new HOMELexer(stream);
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
 
+        // Custom error handler format output print
+        // http://stackoverflow.com/questions/22325445/how-to-grab-antlr4-error-output
+        CustomErrorListener errorListener = new CustomErrorListener(true, stream.toString());
+
+        // Removes Antlr4 own error output in terminal
+        // http://stackoverflow.com/questions/18132078/handling-errors-in-antlr4
+        lexer.removeErrorListeners();
+        parser.removeErrorListeners();
+
+        //add the errors of the parser to errorListener
+        lexer.addErrorListener(errorListener);
+        parser.addErrorListener(errorListener);
+
+
         ParseTree tree = parser.program();
+
+
+        if (errorListener.HasErrors()) {
+            System.out.println( "---------------------------------- Errors Messages ----------------------------------");
+            for (int i = 0; i < 3; i++) {
+                System.out.println(errorListener.ErrorMessages().get(i));
+            }
+        }
+
+        if (errorListener.HasWarnings()) {
+            System.out.println( "--------------------------------- Warnings Messages ---------------------------------");
+            for (String s : errorListener.WarningMessages()) {
+                System.out.println(s);
+            }
+        }
 
         if (parser.getNumberOfSyntaxErrors() > 0)
         {
@@ -65,12 +95,11 @@ public class Main
         list.bytecode = "LJava/Lang/ArrayList;";
         list.methods.add(new Function("add", nothing, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
-        list.methods.add(new Function("lol", integer, new ArrayList<Type>()));
+        list.methods.add(new Function("toString", string, new ArrayList<Type>()));
         dictionary = new Type("Dictionary");
         dictionary.methods.add(new Function("put", object, new ArrayList<Type>(Arrays.asList(string, generic))));
         dictionary.methods.add(new Function("remove", nothing, string.toList()));
-        dictionary.methods.add(new Function("lol", integer, new ArrayList<Type>()));
-        //TODO: Allow collections as parameters/return types. Also, constructors/fields don't work for collections atm.
+        dictionary.methods.add(new Function("toString", string, new ArrayList<Type>()));
 
         symbolTable.functions.addSymbol("RegisterEvent", new Function("RegisterEvent", nothing, new ArrayList<>(Arrays.asList(event, functionType))));
 
@@ -211,8 +240,8 @@ public class Main
 
         // System.out.println("omagmward");
 //==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
-//        lol.inspect(parser);
+        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
+        lol.inspect(parser);
 //=================================================================================
 
     }

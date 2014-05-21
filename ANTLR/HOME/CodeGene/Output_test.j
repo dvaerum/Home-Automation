@@ -220,6 +220,7 @@
 .line 9
     aload_0
     bipush 3
+    ineg
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     aload_0
     swap

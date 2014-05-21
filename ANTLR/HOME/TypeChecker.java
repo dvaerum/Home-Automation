@@ -240,14 +240,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
 
-            if(forkReturnStack.closed())
-            {
-                //forks=returns. We have a return statement
-                System.out.println(String.format("Info at line %d: Yay, return!", ctx.getStart().getLine()));
-            } else {
+            if(!forkReturnStack.closed())
                 return new ErrorType(String.format("Function doesn't contain sufficient return statements", ctx.getStart().getLine()), false);
             }
-        }
         else if(stmtsType instanceof ErrorType)
             returnType = stmtsType;
 

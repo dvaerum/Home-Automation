@@ -110,7 +110,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         public Statements()
         {
             this.statements = new ArrayList<>();
-            this.limitStack = 0; // TODO change to improve performance
+            this.limitStack = 0;
             this.limitStackCounts = 0;
             this.limitLocale = 0;
         }
@@ -609,10 +609,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements stmts)
     {
-        // TODO just a test
-/*        symbolTable.newLine();
-        stmts.add(symbolTable.getLineNumberText());*/
-
         if (ctx.declaration() != null)
         {
             visitDeclaration(ctx.declaration(), stmts);

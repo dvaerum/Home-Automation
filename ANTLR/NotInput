@@ -1,4 +1,4 @@
-Input TESTER = Input(32, "Stue")
+Input TESTER = Input (32, "Stue")
 Input TESTER2 = returnTest2()
 List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
 Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
@@ -6,7 +6,7 @@ List<Boolean> listBool = {true, false, true, true}
 String t = "hej" + " " + "med" + " " + "dig"
 
     Decimal y = -24.3
-    Integer z = 3
+    Integer z = 3.
 
 function Setup() returns Nothing
     y++

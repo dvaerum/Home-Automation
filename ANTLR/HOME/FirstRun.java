@@ -9,14 +9,6 @@ import java.util.ArrayList;
  * Created by Jacob on 20-03-14.
  */
 public class FirstRun extends HOMEBaseVisitor<Type> {
-
-    //TODO: Determine if newline shall be removed or not
-    @Override
-    public Type visitNewline(@NotNull HOMEParser.NewlineContext ctx)
-    {
-        return Main.nothing;
-    }
-
     @Override
     public Type visitGlobal(@NotNull HOMEParser.GlobalContext ctx)
     {
@@ -69,7 +61,6 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
                 returnType = blockType;
         }
 
-        //TODO: Check if returning false positives
         //Checks if "setup" function has been found
         if(!Main.symbolTable.functions.symbolExists("Setup") && !(returnType instanceof ErrorType))
         {

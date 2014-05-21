@@ -1531,7 +1531,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public void visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements stmts)
     {
-        // TODO Identifier, check local or field
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
         int location = symbolInfo.var.location;
         Type type = symbolInfo.var.type;
@@ -1608,6 +1607,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             ExpressionReturn r1 = checkExpression(ctx, stmts, 0, convertingFlag);
 
             return new ExpressionReturn(r1.type, "");
+        }
+        else if (ctx.expression().size() == 0 && label != null)
+        {
+            ExpressionReturn r1 = visitExpression(ctx, stmts, null, convertingFlag);
+
+            stmts.add("ifne " + label, ctx);
         }
         else
         {

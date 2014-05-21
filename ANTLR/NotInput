@@ -45,6 +45,15 @@ function Setup() returns Nothing
         x=x+4
     endif
 
+    Boolean XXX = true
+    if (XXX)
+        PrintS("if(XXX) - Virker")
+    elseif (XXX)
+        PrintS("if(XXX) - Noget Virker")
+    else
+        PrintS("if(XXX) - Intet virker")
+    endif
+
     if(x == 3)
         if(y < 3.3)
             y++

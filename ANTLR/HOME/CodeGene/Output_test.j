@@ -229,7 +229,7 @@ return
 
 .method public Setup()V
     .limit stack 8
-    .limit locals 30
+    .limit locals 31
 .line 12
     aload_0
     getfield HOME/y Ljava/lang/Double;
@@ -397,72 +397,56 @@ return
     goto Label3
     Label3:
 .line 48
+    iconst_1
+    istore 7
+.line 49
+    iload 7
+    ifne Label4
+.line 51
+    iload 7
+    ifne Label5
+.line 54
+    aload_0
+    ldc "if(XXX) - Intet virker"
+    invokevirtual HOME/PrintS(Ljava/lang/String;)Ljava/lang/String;
+    pop
+    goto Label6
+    Label4:
+.line 50
+    aload_0
+    ldc "if(XXX) - Virker"
+    invokevirtual HOME/PrintS(Ljava/lang/String;)Ljava/lang/String;
+    pop
+    goto Label6
+    Label5:
+.line 52
+    aload_0
+    ldc "if(XXX) - Noget Virker"
+    invokevirtual HOME/PrintS(Ljava/lang/String;)Ljava/lang/String;
+    pop
+    goto Label6
+    Label6:
+.line 57
     iload 1
     bipush 3
-    if_icmpeq Label4
-    goto Label5
-    Label4:
-.line 49
+    if_icmpeq Label7
+    goto Label8
+    Label7:
+.line 58
     aload_0
     getfield HOME/y Ljava/lang/Double;
     invokevirtual java/lang/Double.doubleValue()D
     ldc2_w 3.3d
     dcmpl
-    iflt Label6
-.line 52
+    iflt Label9
+.line 61
     iload 1
     iconst_1
     isub
     istore 1
-    goto Label7
-    Label6:
-.line 50
-    aload_0
-    getfield HOME/y Ljava/lang/Double;
-    invokevirtual java/lang/Double.doubleValue()D
-    dconst_1
-    dadd
-    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
-    aload_0
-    swap
-    putfield HOME/y Ljava/lang/Double;
-    goto Label7
-    Label7:
-    goto Label5
-    Label5:
-.line 56
-    aload_0
-    iload 1
-    invokevirtual HOME/PrintI(I)I
-    pop
-.line 62
-    goto Label9
-    Label8:
-.line 63
-    iload 1
-    iconst_1
-    iadd
-    istore 1
+    goto Label10
     Label9:
-    iload 1
-    sipush 300
-    if_icmplt Label8
-.line 66
-    Label10:
-    iconst_1
-    aload_0
-    getfield HOME/y Ljava/lang/Double;
-    invokevirtual java/lang/Double.doubleValue()D
-    ldc2_w 8.1d
-    dcmpl
-    ifle Label12
-    iconst_1
-    goto Label13
-    Label12:
-    iconst_0
-    Label13:
-    if_icmpeq Label11
-.line 67
+.line 59
     aload_0
     getfield HOME/y Ljava/lang/Double;
     invokevirtual java/lang/Double.doubleValue()D
@@ -473,14 +457,42 @@ return
     swap
     putfield HOME/y Ljava/lang/Double;
     goto Label10
-    Label11:
-.line 70
-    goto Label15
-    Label14:
+    Label10:
+    goto Label8
+    Label8:
+.line 65
+    aload_0
+    iload 1
+    invokevirtual HOME/PrintI(I)I
+    pop
 .line 71
-    goto Label17
-    Label16:
+    goto Label12
+    Label11:
 .line 72
+    iload 1
+    iconst_1
+    iadd
+    istore 1
+    Label12:
+    iload 1
+    sipush 300
+    if_icmplt Label11
+.line 75
+    Label13:
+    iconst_1
+    aload_0
+    getfield HOME/y Ljava/lang/Double;
+    invokevirtual java/lang/Double.doubleValue()D
+    ldc2_w 8.1d
+    dcmpl
+    ifle Label15
+    iconst_1
+    goto Label16
+    Label15:
+    iconst_0
+    Label16:
+    if_icmpeq Label14
+.line 76
     aload_0
     getfield HOME/y Ljava/lang/Double;
     invokevirtual java/lang/Double.doubleValue()D
@@ -490,65 +502,60 @@ return
     aload_0
     swap
     putfield HOME/y Ljava/lang/Double;
+    goto Label13
+    Label14:
+.line 79
+    goto Label18
     Label17:
+.line 80
+    goto Label20
+    Label19:
+.line 81
+    aload_0
+    getfield HOME/y Ljava/lang/Double;
+    invokevirtual java/lang/Double.doubleValue()D
+    dconst_1
+    dadd
+    invokestatic java/lang/Double.valueOf(D)Ljava/lang/Double;
+    aload_0
+    swap
+    putfield HOME/y Ljava/lang/Double;
+    Label20:
     iload 1
     bipush 3
-    if_icmpgt Label16
-    Label15:
+    if_icmpgt Label19
+    Label18:
     aload_0
     getfield HOME/y Ljava/lang/Double;
     invokevirtual java/lang/Double.doubleValue()D
     ldc2_w 3.2d
     dcmpl
-    iflt Label14
-.line 82
-    new java/util/ArrayList
-    dup
-    invokespecial java/util/ArrayList.<init>()V
-    astore 7
+    iflt Label17
+.line 91
     new java/util/ArrayList
     dup
     invokespecial java/util/ArrayList.<init>()V
     astore 8
-    aload 8
-    bipush 11
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
-    aload 8
-    bipush 22
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
-    aload 8
-    bipush 33
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
-    aload 7
-    aload 8
-    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
-    pop
     new java/util/ArrayList
     dup
     invokespecial java/util/ArrayList.<init>()V
     astore 9
     aload 9
-    bipush 44
+    bipush 11
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
-    bipush 55
+    bipush 22
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
     aload 9
-    bipush 66
+    bipush 33
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    aload 7
+    aload 8
     aload 9
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
@@ -557,112 +564,135 @@ return
     invokespecial java/util/ArrayList.<init>()V
     astore 10
     aload 10
+    bipush 44
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 10
+    bipush 55
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 10
+    bipush 66
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 8
+    aload 10
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    new java/util/ArrayList
+    dup
+    invokespecial java/util/ArrayList.<init>()V
+    astore 11
+    aload 11
     bipush 77
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    aload 10
+    aload 11
     bipush 88
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    aload 10
+    aload 11
     bipush 99
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-    aload 7
-    aload 10
+    aload 8
+    aload 11
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-.line 84
-    aload 7
+.line 93
+    aload 8
     invokeinterface java/util/List/iterator()Ljava/util/Iterator; 1
-    astore 11
-    Label18:
-    aload 11
+    astore 12
+    Label21:
+    aload 12
     invokeinterface java/util/Iterator/hasNext()Z 1
-    ifeq Label19
-    aload 11
+    ifeq Label22
+    aload 12
     invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
     checkcast java/util/ArrayList
-    astore 12
-.line 85
-    aload 12
-    invokeinterface java/util/List/iterator()Ljava/util/Iterator; 1
     astore 13
-    Label20:
+.line 94
     aload 13
+    invokeinterface java/util/List/iterator()Ljava/util/Iterator; 1
+    astore 14
+    Label23:
+    aload 14
     invokeinterface java/util/Iterator/hasNext()Z 1
-    ifeq Label21
-    aload 13
+    ifeq Label24
+    aload 14
     invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
     checkcast java/lang/Integer
     invokevirtual java/lang/Integer.intValue()I
-    istore 14
-.line 86
+    istore 15
+.line 95
     aload_0
-    iload 14
+    iload 15
     invokevirtual HOME/PrintI(I)I
     pop
-    goto Label20
-    Label21:
-    goto Label18
-    Label19:
-.line 93
-    new java/util/HashMap
-    dup
-    invokespecial java/util/HashMap.<init>()V
-    astore 15
-    aload 15
-    ldc "dic1"
+    goto Label23
+    Label24:
+    goto Label21
+    Label22:
+.line 102
     new java/util/HashMap
     dup
     invokespecial java/util/HashMap.<init>()V
     astore 16
     aload 16
-    ldc "one"
-    bipush 1
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-    pop
-    aload 16
-    ldc "two"
-    bipush 2
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-    pop
-    aload 16
-    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-    pop
-    aload 15
-    ldc "dic2"
+    ldc "dic1"
     new java/util/HashMap
     dup
     invokespecial java/util/HashMap.<init>()V
     astore 17
     aload 17
+    ldc "one"
+    bipush 1
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    pop
+    aload 17
+    ldc "two"
+    bipush 2
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    pop
+    aload 17
+    invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    pop
+    aload 16
+    ldc "dic2"
+    new java/util/HashMap
+    dup
+    invokespecial java/util/HashMap.<init>()V
+    astore 18
+    aload 18
     ldc "three"
     bipush 3
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
-    aload 17
+    aload 18
     ldc "four"
     bipush 4
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
-    aload 17
+    aload 18
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
-.line 95
-    aload 15
+.line 104
+    aload 16
     ldc "dic1"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/util/HashMap
     ldc "two"
-    aload 15
+    aload 16
     ldc "dic1"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/util/HashMap
@@ -675,8 +705,8 @@ return
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
-.line 96
-    aload 15
+.line 105
+    aload 16
     ldc "dic1"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/util/HashMap
@@ -692,31 +722,31 @@ return
     invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual java/util/HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     pop
-.line 98
-    aload 15
+.line 107
+    aload 16
     ldc "dic1"
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast java/util/HashMap
     invokevirtual java/util/HashMap/values()Ljava/util/Collection;
     invokeinterface java/util/Collection/iterator()Ljava/util/Iterator; 1
-    astore 18
-    Label22:
-    aload 18
+    astore 19
+    Label25:
+    aload 19
     invokeinterface java/util/Iterator/hasNext()Z 1
-    ifeq Label23
-    aload 18
+    ifeq Label26
+    aload 19
     invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
     checkcast java/lang/Integer
     invokevirtual java/lang/Integer.intValue()I
-    istore 19
-.line 99
+    istore 20
+.line 108
     aload_0
-    iload 19
+    iload 20
     invokevirtual HOME/PrintI(I)I
     pop
-    goto Label22
-    Label23:
-.line 107
+    goto Label25
+    Label26:
+.line 116
     bipush 3
     bipush 3
     bipush 3
@@ -724,145 +754,145 @@ return
     imul
     iload 1
     iadd
-    istore 20
-.line 108
-    iconst_1
-    iconst_0
-    iconst_1
-    istore 22
-    ifne Label25
-    iload 22
-    ifne Label25
-    iconst_0
-    goto Label24
-    Label25:
-    iconst_1
-    Label24:
-    istore 23
-    ifeq Label26
-    iload 23
-    ifeq Label26
-    iconst_1
-    goto Label27
-    Label26:
-    iconst_0
-    Label27:
     istore 21
-.line 109
-    bipush 3
-    bipush 3
-    if_icmple Label28
+.line 117
     iconst_1
-    goto Label29
+    iconst_0
+    iconst_1
+    istore 23
+    ifne Label28
+    iload 23
+    ifne Label28
+    iconst_0
+    goto Label27
     Label28:
-    iconst_0
-    Label29:
     iconst_1
-    istore 25
-    ifeq Label30
-    iload 25
-    ifeq Label30
-    iconst_1
-    goto Label31
-    Label30:
-    iconst_0
-    Label31:
+    Label27:
     istore 24
-.line 110
+    ifeq Label29
+    iload 24
+    ifeq Label29
     iconst_1
+    goto Label30
+    Label29:
     iconst_0
-    istore 27
-    ifne Label33
-    iload 27
-    ifne Label33
-    iconst_0
+    Label30:
+    istore 22
+.line 118
+    bipush 3
+    bipush 3
+    if_icmple Label31
+    iconst_1
     goto Label32
-    Label33:
-    iconst_1
+    Label31:
+    iconst_0
     Label32:
+    iconst_1
     istore 26
-.line 111
+    ifeq Label33
+    iload 26
+    ifeq Label33
+    iconst_1
+    goto Label34
+    Label33:
+    iconst_0
+    Label34:
+    istore 25
+.line 119
+    iconst_1
+    iconst_0
+    istore 28
+    ifne Label36
+    iload 28
+    ifne Label36
+    iconst_0
+    goto Label35
+    Label36:
+    iconst_1
+    Label35:
+    istore 27
+.line 120
     ldc "asdf"
-    astore 28
-.line 113
+    astore 29
+.line 122
     aload_0
-    aload 28
+    aload 29
     invokevirtual HOME/PrintS(Ljava/lang/String;)Ljava/lang/String;
     pop
-.line 119
+.line 128
     aload_0
     aload_0
     getfield HOME/TESTER Lclasses/standard/Input;
     invokevirtual classes/standard/Input.getPort()I
     invokevirtual HOME/PrintI(I)I
     pop
-.line 120
+.line 129
     aload_0
     getfield HOME/TESTER Lclasses/standard/Input;
     bipush 4
     putfield classes/standard/Input/port I
-.line 121
+.line 130
     aload_0
     aload_0
     getfield HOME/TESTER Lclasses/standard/Input;
     invokevirtual classes/standard/Input.getPort()I
-    invokevirtual HOME/PrintI(I)I
-    pop
-.line 123
-    aload_0
-    getfield HOME/TESTER Lclasses/standard/Input;
-    sipush 1337
-    invokevirtual classes/standard/Input.setPort(I)V
-.line 124
-    aload_0
-    aload_0
-    getfield HOME/TESTER Lclasses/standard/Input;
-    getfield classes/standard/Input/port I
     invokevirtual HOME/PrintI(I)I
     pop
 .line 132
     aload_0
-    getfield HOME/TESTER2 Lclasses/standard/Input;
-    astore 29
+    getfield HOME/TESTER Lclasses/standard/Input;
+    sipush 1337
+    invokevirtual classes/standard/Input.setPort(I)V
 .line 133
     aload_0
-    aload 29
+    aload_0
+    getfield HOME/TESTER Lclasses/standard/Input;
     getfield classes/standard/Input/port I
-    invokevirtual HOME/PrintI(I)I
-    pop
-.line 135
-    aload_0
-    invokevirtual HOME/returnTest2()Lclasses/standard/Input;
-    astore 29
-.line 136
-    aload_0
-    aload 29
-    getfield classes/standard/Input/port I
-    invokevirtual HOME/PrintI(I)I
-    pop
-.line 137
-    aload 29
-    sipush 666
-    invokevirtual classes/standard/Input.setPort(I)V
-.line 138
-    aload_0
-    aload 29
-    invokevirtual classes/standard/Input.getPort()I
     invokevirtual HOME/PrintI(I)I
     pop
 .line 141
     aload_0
+    getfield HOME/TESTER2 Lclasses/standard/Input;
+    astore 30
+.line 142
+    aload_0
+    aload 30
+    getfield classes/standard/Input/port I
+    invokevirtual HOME/PrintI(I)I
+    pop
+.line 144
+    aload_0
+    invokevirtual HOME/returnTest2()Lclasses/standard/Input;
+    astore 30
+.line 145
+    aload_0
+    aload 30
+    getfield classes/standard/Input/port I
+    invokevirtual HOME/PrintI(I)I
+    pop
+.line 146
+    aload 30
+    sipush 666
+    invokevirtual classes/standard/Input.setPort(I)V
+.line 147
+    aload_0
+    aload 30
+    invokevirtual classes/standard/Input.getPort()I
+    invokevirtual HOME/PrintI(I)I
+    pop
+.line 150
+    aload_0
     invokevirtual HOME/returnForkTest1()I
     pop
-.line 142
+.line 151
     aload_0
     invokevirtual HOME/returnForkTest2()I
     pop
-.line 143
+.line 152
     aload_0
     invokevirtual HOME/returnForkTest3()I
     pop
-.line 145
+.line 154
     aload_0
     invokevirtual HOME/hejz()Ljava/util/ArrayList;
     pop
@@ -886,14 +916,14 @@ return
 .method public returnTest2()Lclasses/standard/Input;
     .limit stack 4
     .limit locals 2
-.line 149
+.line 158
     new classes/standard/Input
     dup
     sipush 333
     ldc "King"
     invokespecial classes/standard/Input.<init>(ILjava/lang/String;)V
     astore 1
-.line 150
+.line 159
     aload 1
     areturn
 .end method
@@ -901,20 +931,20 @@ return
 .method public returnForkTest1()I
     .limit stack 3
     .limit locals 1
-.line 154
+.line 163
     bipush 3
     bipush 3
-    if_icmpeq Label34
-    goto Label35
-    Label34:
-.line 155
+    if_icmpeq Label37
+    goto Label38
+    Label37:
+.line 164
     bipush 5
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 5
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
-    Label35:
-.line 157
+    Label38:
+.line 166
     bipush 3
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 3
@@ -925,10 +955,10 @@ return
 .method public hej()Ljava/lang/String;
     .limit stack 3
     .limit locals 2
-.line 161
+.line 170
     ldc "HEJ"
     astore 1
-.line 162
+.line 171
     aload 1
     dup
     getstatic java/lang/System/out Ljava/io/PrintStream;
@@ -940,29 +970,29 @@ return
 .method public returnForkTest2()I
     .limit stack 3
     .limit locals 1
-.line 166
+.line 175
     bipush 3
     bipush 4
-    if_icmpeq Label36
-.line 168
+    if_icmpeq Label39
+.line 177
     bipush 5
     bipush 6
-    if_icmpeq Label37
-.line 171
+    if_icmpeq Label40
+.line 180
     bipush 8
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 8
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
-    Label36:
-.line 167
+    Label39:
+.line 176
     bipush 6
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 6
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
-    Label37:
-.line 169
+    Label40:
+.line 178
     bipush 7
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 7
@@ -973,36 +1003,36 @@ return
 .method public returnForkTest3()I
     .limit stack 3
     .limit locals 1
-.line 176
+.line 185
     bipush 1
     bipush 2
-    if_icmpeq Label39
-    goto Label40
-    Label39:
-.line 177
+    if_icmpeq Label42
+    goto Label43
+    Label42:
+.line 186
     bipush 3
     bipush 4
-    if_icmpeq Label41
-    goto Label42
-    Label41:
-.line 178
+    if_icmpeq Label44
+    goto Label45
+    Label44:
+.line 187
     bipush 5
     bipush 6
-    if_icmpeq Label43
-    goto Label44
-    Label43:
-.line 179
+    if_icmpeq Label46
+    goto Label47
+    Label46:
+.line 188
     bipush 7
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 7
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
-    Label44:
-    goto Label42
-    Label42:
-    goto Label40
-    Label40:
-.line 183
+    Label47:
+    goto Label45
+    Label45:
+    goto Label43
+    Label43:
+.line 192
     bipush 0
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc 0
@@ -1013,7 +1043,7 @@ return
 .method public hejz()Ljava/util/ArrayList;
     .limit stack 2
     .limit locals 3
-.line 187
+.line 196
     new java/util/ArrayList
     dup
     invokespecial java/util/ArrayList.<init>()V
@@ -1030,7 +1060,7 @@ return
     aload 2
     invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
     pop
-.line 188
+.line 197
     aload 1
     areturn
 .end method
@@ -1038,7 +1068,7 @@ return
 .method public not()V
     .limit stack 2
     .limit locals 1
-.line 192
+.line 201
     aload_0
     invokevirtual HOME/not2()Ljava/lang/String;
     pop
@@ -1051,7 +1081,7 @@ return
 .method public not2()Ljava/lang/String;
     .limit stack 3
     .limit locals 1
-.line 197
+.line 206
     aload_0
     invokevirtual HOME/hej()Ljava/lang/String;
     dup
@@ -1064,26 +1094,26 @@ return
 .method public testtt()V
     .limit stack 3
     .limit locals 2
-.line 201
+.line 210
     iconst_0
     istore 1
-.line 202
-    Label45:
-    iload 1
-    iconst_1
-    if_icmpeq Label46
-.line 203
-    iload 1
-    iconst_0
-    if_icmpne Label47
-    iconst_1
-    goto Label48
-    Label47:
-    iconst_0
+.line 211
     Label48:
+    iload 1
+    iconst_1
+    if_icmpeq Label49
+.line 212
+    iload 1
+    iconst_0
+    if_icmpne Label50
+    iconst_1
+    goto Label51
+    Label50:
+    iconst_0
+    Label51:
     istore 1
-    goto Label45
-    Label46:
+    goto Label48
+    Label49:
     getstatic java/lang/System/out Ljava/io/PrintStream;
     ldc "Great Success!!"
     invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
@@ -1093,7 +1123,7 @@ return
 .method public PrintI(I)I
     .limit stack 3
     .limit locals 2
-.line 208
+.line 217
     iload 1
     getstatic java/lang/System/out Ljava/io/PrintStream;
     iload 1
@@ -1104,7 +1134,7 @@ return
 .method public PrintD(D)D
     .limit stack 5
     .limit locals 3
-.line 212
+.line 221
     dload 1
     getstatic java/lang/System/out Ljava/io/PrintStream;
     dload 1
@@ -1115,7 +1145,7 @@ return
 .method public PrintS(Ljava/lang/String;)Ljava/lang/String;
     .limit stack 3
     .limit locals 2
-.line 216
+.line 225
     aload 1
     dup
     getstatic java/lang/System/out Ljava/io/PrintStream;

@@ -123,11 +123,11 @@ incDec
     ;
 
 listIndex
-    : IdentifierExact ('[' expression ']')+
+    : identifier ('[' expression ']')+
     ;
 
 field
-    : identifier DOT IdentifierExact
+    : identifier DOT identifier
     ;
 
 identifier

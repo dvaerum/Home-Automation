@@ -127,7 +127,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitListIndex(@NotNull HOMEParser.ListIndexContext ctx)
     {
-        String symbol = ctx.IdentifierExact().getText();
+        String symbol = ctx.identifier().getText();
 
         if(!Main.symbolTable.variables.symbolExists(symbol))
             return new ErrorType(String.format("The variable \"%s\" is undefined.", symbol), false);
@@ -188,12 +188,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = new ErrorType("Variable method call went wrong", false);
 
-        Type typeOfObject = visitIdentifier(ctx.identifier());
+        Type typeOfObject = visitIdentifier(ctx.identifier(0));
 
         if (typeOfObject instanceof ErrorType)
             return typeOfObject;
         Variable field;
-        String fieldName = ctx.IdentifierExact().getText();
+        String fieldName = ctx.identifier(1).getText();
 
         //Get method from type object, and return if not found
         if((field = typeOfObject.getFieldByName(fieldName)) == null)
@@ -240,9 +240,14 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
 
-            if(!forkReturnStack.closed())
+            if(forkReturnStack.closed())
+            {
+                //forks=returns. We have a return statement
+                System.out.println(String.format("Info at line %d: Yay, return!", ctx.getStart().getLine()));
+            } else {
                 return new ErrorType(String.format("Function doesn't contain sufficient return statements", ctx.getStart().getLine()), false);
             }
+        }
         else if(stmtsType instanceof ErrorType)
             returnType = stmtsType;
 

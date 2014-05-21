@@ -236,7 +236,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitProgram(@NotNull HOMEParser.ProgramContext ctx) { return visitChildren(ctx); }
+	@Override public T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -244,7 +244,7 @@ public class HOMEBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements H
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitProgram(@NotNull HOMEParser.ProgramContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

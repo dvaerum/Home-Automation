@@ -370,19 +370,6 @@ public class HOMEBaseListener implements HOMEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(@NotNull HOMEParser.ProgramContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProgram(@NotNull HOMEParser.ProgramContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -390,6 +377,19 @@ public class HOMEBaseListener implements HOMEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProgram(@NotNull HOMEParser.ProgramContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProgram(@NotNull HOMEParser.ProgramContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

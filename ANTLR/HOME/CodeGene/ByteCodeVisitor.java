@@ -967,8 +967,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.listIndex() != null)
         {
-            SymbolInfo symbol = symbolTable.variables.getSymbol(ctx.listIndex().IdentifierExact().getText());
-            CollectionType type = (CollectionType) symbolTable.variables.getType(ctx.listIndex().IdentifierExact().getText());
+            SymbolInfo symbol = symbolTable.variables.getSymbol(ctx.listIndex().identifier().getText());
+            CollectionType type = (CollectionType) symbolTable.variables.getType(ctx.listIndex().identifier().getText());
 
             symbol.load(ctx, stmts);
 
@@ -1039,9 +1039,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.field() != null)
         {
-            SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.field().identifier().getText());
-            Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.field().IdentifierExact().getText()).type;
-            String fieldname = ctx.field().IdentifierExact().getText();
+            SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.field().identifier(0).getText());
+            Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.field().identifier(1).getText()).type;
+            String fieldname = ctx.field().identifier(1).getText();
 
             symbolClassInfo.load(ctx, stmts);
 
@@ -1167,7 +1167,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         SymbolInfo symbolInfoOfVariable;
         if (ctx.expression().listIndex() != null)
         {
-            symbolInfoOfVariable = symbolTable.variables.getSymbol(ctx.expression().listIndex().IdentifierExact().getText());
+            symbolInfoOfVariable = symbolTable.variables.getSymbol(ctx.expression().listIndex().identifier().getText());
         }
         else
         {
@@ -1360,10 +1360,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public ExpressionReturn visitFuncCallRegisterEvent(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
     {
-        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.funcParameters().expression(0).field().identifier().getText());
+        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.funcParameters().expression(0).field().identifier(0).getText());
 
         symbolInfo.load(ctx, stmts);
-        stmts.add("ldc " + "\"" + ctx.funcParameters().expression(0).field().IdentifierExact().getText() + "\"", ctx);
+        stmts.add("ldc " + "\"" + ctx.funcParameters().expression(0).field().identifier(1).getText() + "\"", ctx);
         stmts.add("ldc " + "\"" + ctx.funcParameters().expression(1).identifier().getText() + "\"", ctx);
 
         String bytecode = "invokevirtual ";
@@ -1661,7 +1661,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public ExpressionReturn visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts, boolean convertingFlag)
     {
-        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.IdentifierExact().getText());
+        SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
         CollectionType type = ((CollectionType) symbolInfo.var.type);
         for (int i = 0; i < ctx.expression().size(); i++)
         {
@@ -1701,11 +1701,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     public ExpressionReturn visitField(@NotNull HOMEParser.FieldContext ctx, Statements stmts, boolean convertingFlag)
     {
-        SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
-        Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.IdentifierExact().getText()).type;
-        String fieldname = ctx.IdentifierExact().getText();
+        SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.identifier(0).getText());
+        Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.identifier(1).getText()).type;
+        String fieldname = ctx.identifier(1).getText();
 
-        visitIdentifier(ctx.identifier(), stmts, convertingFlag);
+        visitIdentifier(ctx.identifier(0), stmts, convertingFlag);
 
         stmts.add(String.format("getfield %s/%s %s",
                 symbolClassInfo.var.type.getClassByteCode(),

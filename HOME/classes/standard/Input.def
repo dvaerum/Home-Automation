@@ -1,0 +1,21 @@
+class Input
+    fields
+        - Boolean state
+        - Event ON_TOGGLED
+        - Event ON_CHANGED
+    endfields
+
+    constructor
+        - Input(Integer)
+    endconstructor
+
+    methods
+        - getPort() > Integer
+        - getState() > Boolean
+        - toString() > String
+    endmethods
+
+    bytecode
+        - standard/Input
+    endbytecode
+endclass

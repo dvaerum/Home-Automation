@@ -23,14 +23,17 @@ public class Type
     public String bytecode;
 
 
-    Type() {
+    Type()
+    {
     }
 
-    public Type(String name) {
+    public Type(String name)
+    {
         this.name = name;
     }
 
-    public ArrayList<Type> toList() {
+    public ArrayList<Type> toList()
+    {
         ArrayList<Type> list = new ArrayList<Type>();
         list.add(this);
         return list;
@@ -45,33 +48,35 @@ public class Type
         List<String> fieldNames = new ArrayList(Arrays.asList(fields.split("- ")));
         //String[] fieldNames = constructorArgs.split("- ");
         fieldNames.remove(0);
-        for (String singleField : fieldNames) {
+        for (String singleField : fieldNames)
+        {
             String[] field = singleField.trim().split(" ");
             if (field[0].equals("Event"))
                 this.fields.add(new Variable(field[1], Main.event));
             else
             {
-                if(Main.symbolTable.types.symbolExists(field[0]))
-                this.fields.add(new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
+                if (Main.symbolTable.types.symbolExists(field[0]))
+                    this.fields.add(new Variable(field[1], Main.symbolTable.types.getSymbol(field[0])));
                 else
                 {
                     System.out.println(String.format("Error in \"%s\".def: Type \"%s\" doesn't exist, please change the type, or make it.", name, field[0]));
                     System.exit(1);
-        }
+                }
             }
         }
 
         //--------------Constructor parsing---------------------
-        if(constructorName != null)
+        if (constructorName != null)
             constructorName = constructorName.replaceAll("- ", "");
 
-        if(constructorName != null && constructorName.equals(name))
+        if (constructorName != null && constructorName.equals(name))
         {
             String[] constrParamsStr = constructorArgs.replaceAll("\\s", "").split(",");
 
             //Prepares list of parameters for constructor.
             ArrayList<Type> constrParams = new ArrayList<>();
-            for (String paramStr : constrParamsStr) {
+            for (String paramStr : constrParamsStr)
+            {
                 if (paramStr.equals(""))
                     continue;
 
@@ -81,7 +86,7 @@ public class Type
                 {
                     System.out.println(String.format("Error in \"%s\".def: Class \"%s\" didn't exist!", name, paramStr));
                     System.exit(1);
-            }
+                }
             }
 
             constructor = new Function(constructorName, this, constrParams);
@@ -89,12 +94,11 @@ public class Type
             //Create function-type
             //And insert into constructor field
         }
-        else if(constructorName != null)
+        else if (constructorName != null)
         {
             System.out.println(String.format("Error in \"%s\".def: The constructor \"%s\" for the class \"%s\" got a different name!", name, constructorName, name));
             System.exit(1);
         }
-
 
 
         //--------------Method parsing---------------------
@@ -103,18 +107,20 @@ public class Type
         methodList.remove(0);
 
         //Loop through all methods, and apply them to the method-list
-        for (String method : methodList) {
+        for (String method : methodList)
+        {
             //Match the pattern, and trim whitespace in both ends
             Matcher methodMatcher = methodPattern.matcher(method.trim());
 
-            if (methodMatcher.matches()) {
+            if (methodMatcher.matches())
+            {
                 //Get method name
                 String methodName = methodMatcher.group(1);
 
                 //Get method returnType
                 String returnTypeString = methodMatcher.group(3);
                 Type returnType;
-                if(!Main.symbolTable.types.symbolExists(returnTypeString))
+                if (!Main.symbolTable.types.symbolExists(returnTypeString))
                     if (returnTypeString.equals("Nothing"))
                         returnType = Main.nothing;
                     else
@@ -129,7 +135,8 @@ public class Type
                 //Get method parameters
                 List<Type> methodParams = new ArrayList<>();
 
-                for (String paramType : Arrays.asList(methodMatcher.group(2).replaceAll("\\s", "").split(","))) {
+                for (String paramType : Arrays.asList(methodMatcher.group(2).replaceAll("\\s", "").split(",")))
+                {
                     if (paramType.equals(""))
                         continue;
 
@@ -151,42 +158,55 @@ public class Type
         //--------------End of constructor---------------------
     }
 
-    public static boolean isListSubtypeOfList(List<Type> l1, List<Type> l2) {
+    public static boolean isListSubtypeOfList(List<Type> l1, List<Type> l2)
+    {
         if (l1.size() == l2.size())
-            for (int i = 0; i < l1.size(); i++) {
-                if (!l1.get(i).isSubtypeOf(l2.get(i))) {
+            for (int i = 0; i < l1.size(); i++)
+            {
+                if (!l1.get(i).isSubtypeOf(l2.get(i)))
+                {
                     return false;
                 }
             }
-        else {
+        else
+        {
             return false;
         }
         return true;
     }
 
-    public boolean isSubtypeOf(Type otherType) {
-        if (this.equals(Main.integer)) {
+    public boolean isSubtypeOf(Type otherType)
+    {
+        if (this.equals(Main.integer))
+        {
             if (otherType.equals(Main.decimal))
                 return true;
-        } else if (this.equals(Main.anything))
+        }
+        else if (this.equals(Main.anything))
             return true;
 
 
         return this.equals(otherType);
     }
 
-    public Function getMethodByName(String name) {
-        for (Function func : methods) {
-            if (name.equals(func.name)) {
+    public Function getMethodByName(String name)
+    {
+        for (Function func : methods)
+        {
+            if (name.equals(func.name))
+            {
                 return func;
             }
         }
         return null;
     }
 
-    public Variable getFieldByName(String name) {
-        for (Variable var : fields) {
-            if (name.equals(var.name)) {
+    public Variable getFieldByName(String name)
+    {
+        for (Variable var : fields)
+        {
+            if (name.equals(var.name))
+            {
                 return var;
             }
         }
@@ -194,7 +214,8 @@ public class Type
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 
@@ -230,63 +251,109 @@ public class Type
         }
     }
 
-    public String getObjectByteCode() {
-        if (this.equals(Main.nothing)) {
+    public String getObjectByteCode()
+    {
+        if (this.equals(Main.nothing))
+        {
             return "V";
-        } else if (this.equals(Main.integer)) {
+        }
+        else if (this.equals(Main.integer))
+        {
             return "Ljava/lang/Integer;";
-        } else if (this.equals(Main.decimal)) {
+        }
+        else if (this.equals(Main.decimal))
+        {
             return "Ljava/lang/Double;";
-        } else if (this.equals(Main.bool)) {
+        }
+        else if (this.equals(Main.bool))
+        {
             return "Ljava/lang/Boolean;";
-        } else if (this.equals(Main.string)) {
+        }
+        else if (this.equals(Main.string))
+        {
             return "Ljava/lang/String;";
-        }if (this.equals(Main.list)){
+        }
+        if (this.equals(Main.list))
+        {
             return "Ljava/util/ArrayList;";
-        } else if (this.equals(Main.dictionary)){
+        }
+        else if (this.equals(Main.dictionary))
+        {
             return "Ljava/util/HashMap;";
-        } else {
+        }
+        else
+        {
             return "LHOME/classes/" + this.bytecode + ";";
         }
     }
 
-    public String getSimpleByteCode() {
+    public String getSimpleByteCode()
+    {
 
-        if (this.equals(Main.nothing)) {
+        if (this.equals(Main.nothing))
+        {
             return "V";
-        } else if (this.equals(Main.integer)) {
+        }
+        else if (this.equals(Main.integer))
+        {
             return this.bytecode;
-        } else if (this.equals(Main.decimal)) {
+        }
+        else if (this.equals(Main.decimal))
+        {
             return this.bytecode;
-        } else if (this.equals(Main.bool)) {
+        }
+        else if (this.equals(Main.bool))
+        {
             return this.bytecode;
-        } else if (this.equals(Main.string)) {
+        }
+        else if (this.equals(Main.string))
+        {
             return "Ljava/lang/String;";
-        }if (this.equals(Main.list)){
+        }
+        if (this.equals(Main.list))
+        {
             return "Ljava/util/ArrayList;";
-        } else if (this.equals(Main.dictionary)){
+        }
+        else if (this.equals(Main.dictionary))
+        {
             return "Ljava/util/HashMap;";
-        } else {
+        }
+        else
+        {
             //return "LHOME/" + this.bytecode + ";";
             return "LHOME/classes/" + this.bytecode + ";";
         }
     }
 
-    public String getClassByteCode() {
+    public String getClassByteCode()
+    {
 
-        if (this.equals(Main.integer)) {
+        if (this.equals(Main.integer))
+        {
             return "java/lang/Integer";
-        } else if (this.equals(Main.decimal)) {
+        }
+        else if (this.equals(Main.decimal))
+        {
             return "java/lang/Double";
-        } else if (this.equals(Main.bool)) {
+        }
+        else if (this.equals(Main.bool))
+        {
             return "java/lang/Boolean";
-        } else if (this.equals(Main.string)) {
+        }
+        else if (this.equals(Main.string))
+        {
             return "java/lang/String";
-        }if (this.equals(Main.list)){
+        }
+        if (this.equals(Main.list))
+        {
             return "java/util/ArrayList";
-        } else if (this.equals(Main.dictionary)){
+        }
+        else if (this.equals(Main.dictionary))
+        {
             return "java/util/HashMap";
-        } else {
+        }
+        else
+        {
             //return "HOME/" + this.bytecode;
             return "HOME/classes/" + this.bytecode;
         }

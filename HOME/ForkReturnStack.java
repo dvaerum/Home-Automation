@@ -8,9 +8,6 @@ public class ForkReturnStack{
     private Deque<ForkReturnCheck> stack = new ArrayDeque<ForkReturnCheck>();
     public void newStack(){
         stack.push(new ForkReturnCheck());
-        ArrayList<String> hej = new ArrayList<String>();
-        hej.add("d");
-        hej.set(0, "s");
     }
 
     public void addFork(){

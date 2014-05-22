@@ -311,7 +311,7 @@ public class Type
             return "java/util/HashMap";
         } else {
             //return "HOME/" + this.bytecode;
-            return "HOME/classes/" + this.bytecode;
+            return "HOME/CodeGene/classes/" + this.bytecode;
         }
     }
 
@@ -325,7 +325,7 @@ public class Type
         if(this.equals(Main.string))
             return this.bytecode;
         else
-            return "HOME/classes/" + this.bytecode;
+            return "HOME/CodeGene/classes/" + this.bytecode;
     }
 
 /*    public String getUndecoratedByteCode(){

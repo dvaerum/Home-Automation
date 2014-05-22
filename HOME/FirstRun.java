@@ -120,7 +120,7 @@ public class FirstRun extends HOMEBaseVisitor<Type> {
         return returnType;
     }
 
-    public ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
+    ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
     {
         ArrayList<Type> returnLIst = new ArrayList<>();
 

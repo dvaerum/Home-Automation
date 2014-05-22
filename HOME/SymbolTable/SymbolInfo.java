@@ -11,10 +11,6 @@ public class SymbolInfo
     public int depth;
 
 
-    public SymbolInfo()
-    {
-    }
-
     public SymbolInfo(String name, Type type, int depth)
     {
         this.var = new Variable(name, type);

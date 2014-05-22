@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class FunctionTable
 {
-    HashMap<String, Function> table = new HashMap<String, Function>();
+    private HashMap<String, Function> table = new HashMap<String, Function>();
 
     // Returns false if the symbol already exists in the current scope.
     public Boolean addSymbol(String symbol, Function func) {

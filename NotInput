@@ -1,4 +1,30 @@
+    Decimal y = -24.3
+    Integer z = 3
+
+function turnOnLamp() returns Nothing
+    Decimal y = 4
+endfunction
+
 function Setup() returns Nothing
-    List<Integer> listInt = {1,2,3,4,5}
-    List<Decimal> listDec = listInt
+    Integer x = 3
+
+    /*******************
+    ****field          *
+    *******************/
+    if(x == 3)
+        if(y < 3.3)
+            y++
+            Integer abc = 5
+        else
+            x--
+        endif
+    endif
+
+    Integer abc
+    PrintI(abc)
+
+endfunction
+
+function PrintI(Integer x) returns Integer
+return x
 endfunction

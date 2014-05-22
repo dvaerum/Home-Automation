@@ -4,17 +4,21 @@ import HOME.ForkReturnStack;
 import HOME.Grammar.HOMEBaseVisitor;
 import HOME.Grammar.HOMEParser;
 import HOME.Main;
+import HOME.SymbolTable.SymbolInfo;
+import HOME.SymbolTable.SymbolTable;
 import HOME.Type.CollectionType;
 import HOME.Type.Type;
-import HOME.SymbolTable.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.io.*;
-import java.lang.String;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class ByteCodeVisitor extends HOMEBaseVisitor
@@ -68,20 +72,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     {
         private String _begin;
         public Statements stmts;
-        private String _return;
         private String _end;
 
         public Function(String _begin, String _end)
         {
             this._begin = _begin;
-            this._return = "";
-            this._end = _end;
-        }
-
-        public Function(String _begin, String _return, String _end)
-        {
-            this._begin = _begin;
-            this._return = _return;
             this._end = _end;
         }
 
@@ -238,6 +233,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     System.exit(4);
             }
 
+            if (limitStackCounts > limitStack)
+            {
+                limitStack = limitStackCounts;
+            }
             this.statements.add(statement);
         }
 
@@ -385,7 +384,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             this.returnValue = returnValue;
             this.actualType = actualType;
         }
-
         public boolean equals(ExpressionReturn epxR)
         {
             return this.type.equals(epxR.type);
@@ -410,14 +408,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    // Is uses to keep track of variables in the local stack
-    SymbolTable symbolTable = Main.symbolTable;
+    // Is used to keep track of variables in the local stack
+    private SymbolTable symbolTable = Main.symbolTable;
 
+    // Keeps track off the forks that happens in the program
+    private ForkReturnStack forkReturnStack = new ForkReturnStack();
 
-    ForkReturnStack forkReturnStack = new ForkReturnStack();
-
-    Function setup;
-    GlobalVariables globalVariables;
+    private Function setup;
+    private GlobalVariables globalVariables;
     private ArrayList<Function> functions = new ArrayList<>();
 
     private FileOutputStream newClass;
@@ -453,7 +451,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    protected void Write(String out)
+    void Write(String out)
     {
         System.out.println(out);
         try
@@ -469,13 +467,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 
 // Visitors
-
-    @Override
-    public Object visitNewline(@NotNull HOMEParser.NewlineContext ctx)
-    {
-        symbolTable.newLine();
-        return super.visitNewline(ctx);
-    }
 
     @Override
     public Object visitGlobal(@NotNull HOMEParser.GlobalContext ctx)
@@ -507,8 +498,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         if (funcName.equals("Setup"))
         {
-//            this.setup = new Function(".method public static main([Ljava/lang/String;)V",
-//                    ".end method");
             this.setup = new Function(".method public Setup()V", ".end method");
             setup.stmts = new Statements();
 
@@ -562,10 +551,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         forkReturnStack.dispose();
 
+        symbolTable.closeScope();
+
         return super.visitFunction(ctx);
     }
 
-    public String returnTypeForFunctionSimple(Type type)
+    String returnTypeForFunctionSimple(Type type)
     {
         if (type instanceof CollectionType)
         {
@@ -577,7 +568,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public String returnTypeForFunctionObject(Type type)
+    String returnTypeForFunctionObject(Type type)
     {
         if (type instanceof CollectionType)
         {
@@ -591,7 +582,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Stmts
 
-    public void visitStmts(@NotNull HOMEParser.StmtsContext ctx, Statements stmts)
+    void visitStmts(@NotNull HOMEParser.StmtsContext ctx, Statements stmts)
     {
         if (ctx.stmt() != null)
         {
@@ -603,7 +594,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements stmts)
+    void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements stmts)
     {
         if (ctx.declaration() != null)
         {
@@ -643,7 +634,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmts)
+    void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmts)
     {
         String type = ctx.type().getText();
         type = type.replaceAll("<.+>", "");
@@ -811,7 +802,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public String visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx, Statements stmts)
+    String visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx, Statements stmts)
     {
         if (ctx == null)
         {
@@ -837,7 +828,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return sb.toString();
     }
 
-    public void visitAssign(@NotNull HOMEParser.AssignContext ctx, Statements stmts)
+    void visitAssign(@NotNull HOMEParser.AssignContext ctx, Statements stmts)
     {
         if (ctx.identifier() != null)
         {
@@ -1043,7 +1034,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public void visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx, Statements stmts)
+    void visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx, Statements stmts)
     {
         forkReturnStack.newStack();
         forkReturnStack.addFork();
@@ -1121,12 +1112,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             forkReturnStack.dispose();
         }
-
-
-        //  return super.visitIfStmt(ctx);
     }
 
-    public Object visitLoop(@NotNull HOMEParser.LoopContext ctx, Statements statements)
+    void visitLoop(@NotNull HOMEParser.LoopContext ctx, Statements statements)
     {
         forkReturnStack.newStack();
         forkReturnStack.addFork();
@@ -1145,11 +1133,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         forkReturnStack.dispose();
 
         symbolTable.closeScope();
-
-        return super.visitLoop(ctx);
     }
 
-    public void visitLoopForeach(@NotNull HOMEParser.LoopForeachContext ctx, Statements stmts)
+    void visitLoopForeach(@NotNull HOMEParser.LoopForeachContext ctx, Statements stmts)
     {
         visitExpression(ctx.expression(), stmts);
 
@@ -1234,7 +1220,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public Object visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx, Statements statements)
+    void visitLoopWhileOrUntil(@NotNull HOMEParser.LoopWhileOrUntilContext ctx, Statements statements)
     {
         String label1 = symbolTable.newLabel();
         String label2 = symbolTable.newLabel();
@@ -1267,15 +1253,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             statements.add("goto " + label1, ctx);
             statements.add(label2 + ":", ctx);
         }
-
-        return super.visitLoopWhileOrUntil(ctx);
     }
 
-    public ExpressionReturn visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
+    ExpressionReturn visitFuncCall(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
     {
         if (ctx.identifier().getText().equals("RegisterEvent"))
         {
-            return visitFuncCallRegisterEvent(ctx, stmts, pop);
+            return visitFuncCallRegisterEvent(ctx, stmts);
         }
         else
         {
@@ -1283,7 +1267,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public ExpressionReturn visitFuncCallNormal(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
+    ExpressionReturn visitFuncCallNormal(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
     {
         HOME.Type.Function function = symbolTable.functions.getSymbol(ctx.identifier().getText());
 
@@ -1347,7 +1331,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(function.returnType, "");
     }
 
-    public ExpressionReturn visitFuncCallRegisterEvent(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts, Boolean pop)
+    ExpressionReturn visitFuncCallRegisterEvent(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts)
     {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.funcParameters().expression(0).field().identifier(0).getText());
 
@@ -1368,12 +1352,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(Main.nothing, "");
     }
 
-    public void visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts)
+    void visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts)
     {
         visitVariableMethodCall(ctx, stmts, false);
     }
 
-    public ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts, boolean convertingFlag)
+    ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo variable = symbolTable.variables.getSymbol(ctx.identifier().getText());
 
@@ -1409,7 +1393,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(variableMethod.returnType, "");
     }
 
-    public void visitReturnFunction(@NotNull HOMEParser.ReturnFunctionContext ctx, Statements stmts)
+    void visitReturnFunction(@NotNull HOMEParser.ReturnFunctionContext ctx, Statements stmts)
     {
         forkReturnStack.addReturn();
         if (ctx == null || ctx.expression() == null)
@@ -1514,7 +1498,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public void visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements stmts)
+    void visitIncDec(@NotNull HOMEParser.IncDecContext ctx, Statements stmts)
     {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
         int location = symbolInfo.var.location;
@@ -1549,17 +1533,17 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Visit Expression
 
-    public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts)
+    ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts)
     {
         return visitExpression(ctx, stmts, null, false);
     }
 
-    public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, String label)
+    ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, String label)
     {
         return visitExpression(ctx, stmts, label, false);
     }
 
-    public ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, String label, boolean convertingFlag)
+    ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, String label, boolean convertingFlag)
     {
 
         if (!convertingFlag)
@@ -1591,7 +1575,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.expression().size() == 1)
         {
-            ExpressionReturn r1 = checkExpression(ctx, stmts, 0, convertingFlag);
+            ExpressionReturn r1 = checkExpression(ctx, stmts, convertingFlag);
 
             return new ExpressionReturn(r1.type, "");
         }
@@ -1638,7 +1622,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Visit Variables
 
-    public ExpressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, boolean convertingFlag)
+    ExpressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo variable = symbolTable.variables.getSymbol(ctx.getText());
         Type type = variable.var.type;
@@ -1650,7 +1634,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(ctx.getText(), type);
     }
 
-    public ExpressionReturn visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts, boolean convertingFlag)
+    ExpressionReturn visitListIndex(@NotNull HOMEParser.ListIndexContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.identifier().getText());
         CollectionType type = ((CollectionType) symbolInfo.var.type);
@@ -1690,7 +1674,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(type.innerType, "");
     }
 
-    public ExpressionReturn visitField(@NotNull HOMEParser.FieldContext ctx, Statements stmts, boolean convertingFlag)
+    ExpressionReturn visitField(@NotNull HOMEParser.FieldContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.identifier(0).getText());
         Type fieldType = symbolClassInfo.var.type.getFieldByName(ctx.identifier(1).getText()).type;
@@ -1714,7 +1698,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Expression methods
 
-    public void visitNegate(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, ExpressionReturn value, boolean convertingFlag)
+    void visitNegate(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, ExpressionReturn value, boolean convertingFlag)
     {
         if (getNegate(ctx).equals("-"))
         {
@@ -1729,7 +1713,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    public String getNegate(HOMEParser.ExpressionContext expressionContext)
+    String getNegate(HOMEParser.ExpressionContext expressionContext)
     {
         if (expressionContext.expression().size() == 1)
         {
@@ -1738,7 +1722,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return "";
     }
 
-    public String getOperator(HOMEParser.ExpressionContext expressionContext)
+    String getOperator(HOMEParser.ExpressionContext expressionContext)
     {
         if (expressionContext.expression().size() == 1)
         {
@@ -1800,29 +1784,29 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add(sAssign.toString(), ctx);
     }
 
-    public ExpressionReturn checkExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, int expressionNR, boolean convertingFlag)
+    ExpressionReturn checkExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, boolean convertingFlag)
     {
-        if (ctx.expression(expressionNR).literal() != null)
+        if (ctx.expression(0).literal() != null)
         {
-            if (ctx.expression(expressionNR).literal().IntegerLiteral() != null)
+            if (ctx.expression(0).literal().IntegerLiteral() != null)
             {
-                ExpressionReturn _return = visitLiteral(ctx.expression(expressionNR).literal(), stmts, convertingFlag);
+                ExpressionReturn _return = visitLiteral(ctx.expression(0).literal(), stmts, convertingFlag);
                 visitNegate(ctx, stmts, _return, convertingFlag);
                 return _return;
             }
-            else if (ctx.expression(expressionNR).literal().DecimalLiteral() != null)
+            else if (ctx.expression(0).literal().DecimalLiteral() != null)
             {
-                ExpressionReturn _return = visitLiteral(ctx.expression(expressionNR).literal(), stmts, false);
+                ExpressionReturn _return = visitLiteral(ctx.expression(0).literal(), stmts, false);
                 visitNegate(ctx, stmts, _return, convertingFlag);
                 return _return;
             }
-            else if (ctx.expression(expressionNR).literal().StringLiteral() != null)
+            else if (ctx.expression(0).literal().StringLiteral() != null)
             {
-                return visitLiteral(ctx.expression(expressionNR).literal(), stmts, false);
+                return visitLiteral(ctx.expression(0).literal(), stmts, false);
             }
-            else if (ctx.expression(expressionNR).literal().booleanLiteral() != null)
+            else if (ctx.expression(0).literal().booleanLiteral() != null)
             {
-                return visitLiteral(ctx.expression(expressionNR).literal(), stmts, false);
+                return visitLiteral(ctx.expression(0).literal(), stmts, false);
             }
             else
             {
@@ -1830,27 +1814,27 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             }
             //r1 = new ExpressionReturn(Main.integer, ctx.expression(0).literal().IntegerLiteral().getText());
         }
-        else if (ctx.expression(expressionNR).identifier() != null)
+        else if (ctx.expression(0).identifier() != null)
         {
-            ExpressionReturn _return = visitIdentifier(ctx.expression(expressionNR).identifier(), stmts, convertingFlag);
+            ExpressionReturn _return = visitIdentifier(ctx.expression(0).identifier(), stmts, convertingFlag);
             visitNegate(ctx, stmts, new ExpressionReturn(symbolTable.variables.getType(_return.returnValue), ""), convertingFlag);
             return _return;
         }
-        else if (ctx.expression(expressionNR).field() != null)
+        else if (ctx.expression(0).field() != null)
         {
-            ExpressionReturn _return = visitField(ctx.expression(expressionNR).field(), stmts, convertingFlag);
+            ExpressionReturn _return = visitField(ctx.expression(0).field(), stmts, convertingFlag);
             visitNegate(ctx, stmts, new ExpressionReturn(_return.type, ""), convertingFlag);
             return _return;
         }
         else
         {
-            ExpressionReturn _return = visitExpression(ctx.expression(expressionNR), stmts, null, convertingFlag);
+            ExpressionReturn _return = visitExpression(ctx.expression(0), stmts, null, convertingFlag);
             visitNegate(ctx, stmts, _return, convertingFlag);
             return _return;
         }
     }
 
-    public Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type)
+    Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type)
     {
         //TODO: generalize for any operator
 
@@ -2070,7 +2054,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return null;
     }
 
-    public Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type, String label)
+    Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type, String label)
     {
         String operator = getOperator(ctx);
 
@@ -2173,7 +2157,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return null;
     }
 
-    public Type compareTypes(ExpressionReturn r1, ExpressionReturn r2)
+    Type compareTypes(ExpressionReturn r1, ExpressionReturn r2)
     {
         if (r1.equals(Main.integer) && r2.equals(Main.integer))
         {
@@ -2227,7 +2211,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Literal
 
-    public ExpressionReturn visitLiteral(@NotNull HOMEParser.LiteralContext ctx, Statements stmts, boolean convertingFlag)
+    ExpressionReturn visitLiteral(@NotNull HOMEParser.LiteralContext ctx, Statements stmts, boolean convertingFlag)
     {
         ExpressionReturn returnType = null;
 
@@ -2272,7 +2256,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return returnType;
     }
 
-    public void addLiteral(ParserRuleContext ctx, Statements stmts, ExpressionReturn literal, boolean convertingFlag)
+    void addLiteral(ParserRuleContext ctx, Statements stmts, ExpressionReturn literal, boolean convertingFlag)
     {
         if (literal.type == Main.integer && !convertingFlag)
         {
@@ -2344,7 +2328,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region List and Dictionary
 
-    public void visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx, Statements stmts)
+    void visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx, Statements stmts)
     {
         stmts.add("new java/util/ArrayList", ctx);
         stmts.add("dup", ctx);

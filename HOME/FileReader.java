@@ -14,11 +14,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Jacob on 26-03-14.
  */
-public class FileReader {
-    SymbolTable symbolTable = Main.symbolTable;
+class FileReader {
+    private SymbolTable symbolTable = Main.symbolTable;
 
     //Insert prototype of classes
-    public void loadClassPrototypes() throws IOException
+    public void loadClassPrototypes()
     {
         File standardDir = new File("HOME" + File.separator + "classes" + File.separator + "standard");
         File customDir = new File("HOME" + File.separator + "classes" + File.separator + "custom");
@@ -65,7 +65,7 @@ public class FileReader {
         }
     }
 
-    public void loadClasses(String folderName) throws IOException
+    void loadClasses(String folderName) throws IOException
     {
         File standardDir = new File("HOME" + File.separator + "classes" + File.separator + folderName);
 

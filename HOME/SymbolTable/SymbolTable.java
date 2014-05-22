@@ -10,8 +10,8 @@ public class SymbolTable
     public FunctionTable functions = new FunctionTable();
     public TypeTable types = new TypeTable();
     public VariableTable variables = new VariableTable();
-    public Integer lineNumber = 1;
-    public Integer labelNumber = 0;
+    private Integer lineNumber = 1;
+    private Integer labelNumber = 0;
 
     public String newLabel() {
         labelNumber++;

@@ -12,6 +12,7 @@ class Output
         - getState() > Boolean
         - setState() > Nothing
         - toggle() > Nothing
+        - getPort() > Integer
     endmethods
     
     bytecode

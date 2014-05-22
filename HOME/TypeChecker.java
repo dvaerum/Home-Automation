@@ -25,8 +25,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         if(ctx.stmt().declaration() != null)
             returnType = visitDeclaration(ctx.stmt().declaration());
-        else if(ctx.stmt().assign() != null)
-            returnType = visitAssign(ctx.stmt().assign());
+        else if(ctx.stmt().assignment() != null)
+            returnType = visitAssignment(ctx.stmt().assignment());
         else if(ctx.stmt().ifStmt() != null){
             returnType = visitIfStmt(ctx.stmt().ifStmt());
 
@@ -406,7 +406,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
     @Override
-    public Type visitAssign(@NotNull HOMEParser.AssignContext ctx)
+    public Type visitAssignment(@NotNull HOMEParser.AssignmentContext ctx)
     {
         Type LHSType = null;
         Type returnType;

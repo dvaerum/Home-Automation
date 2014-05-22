@@ -1,21 +1,20 @@
-class AnalogOutput
+class AnalogInput
     fields
         - Integer value
+        - Event ON_CHANGED
     endfields
 
     constructor
-        - AnalogOutput(Integer)
+        - AnalogInput(Integer)
     endconstructor
 
     methods
         - toString() > String
-        - dampen() > Nothing
         - getValue() > Integer
-        - setValue(Integer) > Nothing
         - getPort() > Integer
     endmethods
 
     bytecode
-        - standard/AnalogOutput
+        - standard/AnalogInput
     endbytecode
 endclass

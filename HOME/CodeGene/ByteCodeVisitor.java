@@ -607,9 +607,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             visitDeclaration(ctx.declaration(), stmts);
         }
-        else if (ctx.assign() != null)
+        else if (ctx.assignment() != null)
         {
-            visitAssign(ctx.assign(), stmts);
+            visitassignment(ctx.assignment(), stmts);
         }
         else if (ctx.ifStmt() != null)
         {
@@ -837,7 +837,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     }
 
     // Assign a value to a variable
-    void visitAssign(@NotNull HOMEParser.AssignContext ctx, Statements stmts)
+    void visitassignment(@NotNull HOMEParser.AssignmentContext ctx, Statements stmts)
     {
         if (ctx.identifier() != null)
         {
@@ -853,7 +853,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         variable.load(ctx, stmts);
                     }
                     visitExpression(ctx.expression(), stmts);
-                    visitAnyAssign(ctx, ctx.AnyAssign(), variable, stmts);
+                    visitAnyassignment(ctx, ctx.AnyAssign(), variable, stmts);
                     variable.store(ctx, stmts);
                     break;
 
@@ -863,7 +863,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         variable.load(ctx, stmts);
                     }
                     visitExpression(ctx.expression(), stmts);
-                    visitAnyAssign(ctx, ctx.AnyAssign(), variable, stmts);
+                    visitAnyassignment(ctx, ctx.AnyAssign(), variable, stmts);
                     variable.store(ctx, stmts);
                     break;
 
@@ -997,7 +997,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.add("checkcast " + Main.integer.getClassByteCode(), ctx); // TODO: real class pls
                 stmts.add("invokevirtual java/lang/Integer/intValue()I", ctx); // TODO: real class pls
                 visitExpression(ctx.expression(), stmts);
-                visitAnyAssign(ctx, ctx.AnyAssign(), symbol, stmts);
+                visitAnyassignment(ctx, ctx.AnyAssign(), symbol, stmts);
             }
             else
             {
@@ -1772,7 +1772,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    private void visitAnyAssign(ParserRuleContext ctx, TerminalNode terminalNode, SymbolInfo variable, Statements stmts)
+    private void visitAnyassignment(ParserRuleContext ctx, TerminalNode terminalNode, SymbolInfo variable, Statements stmts)
     {
         if (terminalNode == null)
         {
@@ -1790,36 +1790,36 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             typeName = variable.var.type.name;
         }
 
-        StringBuilder sAssign = new StringBuilder();
+        StringBuilder sassignment = new StringBuilder();
         switch (typeName)
         {
             case "Integer":
-                sAssign.append("i");
+                sassignment.append("i");
                 break;
             case "Decimal":
-                sAssign.append("d");
+                sassignment.append("d");
                 break;
         }
 
         switch (terminalNode.getText())
         {
             case "+=":
-                sAssign.append("add");
+                sassignment.append("add");
                 break;
             case "-=":
-                sAssign.append("sub");
+                sassignment.append("sub");
                 break;
             case "*=":
-                sAssign.append("mul");
+                sassignment.append("mul");
                 break;
             case "/=":
-                sAssign.append("div");
+                sassignment.append("div");
                 break;
             case "%=":
-                sAssign.append("rem");
+                sassignment.append("rem");
                 break;
         }
-        stmts.add(sAssign.toString(), ctx);
+        stmts.add(sassignment.toString(), ctx);
     }
 
     ExpressionReturn checkExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, boolean convertingFlag)

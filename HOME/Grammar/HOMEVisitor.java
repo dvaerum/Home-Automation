@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
+public interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#expression}.
 	 * @param ctx the parse tree
@@ -26,13 +26,6 @@ interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link HOMEParser#assign}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssign(@NotNull HOMEParser.AssignContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#int2dec}.
@@ -194,6 +187,13 @@ interface HOMEVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitField(@NotNull HOMEParser.FieldContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link HOMEParser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment(@NotNull HOMEParser.AssignmentContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link HOMEParser#newline}.

@@ -1,4 +1,4 @@
-Input TESTER = Input (32, "Stue")
+Input TESTER = Input (32)
 Input TESTER2 = returnTest2()
 List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
 Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
@@ -126,11 +126,6 @@ function Setup() returns Nothing
     **************/
 
     PrintI(TESTER.getPort())
-    TESTER.port = 4
-    PrintI(TESTER.getPort())
-
-    TESTER.setPort(1337)
-    PrintI(TESTER.port)
 
 
     /********************
@@ -139,11 +134,8 @@ function Setup() returns Nothing
     ********************/
 
     Input inputParam = TESTER2
-    PrintI(inputParam.port)
 
     inputParam = returnTest2()
-    PrintI(inputParam.port)
-    inputParam.setPort(666)
     PrintI(inputParam.getPort())
 
 
@@ -155,7 +147,7 @@ function Setup() returns Nothing
 endfunction
 
 function returnTest2() returns Input
-    Input testingObject = Input(333, "King")
+    Input testingObject = Input(333)
  return testingObject
 endfunction
 

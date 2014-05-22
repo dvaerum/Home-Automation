@@ -19,10 +19,6 @@ import java.util.regex.Pattern;
 
 public class ByteCodeVisitor extends HOMEBaseVisitor
 {
-
-    SymbolTable symbolTable = Main.symbolTable;
-    ForkReturnStack forkReturnStack = new ForkReturnStack();
-
     // When generation the bytecode we need to keep an overview of the entire process,
     // below are a set of classes each defining a unique set of bytecode sequences,
     // 1. GlobalVariables
@@ -50,6 +46,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             _end = ".end method";
         }
 
+        // Writes jasmin code to file
         public void build()
         {
             for (String field : fields)
@@ -88,6 +85,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             this._end = _end;
         }
 
+        // Writes jasmin code to file
         public void build()
         {
             Write(this._begin);
@@ -97,8 +95,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    // Statements are organized and added here, this is mainly used as a parameters
-    // when travelling trough the visitor
+    // Statements are organized and added here, this is done through the first parameter.
+    // It adds the directive ".line" which jasmin uses
+    // It calculates the size of the operand stack (but it count too much then encountering if-stmts)
     public class Statements
     {
         private int limitStack;
@@ -139,9 +138,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         public void add(String statement)
         {
-            // Todo remove debug
-            int _debug = limitStackCounts;
-
             statement = statement.replaceAll("\\s+", " ");
 
             String[] bytecode = statement.split(" ");
@@ -242,13 +238,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     System.exit(4);
             }
 
-            // Todo remove debug
-            _debug = limitStackCounts - _debug;
-            if (limitStackCounts > limitStack)
-            {
-                limitStack = limitStackCounts;
-            }
-
             this.statements.add(statement);
         }
 
@@ -263,7 +252,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 }
             }
 
-            //String[] temp2 = bytecode[1].split(Pattern.quote(")"));
             stackInc(wordSize(getReturnType(bytecode[1])));
         }
 
@@ -352,16 +340,18 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             limitStackCounts -= value;
         }
 
-        public void addLocal(int limit)
+        public void LocalInc()
         {
-            this.limitLocale += limit;
+            this.limitLocale += 1;
         }
 
+        // Writes jasmin code to file
         public void build()
         {
-            //Write(String.format("    " + ".limit stack %d", this.limitStack < 10 ? this.limitStack + 10 : this.limitStack));
             Write(String.format("    " + ".limit stack %d", this.limitStack));
             Write(String.format("    " + ".limit locals %d", this.limitLocale + 1));
+
+            //Prettyprint
             for (String statement : statements)
             {
                 if (statement.contains(".line"))
@@ -419,6 +409,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             }
         }
     }
+
+    // Is uses to keep track of variables in the local stack
+    SymbolTable symbolTable = Main.symbolTable;
+
+
+    ForkReturnStack forkReturnStack = new ForkReturnStack();
 
     Function setup;
     GlobalVariables globalVariables;
@@ -658,7 +654,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         switch (type)
         {
             case "Integer":
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.integer, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
@@ -672,7 +668,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 break;
 
             case "Decimal":
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.decimal, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
@@ -683,11 +679,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stmts.add("dconst_0", ctx);
                 }
                 variable.store(ctx, stmts);
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 break;
 
             case "String":
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.string, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
@@ -701,7 +697,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 break;
 
             case "Boolean":
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.bool, stmts.currentLocal());
 
                 if (ctx.expression() != null)
@@ -738,7 +734,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         // Here we do not re-use the list
                         visitExpression(ctx.expression(), stmts);
                         stmts.add("astore " + currentLocal, ctx);
-                        stmts.addLocal(1);
+                        stmts.LocalInc();
                     }
                 }
                 else
@@ -778,7 +774,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         // Here we do not re-use the list
                         visitExpression(ctx.expression(), stmts);
                         stmts.add("astore " + currentLocal2, ctx);
-                        stmts.addLocal(1);
+                        stmts.LocalInc();
                     }
                 }
                 else
@@ -795,7 +791,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 break;
 
             default:
-                stmts.addLocal(1);
+                stmts.LocalInc();
                 String className = ctx.type().getText();
                 Type symbol = symbolTable.types.getSymbol(className);
                 SymbolInfo symbolInfoClass = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
@@ -830,14 +826,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             Integer location = stmts.nextLocal();
 
-            if (type.equals(Main.decimal))
-            {
-                stmts.addLocal(2);
-            }
-            else
-            {
-                stmts.addLocal(1);
-            }
+            stmts.LocalInc();
+
             symbolTable.variables.addSymbol(dec.identifier().getText(), type, location);
             //visitDeclaration(dec, stmts);
 
@@ -907,7 +897,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             visitExpression(ctx.expression(), stmts);
                             if (variable.depth != 0)
                             {
-                                stmts.addLocal(1);
+                                stmts.LocalInc();
                                 currentLocal++;
                             }
                         }
@@ -946,7 +936,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             visitExpression(ctx.expression(), stmts);
                             if (variable.depth != 0)
                             {
-                                stmts.addLocal(1);
+                                stmts.LocalInc();
                                 currentLocal++;
                             }
                         }
@@ -1177,7 +1167,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         if (realType.equals(Main.list))
         {
-            stmts.addLocal(1);
+            stmts.LocalInc();
             Integer iterator = stmts.currentLocal();
 
             Type innerType = symbolTable.types.getSymbol(ctx.type().getText());
@@ -1196,7 +1186,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             innerType.invokeToSimpleType(ctx, stmts);
 
-            stmts.addLocal(1);
+            stmts.LocalInc();
             SymbolInfo symbolInfo = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), innerType, stmts.currentLocal());
 
             //symbolTable.variables.getSymbol(identifier).store(stmts);
@@ -1210,7 +1200,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (realType.equals(Main.dictionary))
         {
             Integer iterator = stmts.nextLocal();
-            stmts.addLocal(1);
+            stmts.LocalInc();
 
             Type innerType = symbolTable.types.getSymbol(ctx.type().getText());
             String labelStart = symbolTable.newLabel();
@@ -1230,7 +1220,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             innerType.invokeToSimpleType(ctx, stmts);
             ;
 
-            stmts.addLocal(1);
+            stmts.LocalInc();
             SymbolInfo symbolInfo = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), innerType, stmts.currentLocal());
 
             String storeCode;
@@ -1874,7 +1864,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (operator)
             {
                 case "+":
-                    stmts.addLocal(1);
+                    stmts.LocalInc();
                     stmts.add("astore " + (stmts.currentLocal() + 1), ctx);
                     stmts.add("astore " + stmts.currentLocal(), ctx);
                     stmts.add("new java/lang/StringBuilder", ctx);
@@ -1885,7 +1875,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stmts.add("aload " + (stmts.currentLocal() + 1), ctx);
                     stmts.add("invokevirtual java/lang/StringBuilder.append(Ljava/lang/String;)Ljava/lang/StringBuilder;", ctx);
                     stmts.add("invokevirtual java/lang/StringBuilder.toString()Ljava/lang/String;", ctx);
-                    stmts.addLocal(1);
+                    stmts.LocalInc();
                     return type;
 
                 case "==":
@@ -2049,7 +2039,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     switch (operator)
                     {
                         case "AND":
-                            stmts.addLocal(1);
+                            stmts.LocalInc();
                             stmts.add("istore " + stmts.currentLocal(), ctx);
                             stmts.add("ifeq " + label1, ctx);
                             stmts.add("iload " + stmts.currentLocal(), ctx);
@@ -2061,7 +2051,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             stmts.add(label2 + ":", ctx);
                             return Main.bool;
                         case "OR":
-                            stmts.addLocal(1);
+                            stmts.LocalInc();
                             stmts.add("istore " + stmts.currentLocal(), ctx);
                             stmts.add("ifne " + label2, ctx);
                             stmts.add("iload " + stmts.currentLocal(), ctx);
@@ -2161,7 +2151,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (operator)
             {
                 case "AND":
-                    stmts.addLocal(1);
+                    stmts.LocalInc();
                     stmts.add("istore " + stmts.currentLocal(), ctx);
                     stmts.add("ifeq " + label1, ctx);
                     stmts.add("iload " + stmts.currentLocal(), ctx);
@@ -2170,7 +2160,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stmts.add(label1 + ":", ctx);
                     return Main.bool;
                 case "OR":
-                    stmts.addLocal(1);
+                    stmts.LocalInc();
                     stmts.add("istore " + stmts.currentLocal(), ctx);
                     stmts.add("ifne " + label, ctx);
                     stmts.add("iload " + stmts.currentLocal(), ctx);
@@ -2359,7 +2349,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add("new java/util/ArrayList", ctx);
         stmts.add("dup", ctx);
         stmts.add("invokespecial java/util/ArrayList.<init>()V", ctx);
-        stmts.addLocal(1);
+        stmts.LocalInc();
         stmts.add("astore " + stmts.currentLocal(), ctx);
         Integer local = stmts.currentLocal();
 
@@ -2400,7 +2390,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add("dup", ctx);
         stmts.add("invokespecial java/util/ArrayList.<init>()V", ctx);
         stmts.add("astore " + stmts.nextLocal(), ctx);
-        stmts.addLocal(1);
+        stmts.LocalInc();
         int local = stmts.currentLocal();
         depth--;
         if (depth != 0)
@@ -2423,7 +2413,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add("dup", ctx);
         stmts.add("invokespecial java/util/HashMap.<init>()V", ctx);
         stmts.add("astore " + stmts.nextLocal(), ctx);
-        stmts.addLocal(1);
+        stmts.LocalInc();
         Integer local = stmts.currentLocal();
 
         for (int i = 0; i < ctx.dictionaryEntry().size(); i++)
@@ -2466,7 +2456,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add("dup", ctx);
         stmts.add("invokespecial java/util/HashMap.<init>()V", ctx);
         stmts.add("astore " + stmts.nextLocal(), ctx);
-        stmts.addLocal(1);
+        stmts.LocalInc();
         depth--;
         if (depth != 0)
         {

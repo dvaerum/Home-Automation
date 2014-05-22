@@ -281,6 +281,10 @@ public class Type
         {
             return "Ljava/util/HashMap;";
         }
+        else if (this.equals(Main.object))
+        {
+            return "Ljava/lang/Object;";
+        }
         else
         {
             return "LHOME/classes/" + this.bytecode + ";";
@@ -318,6 +322,10 @@ public class Type
         {
             return "Ljava/util/HashMap;";
         }
+        else if (this.equals(Main.object))
+        {
+            return "Ljava/lang/Object;";
+        }
         else
         {
             //return "LHOME/" + this.bytecode + ";";
@@ -351,6 +359,10 @@ public class Type
         else if (this.equals(Main.dictionary))
         {
             return "java/util/HashMap";
+        }
+        else if (this.equals(Main.object))
+        {
+            return "java/lang/Object";
         }
         else
         {

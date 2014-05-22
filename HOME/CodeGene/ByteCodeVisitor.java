@@ -641,7 +641,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-    // Declare one variable and initialize with a hardcoded value or
+    // Declare one variable and initialize it with a value or
     // with 0, "" or null if nothing is specified
     void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmts)
     {
@@ -836,7 +836,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return sb.toString();
     }
 
-    
+    // Assign a value to a variable
     void visitAssign(@NotNull HOMEParser.AssignContext ctx, Statements stmts)
     {
         if (ctx.identifier() != null)
@@ -856,6 +856,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     visitAnyAssign(ctx, ctx.AnyAssign(), variable, stmts);
                     variable.store(ctx, stmts);
                     break;
+
                 case "Decimal":
                     if (ctx.AnyAssign() != null)
                     {
@@ -865,15 +866,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     visitAnyAssign(ctx, ctx.AnyAssign(), variable, stmts);
                     variable.store(ctx, stmts);
                     break;
+
                 case "String":
                     visitExpression(ctx.expression(), stmts);
                     variable.store(ctx, stmts);
-
                     break;
+
                 case "List":
                     CollectionType symbolType = (CollectionType) variable.var.type;
                     int currentLocal = stmts.nextLocal();
-                    // TODO make it work with fields as well
                     if (ctx.expression() != null)
                     {
                         if (ctx.expression().literal() != null)
@@ -909,10 +910,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     variable.store(ctx, stmts);
                     break;
+
                 case "Dictionary":
                     symbolType = (CollectionType) variable.var.type;
                     currentLocal = stmts.nextLocal();
-                    // TODO make it work with fields as well
                     if (ctx.expression() != null)
                     {
                         if (ctx.expression().literal() != null)
@@ -952,6 +953,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     visitExpression(ctx.expression(), stmts);
                     stmts.add("astore " + variable.var.location, ctx);
                     break;
+
             }
         }
         else if (ctx.listIndex() != null)
@@ -986,13 +988,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 visitExpression(exp, stmts);
                 if (type.primaryType.equals(Main.list))
                 {
-                    stmts.add("invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;", ctx);
+                    stmts.add("invokevirtual java/util/ArrayList.get(I)Ljava/lang/Object;", ctx);
                 }
                 else
                 {
-                    stmts.add("invokevirtual java/util/HashMap/get(Ljava/lang/Object;)Ljava/lang/Object;", ctx);
+                    stmts.add("invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;", ctx);
                 }
-                stmts.add("checkcast java/lang/Integer", ctx); // TODO: real class pls
+                stmts.add("checkcast " + Main.integer.getClassByteCode(), ctx); // TODO: real class pls
                 stmts.add("invokevirtual java/lang/Integer/intValue()I", ctx); // TODO: real class pls
                 visitExpression(ctx.expression(), stmts);
                 visitAnyAssign(ctx, ctx.AnyAssign(), symbol, stmts);
@@ -1043,17 +1045,41 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+
+    /*** How if-stmts works ***
+     *
+     * if (true) goto l_if
+     * elseif (true) goto l_elseif
+     *     else code...
+     *     goto l_end
+     * l_if:
+     *     if code...
+     *     goto l_end
+     * l_elseif:
+     *     elseif code..
+     *     goto l_end
+     * l_end
+     */
+
+    // Compiles the if statements
     void visitIfStmt(@NotNull HOMEParser.IfStmtContext ctx, Statements stmts)
     {
         forkReturnStack.newStack();
         forkReturnStack.addFork();
+
+        // Used to check if there is a return statement,
+        // because if there is, there must not be a goto afterwards
+        // because that will resolve in a illegal "jump"
         int tempReturns = 0;
+
         boolean usingEndLabel = false;
 
         String ifLabel = symbolTable.newLabel();
 
+        // Will generate the jasmin code for if-stmt
         visitExpression(ctx.expression(), stmts, ifLabel);
 
+        // List of all the elseif statement
         List<HOMEParser.ElseIfStmtContext> elseif = ctx.elseIfStmt();
 
         ArrayList<String> elseifLabel = new ArrayList<>();
@@ -1061,6 +1087,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             elseifLabel.add(symbolTable.newLabel());
 
+            // Will generate the jasmin code for elseif-stmt
             visitExpression(elseif.get(i).expression(), stmts, elseifLabel.get(i));
 
             forkReturnStack.addFork();
@@ -1076,6 +1103,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         }
 
+        // if there was not return or if there is no else-stmt add goto
         if (forkReturnStack.getReturns() == tempReturns || ctx.elseStmt() == null)
         {
             stmts.add("goto " + endLabel, ctx);
@@ -1087,6 +1115,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add(ifLabel + ":", ctx);
         visitStmts(ctx.stmts(), stmts);
 
+        // if there was not return or if there is no else-stmt add goto
         if (forkReturnStack.getReturns() == tempReturns)
         {
             stmts.add("goto " + endLabel, ctx);

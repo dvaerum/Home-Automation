@@ -27,7 +27,6 @@ class FileReader {
         //Get list of standard and custom-classses
         List<File> listOfFiles = new ArrayList(Arrays.asList(standardDir.listFiles()));
         List<File> listOfFiles2 = new ArrayList(Arrays.asList(customDir.listFiles()));
-        //TODO: Read custom classes
 
         //Combine lists
         for(File tmpfile : listOfFiles2)
@@ -81,7 +80,6 @@ class FileReader {
         for(File importclass : expectedClasses)
         {
             String fileName = importclass.getName().replaceFirst(".def", "");
-            //TODO: Change to .class instead of .txt
             File classfile = new File(standardDir + File.separator + fileName + ".class");
             //Check if java .class file for the type exists, if not give a warning
             if(! classfile.exists() && !classfile.isDirectory() )
@@ -111,19 +109,14 @@ class FileReader {
         String str = null;
         if(!new Scanner(new File(fullPath)).useDelimiter("\\Z").hasNext())
         {
-            //System.out.println(String.format("Warning: Class reader failed at path: %s", fullPath));
+            System.out.println(String.format("Warning: Class reader failed at path: %s", fullPath));
             return;
         }
         //Convert the file of multiple lines into a single string
         str = new Scanner(new File(fullPath)).useDelimiter("\\Z").next();
 
         //Define the pattern, that is used to recognize the class.def file
-
-        // Todo: få jacobs til at virke for dennis
-        // Jacob
         Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z_][a-zA-Z0-9_]*)\\sfields\\s((?:\\-\\s[a-zA-Z_][a-zA-Z0-9_]*\\s[a-zA-Z_][a-zA-Z0-9_]*\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[a-zA-Z_][a-zA-Z0-9_]*)\\(((?:[a-zA-Z_][a-zA-Z0-9_]*(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z_][a-zA-Z0-9_]*)\\((?:(?:[a-zA-Z_][a-zA-Z0-9_]*(?:, )?)*)\\)\\s+>\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*)*)\\sendmethods\\sbytecode\\s(\\-\\s.+)\\sendbytecode\\sendclass");
-        // Dennis
-        //Pattern classPtrn = Pattern.compile("class\\s([a-zA-Z_]+)\\sfields\\s((?:\\-\\s[\\w]+\\s\\w+\\s)*)endfields\\sconstructor\\s(?:(\\-\\s[A-Za-z_]\\w*)\\(((?:\\w(?:, )?)*)\\)\\s)?endconstructor\\smethods\\s((?:\\-\\s(?:[a-zA-Z0-9_]+)\\((?:(?:\\w(?:, )?)*)\\)\\s+>\\s+\\w+\\s*)*)endmethods\\sbytecode\\s((?:\\-\\s.+\\s*)*)\\sendbytecode\\sendclass");
 
         //Convert multiple whitespaces into single whitesspaces, and remove newline and caret return to ease the regex
         str = str.replaceAll("\\s+", " ");

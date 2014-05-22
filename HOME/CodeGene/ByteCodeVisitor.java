@@ -653,7 +653,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             case "Integer":
                 stmts.LocalInc();
-                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.integer, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts); // TODO Add visitExpression
@@ -662,12 +661,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("iconst_0", ctx);
                 }
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.integer, stmts.currentLocal());
                 variable.store(ctx, stmts);
                 break;
 
             case "Decimal":
                 stmts.LocalInc();
-                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.decimal, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts);
@@ -676,13 +675,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("dconst_0", ctx);
                 }
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.decimal, stmts.currentLocal());
                 variable.store(ctx, stmts);
                 stmts.LocalInc();
                 break;
 
             case "String":
                 stmts.LocalInc();
-                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.string, stmts.currentLocal());
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts);
@@ -691,13 +690,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("ldc \"\"", ctx);
                 }
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.string, stmts.currentLocal());
                 variable.store(ctx, stmts);
                 break;
 
             case "Boolean":
                 stmts.LocalInc();
-                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.bool, stmts.currentLocal());
-
                 if (ctx.expression() != null)
                 {
                     visitExpression(ctx.expression(), stmts);
@@ -706,6 +704,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("iconst_0", ctx);
                 }
+                variable = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), Main.bool, stmts.currentLocal());
                 variable.store(ctx, stmts);
                 break;
 
@@ -792,7 +791,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.LocalInc();
                 String className = ctx.type().getText();
                 Type symbol = symbolTable.types.getSymbol(className);
-                SymbolInfo symbolInfoClass = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
 
                 if (ctx.expression() != null)
                 {
@@ -802,6 +800,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("aconst_null", ctx);
                 }
+                SymbolInfo symbolInfoClass = symbolTable.variables.addAndGetSymbol(ctx.identifier().getText(), symbol, stmts.currentLocal());
 
                 symbolInfoClass.store(ctx, stmts);
 

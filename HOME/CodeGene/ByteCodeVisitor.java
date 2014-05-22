@@ -468,6 +468,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 // Visitors
 
+    // Compiles the global variable
     @Override
     public Object visitGlobal(@NotNull HOMEParser.GlobalContext ctx)
     {
@@ -485,6 +486,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return super.visitGlobal(ctx);
     }
 
+    // Compiles the required setup function and the not required functions
     @Override
     public Object visitFunction(@NotNull HOMEParser.FunctionContext ctx)
     {
@@ -556,6 +558,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return super.visitFunction(ctx);
     }
 
+    // Returns String for simple type, if it is a simple type
     String returnTypeForFunctionSimple(Type type)
     {
         if (type instanceof CollectionType)
@@ -568,6 +571,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Returns String for object type, if it is a simple type
     String returnTypeForFunctionObject(Type type)
     {
         if (type instanceof CollectionType)
@@ -582,6 +586,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
 //region Stmts
 
+    // Compiler jasmin code for one statement and
+    // continue to the next statement if there are more
     void visitStmts(@NotNull HOMEParser.StmtsContext ctx, Statements stmts)
     {
         if (ctx.stmt() != null)
@@ -594,6 +600,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Determines a single statement node
     void visitStmt(@NotNull HOMEParser.StmtContext ctx, Statements stmts)
     {
         if (ctx.declaration() != null)

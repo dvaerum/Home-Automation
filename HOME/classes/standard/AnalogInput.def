@@ -1,0 +1,20 @@
+class AnalogInput
+    fields
+        - Integer value
+        - Event ON_CHANGED
+    endfields
+
+    constructor
+        - AnalogInput(Integer)
+    endconstructor
+
+    methods
+        - toString() > String
+        - getValue() > Integer
+        - getPort() > Integer
+    endmethods
+
+    bytecode
+        - standard/AnalogInput
+    endbytecode
+endclass

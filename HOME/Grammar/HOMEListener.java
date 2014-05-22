@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * This interface defines a complete listener for a parse tree produced by
  * {@link HOMEParser}.
  */
-interface HOMEListener extends ParseTreeListener {
+public interface HOMEListener extends ParseTreeListener {
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#expression}.
 	 * @param ctx the parse tree
@@ -31,17 +31,6 @@ interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link HOMEParser#assign}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssign(@NotNull HOMEParser.AssignContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HOMEParser#assign}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssign(@NotNull HOMEParser.AssignContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#int2dec}.
@@ -295,6 +284,17 @@ interface HOMEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitField(@NotNull HOMEParser.FieldContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link HOMEParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment(@NotNull HOMEParser.AssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HOMEParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment(@NotNull HOMEParser.AssignmentContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#newline}.

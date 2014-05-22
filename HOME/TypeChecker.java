@@ -240,13 +240,8 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
 
-            if(forkReturnStack.closed())
-            {
-                //forks=returns. We have a return statement
-                System.out.println(String.format("Info at line %d: Yay, return!", ctx.getStart().getLine()));
-            } else {
+            if(!forkReturnStack.closed())
                 return new ErrorType(String.format("Function doesn't contain sufficient return statements", ctx.getStart().getLine()), false);
-            }
         }
         else if(stmtsType instanceof ErrorType)
             returnType = stmtsType;
@@ -516,7 +511,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     returnType = new ErrorType(String.format("Unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()), false);
                 }
             }
-            //TODO: Check if it is possible to put a literal infront of a expression, and if yes, make a else here
 
             return returnType;
         }
@@ -904,7 +898,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    //TODO: Needs more checking, not done at all
     public Type visitLoopForeach(@NotNull HOMEParser.LoopForeachContext ctx)
     {
         Main.symbolTable.openScope();
@@ -962,10 +955,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    // TODO: needs further checking
     @Override
     public Type visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx) {
-        Type returnType = new ErrorType("Variable method call went wrong", false);
+        Type returnType;
         HOMEParser.FuncCallContext currctx = ctx.funcCall();
 
         Type typeOfObject = visitIdentifier(ctx.identifier());
@@ -1012,11 +1004,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
     void addIntToDecNode(HOMEParser.ExpressionContext ctx)
     {
-        System.out.println(String.format("\t(Line %d) Integer should be converted", ctx.getStart().getLine()));
-        if(ctx.int2dec() == null)
+        int lastChild = ctx.getChildCount() - 1;
+        if(!(ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext))
             ctx.addChild(new HOMEParser.Int2decContext(ctx, ctx.invokingState));
-        else
-            System.out.println("DEBUG: Attempt to add conversion node multiple times.");
     }
 
     public boolean addConversionNode(Type expectedType, Type exprType, HOMEParser.ExpressionContext expr)
@@ -1044,14 +1034,4 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         return BooleanOperator.contains(str);
     }
-
-
-    //TODO: Nothing functions can use: "return hej()" if hej() also returns Nothing
-    //TODO: When CollectionTypes are initialized, only the methods are copied, but neither the fields nor the constructor are copied.
-    //TODO: Search and destroy double error-printing, and missing propagation.
-    // ------- NEW GRAMMAR -------
-
-    // --------- Til 2. iteration --------
-    //TODO: Events
-
 }

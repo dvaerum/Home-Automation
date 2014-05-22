@@ -1574,7 +1574,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         if (!convertingFlag)
         {
-            convertingFlag = ctx.int2dec() != null;
+            int lastChild = ctx.getChildCount() - 1;
+            //if(ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext)
+            convertingFlag = ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext;
         }
 
         if (ctx.expression().size() == 2)

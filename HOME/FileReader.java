@@ -20,11 +20,11 @@ public class FileReader {
     //Insert prototype of classes
     public void loadClassPrototypes() throws IOException
     {
-        File standardDir = new File("classes" + File.separator + "standard-classes");
-        File customDir = new File("classes" + File.separator + "custom-classes");
+        File standardDir = new File("HOME" + File.separator + "classes" + File.separator + "standard");
+        File customDir = new File("HOME" + File.separator + "classes" + File.separator + "custom");
         String files;
 
-        //Get list of standard-classes and custom-classses
+        //Get list of standard and custom-classses
         List<File> listOfFiles = new ArrayList(Arrays.asList(standardDir.listFiles()));
         List<File> listOfFiles2 = new ArrayList(Arrays.asList(customDir.listFiles()));
         //TODO: Read custom classes
@@ -56,8 +56,8 @@ public class FileReader {
     {
         try
         {
-            loadClasses("standard-classes");
-            loadClasses("custom-classes");
+            loadClasses("standard");
+            loadClasses("custom");
         }
         catch (IOException e)
         {
@@ -67,7 +67,7 @@ public class FileReader {
 
     public void loadClasses(String folderName) throws IOException
     {
-        File standardDir = new File("classes" + File.separator + folderName);
+        File standardDir = new File("HOME" + File.separator + "classes" + File.separator + folderName);
 
         //Get all files that ends with .def, to prevent both processing .txt and .def files
         List<File> expectedClasses = new ArrayList(Arrays.asList(standardDir.listFiles(new FilenameFilter() {
@@ -77,7 +77,7 @@ public class FileReader {
             }
         })));
 
-        //Run through all standard-classes, and update the prototype type with all info
+        //Run through all standard, and update the prototype type with all info
         for(File importclass : expectedClasses)
         {
             String fileName = importclass.getName().replaceFirst(".def", "");

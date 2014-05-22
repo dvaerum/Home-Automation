@@ -1,0 +1,18 @@
+class AnalogOutput
+    fields
+        - Integer value
+    endfields
+
+    constructor
+        - AnalogOutput(Integer)
+    endconstructor
+
+    methods
+        - toString() > String
+        - dampen() > Nothing
+    endmethods
+
+    bytecode
+        - standard/AnalogOutput
+    endbytecode
+endclass

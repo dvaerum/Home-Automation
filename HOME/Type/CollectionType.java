@@ -77,7 +77,7 @@ public class CollectionType extends Type
         if(this.equals(Main.string))
             return this.bytecode;
         else
-            return "classes/" + this.bytecode;
+            return "HOME/classes/" + this.bytecode;
     }
 
     public String getObjectByteCode() {

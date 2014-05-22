@@ -9,7 +9,6 @@ program : newline* global block EOF ;
 
 global
     : declaration newline+ global
-    | assign newline+ global
     |
     ;
 

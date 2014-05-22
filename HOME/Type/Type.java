@@ -269,7 +269,7 @@ public class Type
         } else if (this.equals(Main.dictionary)){
             return "Ljava/util/HashMap;";
         } else {
-            return "Lclasses/" + this.bytecode + ";";
+            return "LHOME/classes/" + this.bytecode + ";";
         }
     }
 
@@ -291,7 +291,7 @@ public class Type
             return "Ljava/util/HashMap;";
         } else {
             //return "LHOME/" + this.bytecode + ";";
-            return "Lclasses/" + this.bytecode + ";";
+            return "LHOME/classes/" + this.bytecode + ";";
         }
     }
 
@@ -311,7 +311,7 @@ public class Type
             return "java/util/HashMap";
         } else {
             //return "HOME/" + this.bytecode;
-            return "classes/" + this.bytecode;
+            return "HOME/classes/" + this.bytecode;
         }
     }
 
@@ -325,7 +325,7 @@ public class Type
         if(this.equals(Main.string))
             return this.bytecode;
         else
-            return "classes/" + this.bytecode;
+            return "HOME/classes/" + this.bytecode;
     }
 
 /*    public String getUndecoratedByteCode(){

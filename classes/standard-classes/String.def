@@ -1,0 +1,17 @@
+class String
+    fields
+    endfields
+
+    constructor
+        - String()
+    endconstructor
+
+    methods
+        - toString() > String
+        - length() > Integer
+    endmethods
+
+    bytecode
+        - java/lang/String
+    endbytecode
+endclass

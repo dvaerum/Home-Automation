@@ -1,13 +1,13 @@
-*.class
+
 
 # Package Files #
 *.war
 *.ear
 
+
 # Local Files
 .idea
 .directory
 out
-ANTLR/ANTLR.iml
-ANTLR/out
-ANTLR/gen
+gen
+HOME.class

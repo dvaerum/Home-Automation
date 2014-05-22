@@ -1,0 +1,16 @@
+class Decimal
+    fields
+    endfields
+
+    constructor
+        - Decimal()
+    endconstructor
+
+    methods
+        - toString() > String
+    endmethods
+
+    bytecode
+        - D
+    endbytecode
+endclass

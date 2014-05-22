@@ -68,14 +68,15 @@ public class Main
             }
         }
 
-        if (errorListener.HasWarnings())
-        {
-            System.out.println("--------------------------------- Warnings Messages ---------------------------------");
-            for (String s : errorListener.WarningMessages())
-            {
-                System.out.println(s);
-            }
-        }
+        //Remove this comment, if you want to see ANTLR warning messages.
+//        if (errorListener.HasWarnings())
+//        {
+//            System.out.println("--------------------------------- Warnings Messages ---------------------------------");
+//            for (String s : errorListener.WarningMessages())
+//            {
+//                System.out.println(s);
+//            }
+//        }
 
         if (parser.getNumberOfSyntaxErrors() > 0)
         {

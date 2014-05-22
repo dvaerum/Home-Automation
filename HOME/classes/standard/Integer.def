@@ -9,7 +9,6 @@ class Integer
     methods
         - toString() > String
         - getValue() > Integer
-        - equals(Integer) > Boolean
     endmethods
 
     bytecode

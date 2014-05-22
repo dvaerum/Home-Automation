@@ -10,6 +10,9 @@ class AnalogOutput
     methods
         - toString() > String
         - dampen() > Nothing
+        - getValue() > Integer
+        - setValue(Integer) > Nothing
+        - getPort() > Integer
     endmethods
 
     bytecode

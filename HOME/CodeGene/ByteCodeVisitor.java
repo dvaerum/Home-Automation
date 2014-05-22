@@ -641,11 +641,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Declare one variable and initialize with a hardcoded value or
+    // with 0, "" or null if nothing is specified
     void visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx, Statements stmts)
     {
         String type = ctx.type().getText();
         type = type.replaceAll("<.+>", "");
-        // TODO check if there is are any expressions on Declaration
         CollectionType symbolType;
         SymbolInfo variable;
 
@@ -655,7 +656,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.LocalInc();
                 if (ctx.expression() != null)
                 {
-                    visitExpression(ctx.expression(), stmts); // TODO Add visitExpression
+                    visitExpression(ctx.expression(), stmts);
                 }
                 else
                 {
@@ -808,6 +809,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // returns a string of types for the parameter to a functions
     String visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx, Statements stmts)
     {
         if (ctx == null)
@@ -818,22 +820,23 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         StringBuilder sb = new StringBuilder();
         for (HOMEParser.FuncParamDeclarationContext dec : ctx.funcParamDeclaration())
         {
+            // Safety function: removes all the spaces in the start
+            // and end of the string, though this should not be necessary
             String t = dec.type().getText().trim();
-            Type type = Main.symbolTable.types.getSymbol(t);
 
-            Integer location = stmts.nextLocal();
+            Type type = symbolTable.types.getSymbol(t);
+
+            symbolTable.variables.addSymbol(dec.identifier().getText(), type, stmts.nextLocal());
 
             stmts.LocalInc();
 
-            symbolTable.variables.addSymbol(dec.identifier().getText(), type, location);
-            //visitDeclaration(dec, stmts);
-
-            sb.append(Main.symbolTable.types.getSymbol(t).getSimpleByteCode());
+            sb.append(symbolTable.types.getSymbol(t).getSimpleByteCode());
         }
 
         return sb.toString();
     }
 
+    
     void visitAssign(@NotNull HOMEParser.AssignContext ctx, Statements stmts)
     {
         if (ctx.identifier() != null)
@@ -1485,7 +1488,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stmts.add("dup", ctx);
                     stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;", ctx);
                     stmts.add("swap", ctx);
-                    stmts.add("invokevirtual java/io/PrintStream/println(" + Main.symbolTable.types.getSymbol(type).getObjectByteCode() + ")V", ctx);
+                    stmts.add("invokevirtual java/io/PrintStream/println(" + symbolTable.types.getSymbol(type).getObjectByteCode() + ")V", ctx);
 
 
                     stmts.add("areturn", ctx);

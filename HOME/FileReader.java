@@ -82,7 +82,7 @@ public class FileReader {
         {
             String fileName = importclass.getName().replaceFirst(".def", "");
             //TODO: Change to .class instead of .txt
-            File classfile = new File(standardDir + File.separator + fileName + ".txt");
+            File classfile = new File(standardDir + File.separator + fileName + ".class");
             //Check if java .class file for the type exists, if not give a warning
             if(! classfile.exists() && !classfile.isDirectory() )
             {

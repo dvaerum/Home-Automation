@@ -4,7 +4,6 @@ import HOME.Main;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by Frederik on 14-04-14.
@@ -67,19 +66,6 @@ public class CollectionType extends Type
         return newFunc;
     }
 
-    public String getByteCode() {
-        if(this.equals(Main.integer))
-            return this.bytecode;
-        if(this.equals(Main.decimal))
-            return this.bytecode;
-        if(this.equals(Main.bool))
-            return this.bytecode;
-        if(this.equals(Main.string))
-            return this.bytecode;
-        else
-            return "classes/" + this.bytecode;
-    }
-
     public String getObjectByteCode() {
         if (this.primaryType.equals(Main.list)){
             return "Ljava/util/ArrayList;";
@@ -100,61 +86,6 @@ public class CollectionType extends Type
 
         return null;
     }
-
-    // Returns a copy of the specified List<Type> where all elements of type 'generic' have been replaced with innerType
-//    private List<Type> replaceGenericList(List<Type> list)
-//    {
-//        List<Type> newList = new ArrayList<>(list);
-//        for(Type t : newList)
-//        {
-//            if (t.equals(Main.generic))
-//            {
-//                t = this.innerType;
-//            }
-//        }
-//        return newList;
-//    }
-
-    // Searches recursively through the inner Types of a Type and replaces all 'generic'-Types with replacementType;
-//    private void replaceGeneric(Type replacementType)
-//    {
-//        if (innerType.equals(Main.generic))
-//        {
-//            innerType = replacementType;
-//        }
-//        else if(innerType instanceof CollectionType)
-//        {
-//            ((CollectionType)innerType).replaceGeneric(replacementType);
-//        }
-//    }
-//
-//    private Type replaceGenericType(Type t)
-//    {
-//        if (t.equals(Main.generic))
-//            return innerType;
-//        return t;
-//    }
-
-//    private List<Type> replaceGenericList(List<Type> methodParms)
-//    {
-//        for(Type t : methodParms)
-//        {
-//            t = replaceGeneric(t);
-//        }
-//    }
-//
-//    private Type replaceGeneric(Type t)
-//    {
-//        if(t.equals(Main.generic))
-//        {
-//            return this.innerType;
-//        }
-//        else if(t instanceof CollectionType)
-//        {
-//            return replaceGeneric(t);
-//        }
-//        return t;
-//    }
 
 }
 

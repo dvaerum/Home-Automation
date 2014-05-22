@@ -12,9 +12,9 @@ import HOME.Type.*;
  */
 public class VariableTable
 {
-    HashMap<String, Deque<SymbolInfo>> table = new HashMap<String, Deque<SymbolInfo>>();
+    private HashMap<String, Deque<SymbolInfo>> table = new HashMap<String, Deque<SymbolInfo>>();
 
-    int currentScope = 0;
+    private int currentScope = 0;
 
     public void openScope()
     {
@@ -76,11 +76,6 @@ public class VariableTable
         Deque<SymbolInfo> stack = addSymbolIfNotExisting(symbol);
         stack.push(info);
         return stack.peek();
-    }
-
-    // Returns false if the symbol already exists in the current scope.
-    public int getLocation(String symbol) {
-        return getSymbol(symbol).var.location;
     }
 
     public Type getType(String symbol) {

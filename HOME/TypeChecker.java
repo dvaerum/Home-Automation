@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class TypeChecker extends HOMEBaseVisitor<Type>
 {
-    String currentFunction = "";
-    ForkReturnStack forkReturnStack = new ForkReturnStack();
+    private String currentFunction = "";
+    private ForkReturnStack forkReturnStack = new ForkReturnStack();
 
     @Override
     public Type visitStmts(@NotNull HOMEParser.StmtsContext ctx)
@@ -332,8 +332,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     }
                 }
                 returnType = new ErrorType(errorString.toString(), false);
-//                returnType = new ErrorType(String.format("Function parameters doesn't match target function " +
-//                        "(too many/invalid type(s))"));
             }
         }
         else
@@ -342,7 +340,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    public ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FuncParametersContext ctx)
+    ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FuncParametersContext ctx)
     {
         ArrayList<Type> returnList = new ArrayList<>();
 
@@ -493,7 +491,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-    public Type checkInnerExpressions(@NotNull HOMEParser.ExpressionContext ctx)
+    Type checkInnerExpressions(@NotNull HOMEParser.ExpressionContext ctx)
     {
         Type returnType;
         Type r1 = null, r2 = null;
@@ -715,7 +713,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         //return visitPrimitiveType(ctx.primitiveType());
     }
 
-    public Type getCollectionType(String typeName, Type innerType)
+    Type getCollectionType(String typeName, Type innerType)
     {
         Type t;
         if (typeName.startsWith("List"))
@@ -1009,7 +1007,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             ctx.addChild(new HOMEParser.Int2decContext(ctx, ctx.invokingState));
     }
 
-    public boolean addConversionNode(Type expectedType, Type exprType, HOMEParser.ExpressionContext expr)
+    boolean addConversionNode(Type expectedType, Type exprType, HOMEParser.ExpressionContext expr)
     {
         if (expectedType.equals(Main.decimal) && exprType.equals(Main.integer))
         {
@@ -1027,7 +1025,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
 
-    List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
+    private List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
 
 
     boolean isBooleanOperator(String str)

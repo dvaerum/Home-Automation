@@ -17,20 +17,13 @@ import java.util.regex.Pattern;
 public class Type
 {
     public String name;
-    public List<Variable> fields = new ArrayList<>();
-    public Function constructor;
+    private List<Variable> fields = new ArrayList<>();
+    private Function constructor;
     public List<Function> methods = new ArrayList<>();
     public String bytecode;
 
 
-    public Type() {
-    }
-
-    public Type(Type t) {
-        name = new String(t.name);
-        fields = new ArrayList<Variable>(t.fields);
-        constructor = t.constructor;
-        methods = new ArrayList<Function>(t.methods);
+    Type() {
     }
 
     public Type(String name) {
@@ -43,7 +36,7 @@ public class Type
         return list;
     }
 
-    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode) throws Exception
+    public void Update(String name, String fields, String constructorName, String constructorArgs, String methods, String bytecode)
     {
         //Add classname into name field
         this.name = name;
@@ -171,15 +164,6 @@ public class Type
         return true;
     }
 
-    public static List<Type> copyTypeList(List<Type> list) {
-        List<Type> newList = new ArrayList<Type>(list);
-
-        for (Type t : newList) {
-            t = new Type(t);
-        }
-        return newList;
-    }
-
     public boolean isSubtypeOf(Type otherType) {
         if (this.equals(Main.integer)) {
             if (otherType.equals(Main.decimal))
@@ -207,13 +191,6 @@ public class Type
             }
         }
         return null;
-    }
-
-    public Type(String name, List<Variable> fields, Function constructor, List<Function> methods) {
-        this.name = name;
-        this.fields = fields;
-        this.constructor = constructor;
-        this.methods = methods;
     }
 
     @Override
@@ -311,31 +288,7 @@ public class Type
             return "java/util/HashMap";
         } else {
             //return "HOME/" + this.bytecode;
-            return "HOME/CodeGene/classes/" + this.bytecode;
+            return "HOME/classes/" + this.bytecode;
         }
     }
-
-    public String getByteCode() {
-        if(this.equals(Main.integer))
-            return this.bytecode;
-        if(this.equals(Main.decimal))
-            return this.bytecode;
-        if(this.equals(Main.bool))
-            return this.bytecode;
-        if(this.equals(Main.string))
-            return this.bytecode;
-        else
-            return "HOME/CodeGene/classes/" + this.bytecode;
-    }
-
-/*    public String getUndecoratedByteCode(){
-        String s = getObjectByteCode();
-        if(s.charAt(0) == 'L'){
-            s = s.substring(1);
-        }
-        if(s.charAt(s.length() - 1) == ';'){
-            s = s.substring(0, s.length() - 1);
-        }
-        return s;
-    }*/
 }

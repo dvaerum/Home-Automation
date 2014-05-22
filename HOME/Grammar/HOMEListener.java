@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * This interface defines a complete listener for a parse tree produced by
  * {@link HOMEParser}.
  */
-public interface HOMEListener extends ParseTreeListener {
+interface HOMEListener extends ParseTreeListener {
 	/**
 	 * Enter a parse tree produced by {@link HOMEParser#expression}.
 	 * @param ctx the parse tree

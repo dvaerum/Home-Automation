@@ -1,6 +1,5 @@
 package HOME;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import org.antlr.v4.runtime.DiagnosticErrorListener;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -12,14 +11,12 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
 
-import java.util.ArrayList;
 import java.util.*;
-import javax.tools.Diagnostic;
 
 /**
  * Created by alt_mulig on 3/26/14.
  */
-public class CustomErrorListener extends DiagnosticErrorListener {
+class CustomErrorListener extends DiagnosticErrorListener {
 
     private ArrayList<String> _errorMessages = new ArrayList<String>();
     private ArrayList<String> _warningMessages = new ArrayList<String>();
@@ -30,16 +27,8 @@ public class CustomErrorListener extends DiagnosticErrorListener {
         return _errorMessages;
     }
 
-    public List<String> WarningMessages() {
-        return _warningMessages;
-    }
-
     public Boolean HasErrors() {
         return _errorMessages.size() > 0;
-    }
-
-    public Boolean HasWarnings() {
-        return _warningMessages.size() > 0;
     }
 
     public CustomErrorListener(Boolean captureDiagnosticWarnings, String file) {

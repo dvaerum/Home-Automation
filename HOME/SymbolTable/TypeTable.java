@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class TypeTable
 {
-    HashMap<String, Type> table = new HashMap<String, Type>();
+    private HashMap<String, Type> table = new HashMap<String, Type>();
 
     // Returns false if the symbol already exists in the current scope.
     public Boolean addSymbol(String symbol, Type type) {

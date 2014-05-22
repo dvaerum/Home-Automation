@@ -17,13 +17,11 @@ block
     ;
 
 function
-    : 'function' identifier functionParameters 'returns' (type|nothing) newline+ //TODO: Add composite data-types
+    : 'function' identifier functionParameters 'returns' (type|nothing) newline+
        stmts
       'endfunction'
     ;
 
-// Morefunctions ensures the uniqueness of the first function, the Setup function,
-// and also allows gives the option of only having the setup function without any newlines following it.
 moreFunctions
     : newline+ block
     | newline*
@@ -46,7 +44,7 @@ stmts
 
 stmt
     : declaration
-    | assign
+    | assignment
     | ifStmt
     | loop
     | funcCall
@@ -62,7 +60,7 @@ declaration
     : type identifier ((AnyAssign|ASSIGN) expression)?
     ;
 //---------------Assignment---------------
-assign
+assignment
     : (identifier|listIndex|field) (AnyAssign|ASSIGN) expression
     ;
 //---------------If statement-------------
@@ -81,7 +79,7 @@ elseIfStmt
 
 elseStmt
     : 'else' newline+
-    stmts
+        stmts
     ;
 //---------------Loops-------------
 loop
@@ -90,9 +88,9 @@ loop
     ;
 
 loopWhileOrUntil
-    :   'repeat' ('while'|'until') LPAREN expression RPAREN newline+
+    :  'repeat' ('while'|'until') LPAREN expression RPAREN newline+
         stmts
-        'endrepeat'
+       'endrepeat'
     ;
 
 loopForeach
@@ -115,7 +113,7 @@ variableMethodCall
     ;
 
 returnFunction
-    : 'return' expression? // TODO change when identifierOrListIndex can be digits
+    : 'return' expression?
     ;
 
 incDec
@@ -139,7 +137,6 @@ IdentifierExact
     : Letter LetterOrDigit*
     ;
 
-
 //---------------Expression---------------
 
 expression
@@ -152,10 +149,10 @@ expression
     | expression or expression
     | funcCall
     | literal
-    | int2dec
     | variableMethodCall
     | identifier|listIndex|field
     | LPAREN expression RPAREN
+//    | int2dec
     ;
 
 
@@ -312,5 +309,3 @@ LINE_COMMENT
     ;
 
 newline : '\r'? '\n' ;//| '\r';
-
-//TODO: FIX INT VS DECIMAL ERROR

@@ -1394,11 +1394,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
         HOME.Type.Function variableMethod = variable.var.type.getMethodByName(ctx.funcCall().identifier().getText());
 
-        visitIdentifier(ctx.identifier(), stmts, false).invokeToObject(ctx, stmts);
+        visitIdentifier(ctx.identifier(), stmts, false);
 
         for (HOMEParser.ExpressionContext expressionContext : ctx.funcCall().funcParameters().expression())
         {
-            visitExpression(expressionContext, stmts);
+            visitExpression(expressionContext, stmts).actualType.invokeToObject(ctx, stmts);
         }
 
         StringBuilder bytecode = new StringBuilder("invokevirtual ").

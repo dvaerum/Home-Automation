@@ -2,8 +2,8 @@ Input kitchenSwitch = Input(1)
 List<Output> kitchenLamps = getKitchenLamps()
 
 function Setup() returns Nothing
-    //List<Integer> ints = {1,2,3}
-    //ints.add(1)
+    List<Integer> ints = {1,2,3}
+    ints.add(1)
 endfunction
 
 //Create kitchen lamps

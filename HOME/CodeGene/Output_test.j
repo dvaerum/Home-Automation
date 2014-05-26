@@ -30,8 +30,34 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 0
-    .limit locals 1
+    .limit stack 2
+    .limit locals 2
+.line 5
+    new java/util/ArrayList
+    dup
+    invokespecial java/util/ArrayList.<init>()V
+    astore 1
+    aload 1
+    bipush 1
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 1
+    bipush 2
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+    aload 1
+    bipush 3
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokeinterface java/util/List.add(Ljava/lang/Object;)Z 2
+    pop
+.line 6
+    aload 1
+    bipush 1
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokevirtual java/util/ArrayList.add(Ljava/lang/Object;)Z
+    pop
     return
 .end method
 
@@ -57,7 +83,8 @@ return
     dup
     iload 2
     invokespecial HOME/classes/standard/Output.<init>(I)V
-    invokevirtual java/util/ArrayList.add(LHOME/classes/standard/Output;)Z
+    invokevirtual java/util/ArrayList.add(Ljava/lang/Object;)Z
+    pop
 .line 16
     iload 2
     iconst_1

@@ -1,4 +1,4 @@
-Input TESTER = Input (32)
+Input TESTER = Input(32)
 Input TESTER2 = returnTest2()
 List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
 Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
@@ -54,8 +54,8 @@ function Setup() returns Nothing
         PrintS("if(XXX) - Intet virker")
     endif
 
-    if(x == 3)
-        if(y < 3.3)
+    if(x == 3.0)
+        if(y < 3)
             y++
         else
             x--
@@ -135,7 +135,7 @@ function Setup() returns Nothing
 
     Input inputParam = TESTER2
 
-    inputParam = returnTest2()
+    inputParam = Input(42)
     PrintI(inputParam.getPort())
 
 

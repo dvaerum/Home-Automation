@@ -11,11 +11,12 @@
 .field public kitchenThermostat3 LHOME/classes/standard/AnalogInput;
 .field public kitchenThermostat4 LHOME/classes/standard/AnalogInput;
 .field public kitchenThermostats Ljava/util/HashMap;
+.field public kitchenAirCond LHOME/classes/standard/AnalogOutput;
 .field public thermostat LHOME/classes/standard/AnalogInput;
 .field public radiator LHOME/classes/standard/AnalogOutput;
 .method public <init>()V
-    .limit stack 15
-    .limit locals 13
+    .limit stack 16
+    .limit locals 14
     aload_0
     invokespecial java/lang/Object/<init>()V
 .line 2
@@ -149,20 +150,29 @@
     aload_0
     swap
     putfield HOME/kitchenThermostats Ljava/util/HashMap;
-.line 16
+.line 14
+    aload_0
+    new HOME/classes/standard/AnalogOutput
+    dup
+    bipush 9
+    invokespecial HOME/classes/standard/AnalogOutput.<init>(I)V
+    aload_0
+    swap
+    putfield HOME/kitchenAirCond LHOME/classes/standard/AnalogOutput;
+.line 17
     aload_0
     new HOME/classes/standard/AnalogInput
     dup
-    bipush 9
+    bipush 10
     invokespecial HOME/classes/standard/AnalogInput.<init>(I)V
     aload_0
     swap
     putfield HOME/thermostat LHOME/classes/standard/AnalogInput;
-.line 17
+.line 18
     aload_0
     new HOME/classes/standard/AnalogOutput
     dup
-    bipush 10
+    bipush 11
     invokespecial HOME/classes/standard/AnalogOutput.<init>(I)V
     aload_0
     swap
@@ -171,30 +181,50 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 1
+    .limit stack 3
     .limit locals 2
-.line 20
+.line 21
+    aload_0
+    getfield HOME/kitchenSwitch LHOME/classes/standard/Input;
+    ldc "ON_TOGGLED"
+    ldc "toggleKitchenLamps"
+    invokevirtual HOME/classes/standard/Input/registerEvent(Ljava/lang/String;Ljava/lang/String;)V
+.line 22
+    aload_0
+    getfield HOME/thermostat LHOME/classes/standard/AnalogInput;
+    ldc "ON_CHANGED"
+    ldc "handleTemperatureChanges"
+    invokevirtual HOME/classes/standard/AnalogInput/registerEvent(Ljava/lang/String;Ljava/lang/String;)V
+.line 27
     aload_0
     invokevirtual HOME/getAverageKitchenTemperature()I
     istore 1
+.line 28
+    aload_0
+    getfield HOME/kitchenAirCond LHOME/classes/standard/AnalogOutput;
+    bipush 25
+    iload 1
+    isub
+    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+    invokevirtual HOME/classes/standard/AnalogOutput.setValue(I)V
     return
 .end method
 
 .method public getAverageKitchenTemperature()I
-    .limit stack 3
+    .limit stack 4
     .limit locals 6
-.line 24
+.line 33
     bipush 10
     istore 1
-.line 26
+.line 35
     bipush 1
     istore 2
-.line 27
+.line 36
     Label1:
     iload 2
     bipush 4
     if_icmpgt Label2
-.line 28
+.line 37
     aload_0
     getfield HOME/kitchenThermostats Ljava/util/HashMap;
     ldc "thermo"
@@ -214,24 +244,92 @@ return
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast HOME/classes/standard/AnalogInput
     astore 5
-.line 29
+.line 38
     iload 1
     aload 5
-    getfield HOME/classes/standard/AnalogInput/value I
+    invokevirtual HOME/classes/standard/AnalogInput.getValue()I
     iadd
     istore 1
-.line 30
+.line 39
     iload 2
     iconst_1
     iadd
     istore 2
     goto Label1
     Label2:
-.line 33
+.line 42
+    iload 1
     bipush 4
+    idiv
     getstatic java/lang/System/out Ljava/io/PrintStream;
+    iload 1
     bipush 4
+    idiv
     invokevirtual java/io/PrintStream/println(I)V
     ireturn
+.end method
+
+.method public handleTemperatureChanges()V
+    .limit stack 2
+    .limit locals 2
+.line 47
+    aload_0
+    getfield HOME/thermostat LHOME/classes/standard/AnalogInput;
+    invokevirtual HOME/classes/standard/AnalogInput.getValue()I
+    istore 1
+.line 49
+    iload 1
+    bipush 10
+    if_icmplt Label3
+.line 51
+    iload 1
+    bipush 20
+    if_icmpgt Label4
+.line 54
+    aload_0
+    getfield HOME/radiator LHOME/classes/standard/AnalogOutput;
+    bipush 1
+    putfield HOME/classes/standard/AnalogOutput/value I
+    goto Label5
+    Label3:
+.line 50
+    aload_0
+    getfield HOME/radiator LHOME/classes/standard/AnalogOutput;
+    bipush 5
+    putfield HOME/classes/standard/AnalogOutput/value I
+    goto Label5
+    Label4:
+.line 52
+    aload_0
+    getfield HOME/radiator LHOME/classes/standard/AnalogOutput;
+    bipush 3
+    putfield HOME/classes/standard/AnalogOutput/value I
+    goto Label5
+    Label5:
+    return
+.end method
+
+.method public toggleKitchenLamps()V
+    .limit stack 1
+    .limit locals 3
+.line 61
+    aload_0
+    getfield HOME/kitchenLamps Ljava/util/ArrayList;
+    invokeinterface java/util/List/iterator()Ljava/util/Iterator; 1
+    astore 1
+    Label6:
+    aload 1
+    invokeinterface java/util/Iterator/hasNext()Z 1
+    ifeq Label7
+    aload 1
+    invokeinterface java/util/Iterator/next()Ljava/lang/Object; 1
+    checkcast HOME/classes/standard/Output
+    astore 2
+.line 62
+    aload 2
+    invokevirtual HOME/classes/standard/Output.toggle()V
+    goto Label6
+    Label7:
+    return
 .end method
 

@@ -24,6 +24,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if (ctx.stmt() == null)
             return Main.nothing;
 
+        //Checks the various cases for the nodes in Stmts
         if (ctx.stmt().declaration() != null)
             returnType = visitDeclaration(ctx.stmt().declaration());
         else if (ctx.stmt().assignment() != null)
@@ -32,6 +33,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         {
             returnType = visitIfStmt(ctx.stmt().ifStmt());
 
+            //Checks for unreachable code
             if (forkReturnStack.closed() && ctx.stmt().ifStmt().elseStmt() != null)
             {
                 if (ctx.stmts().getChildCount() > 0)
@@ -74,6 +76,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = visitIncDec(ctx.stmt().incDec());
         }
 
+        //if error is found.
         if (returnType instanceof ErrorType)
         {
             if (!((ErrorType) returnType).isPrinted)
@@ -84,6 +87,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return returnType;
         }
 
+        //Visits any additional stmts nodes
         Type stmtsType = null;
         if (ctx.stmts() != null && ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
@@ -106,6 +110,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             returnType = visitFunction(ctx.function());
         }
 
+        //If error is found
         if (returnType instanceof ErrorType)
         {
             if (!((ErrorType) returnType).isPrinted)
@@ -131,7 +136,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitListIndex(@NotNull HOMEParser.ListIndexContext ctx)
     {
         String symbol = ctx.identifier().getText();
-
+        //check if identifier exists
         if (!Main.symbolTable.variables.symbolExists(symbol))
             return new ErrorType(String.format("The variable \"%s\" is undefined.", symbol), false);
 
@@ -139,7 +144,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type indexType = null;
         Type innerType;
         int count = 0;
-
+        //Check if collection
         if (collectionType instanceof CollectionType)
         {
             if (((CollectionType) collectionType).primaryType.equals(Main.list))
@@ -150,6 +155,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else
             return new ErrorType(String.format("Type %s is not a collection.", collectionType), false);
 
+        //checks all expressions. Each expression for each bracket.
         for (HOMEParser.ExpressionContext expr : ctx.expression())
         {
             count++;
@@ -158,6 +164,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return new ErrorType(String.format("Invalid index type. Expected %s, got %s.", indexType, visitExpression(expr)), false);
             }
         }
+        //Goes "count" times down in the collection if possible.
         innerType = collectionType;
         for (int i = 0; i < count; i++)
         {
@@ -176,6 +183,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type returnType;
         String symbol = ctx.IdentifierExact().getText();
 
+        //Checks for identifier in symbol table
         if (!Main.symbolTable.variables.symbolExists(symbol))
         {
             returnType = new ErrorType(String.format("Unknown identifier. Symbol \"%s\" doesn't exist in the current context", symbol), false);
@@ -261,6 +269,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         ArrayList<Type> paramList = getFunctionParameters(ctx.funcParameters());
 
+        //Checks for the registerEvent method
         if (funcName.equals("RegisterEvent") && paramList.size() == 2 && paramList.get(1) instanceof ErrorType)
         {
             String eventFunctionName = ctx.funcParameters().expression(1).getText();
@@ -281,6 +290,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         StringBuilder errorString = new StringBuilder();
 
+        //Constructs correct error messages.
         for (Type t : paramList)
         {
             if (errorString.length() > 0)
@@ -299,6 +309,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         else if (Main.symbolTable.functions.symbolExists(funcName))
         {
+            //Checks if the function is called correctly.
             List<Type> expectedParameters = Main.symbolTable.functions.getSymbol(funcName).parameters;
             if (Type.isListSubtypeOfList(paramList, expectedParameters))
             {
@@ -310,6 +321,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
             else
             {
+                //Constructs correct error.
                 errorString = new StringBuilder("Function parameters didn't match:");
 
                 if (paramList.size() < expectedParameters.size())
@@ -340,8 +352,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
+    //Creates list of the parameters.
     ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FuncParametersContext ctx)
     {
+
         ArrayList<Type> returnList = new ArrayList<>();
 
         for (HOMEParser.ExpressionContext currExpr : ctx.expression())
@@ -353,6 +367,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnList;
     }
 
+    //Adding formal parameters to symbol table
     public Type visitFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
     {
         Type returnType = Main.nothing;
@@ -415,6 +430,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type LHSType = null;
         Type returnType;
 
+        //visits left-hand-side
         if (ctx.identifier() != null)
             LHSType = visitIdentifier(ctx.identifier());
         else if (ctx.listIndex() != null)
@@ -430,7 +446,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if (expression instanceof ErrorType)
             return expression;
 
-
+        //If expression is same type as left-hand-side...
         if (expression.isSubtypeOf(LHSType))
         {
             String operator = ctx.getChild(1).getText();
@@ -476,6 +492,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return expression;
         }
 
+        //Adds symbol to symbol table. Error if already exists in this scope.
         if (!Main.symbolTable.variables.addSymbol(identifier, type))
             return new ErrorType(String.format("Can't declare symbol. %s already exists!", identifier), false);
 
@@ -669,6 +686,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
         innerType = visitExpression(ctx.dictionaryEntry(0).expression(1));
 
+        //Goes through all dictionary entries
         Type current;
         for (HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
         {
@@ -688,7 +706,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return new ErrorType("Invalid Dictionary literal, types do not match.", false);
             }
 
-        }
+        } //potentially adds conversion node
         if (innerType.equals(Main.decimal))
         {
             for (HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
@@ -721,6 +739,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if (innerType instanceof ErrorType)
             return innerType;
 
+        //if not already there, it's added to the symbol table.
         if (!Main.symbolTable.types.symbolExists(typeName))
             Main.symbolTable.types.addSymbol(typeName, new CollectionType(typeName, t, innerType, t.bytecode));
 
@@ -730,6 +749,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx)
     {
+        //Visits the collection. Goes through collections within collections.
         String primaryTypeText = ctx.getText().split("<")[0];
         Type innerType = visitType(ctx.type());
         String typeName = primaryTypeText + "<" + innerType.name + ">";
@@ -755,11 +775,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Main.symbolTable.openScope();
 
+        //Fork stack created to maintain returns and braches.
         forkReturnStack.newStack();
         forkReturnStack.addFork();
 
         Type returnType = null;
 
+        //Checks conditional expression.
         if (ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
@@ -781,6 +803,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if (!returnType.equals(Main.bool))
             return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType, false);
 
+        //Visits all potential else if statements
         if (ctx.elseIfStmt().size() > 0)
         {
             for (HOMEParser.ElseIfStmtContext currCtx : ctx.elseIfStmt())
@@ -791,6 +814,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
         }
 
+        //Visits potential else statement
         if (ctx.elseStmt() != null)
         {
             forkReturnStack.addFork();
@@ -806,6 +830,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitElseIfStmt(@NotNull HOMEParser.ElseIfStmtContext ctx)
     {
+        //Opens scope, checks expression, and visits statement.
         Main.symbolTable.openScope();
         Type returnType = null;
 
@@ -831,6 +856,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitElseStmt(@NotNull HOMEParser.ElseStmtContext ctx)
     {
+        //Opens scope and visit statements
         Main.symbolTable.openScope();
 
         Type returnType = Main.bool;
@@ -854,6 +880,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Type returnType = null;
 
+        //Goes into one of the specific loops.
         if (ctx.loopWhileOrUntil() != null)
             returnType = visitLoopWhileOrUntil(ctx.loopWhileOrUntil());
         else if (ctx.loopForeach() != null)
@@ -867,6 +894,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Main.symbolTable.openScope();
 
+        //Checks expression of loop.
         Type returnType = visitExpression(ctx.expression());
 
         if (ctx.expression() != null && ctx.expression().literal() != null && ctx.expression().literal().booleanLiteral() != null)
@@ -874,6 +902,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else if (!(returnType instanceof ErrorType) && !returnType.equals(Main.bool))
             returnType = new ErrorType(String.format("Loop expressions should be of type Boolean - got %s", returnType), false);
 
+        //Visits statements within loop body
         Type stmtsType = null;
         if (ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
@@ -893,6 +922,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         returnType = visitType(ctx.type());
         Type collectionType;
 
+        //Checks expression in foreach
         collectionType = visitExpression(ctx.expression());
         if (collectionType instanceof ErrorType)
             return collectionType;
@@ -902,6 +932,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         if (!returnType.equals(((CollectionType) collectionType).innerType))
             return new ErrorType(String.format("Collection type doesn't match type of %s.", ctx.identifier().getText()), false);
 
+        //Adds variable in foreach loop to symboltable.
         Main.symbolTable.variables.addSymbol(ctx.identifier().getText(), returnType);
 
         Type stmtsType = null;
@@ -920,6 +951,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = null;
 
+        //Visits the different cases.
         if (ctx.identifier() != null)
             returnType = visitIdentifier(ctx.identifier());
         else if (ctx.listIndex() != null)
@@ -956,6 +988,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         ArrayList<Type> paramList = getFunctionParameters(currCtx.funcParameters());
         StringBuilder errorString = new StringBuilder();
 
+        //Constructs correct error
         for (Type t : paramList)
         {
             if (errorString.length() > 0)
@@ -982,6 +1015,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
+    //Adds conversion node
     void addIntToDecNode(HOMEParser.ExpressionContext ctx)
     {
         int lastChild = ctx.getChildCount() - 1;
@@ -989,6 +1023,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             ctx.addChild(new HOMEParser.Int2decContext(ctx, ctx.invokingState));
     }
 
+    //Checks if conversion node is neccesary, then adds it if so.
     boolean addConversionNode(Type expectedType, Type exprType, HOMEParser.ExpressionContext expr)
     {
         if (expectedType.equals(Main.decimal) && exprType.equals(Main.integer))

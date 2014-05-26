@@ -1,20 +1,254 @@
-Input kitchenSwitch = Input(1)
-List<Output> kitchenLamps = getKitchenLamps()
+Input TESTER = Input(32)
+Input TESTER2
+List<List<Input>> abe1 = {}
+Dictionary<Dictionary<Input>> abe2
+Boolean f
+List<Boolean> listBool = {f, false, true, true}
+String t
+
+Decimal y
+Integer z
 
 function Setup() returns Nothing
-    List<Integer> ints = {1,2,3}
-    ints.add(1)
-endfunction
+    TESTER2 = returnTest2()
+    abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
+    abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
 
-//Create kitchen lamps
-function  getKitchenLamps() returns List<Output>
-    List<Output> lamps
+    abe1 = {}
+    abe1 = abe1
+    t = "hej" + " " + "med" + " " + "dig"
+    y = -24.3
+    z = 3
 
-    Integer i = 2
-    repeat until(i > 4)
-        lamps.add(Output(i))
-        i++
+    Decimal d = y
+    y++
+    z++
+    PrintD(y)
+    PrintI(z)
+    d--
+    z--
+    PrintD(d)
+    PrintI(z)
+
+    Integer x = 3
+
+    t = t + " " + "Master"
+    PrintS(t)
+
+    /*******************
+    ****field          *
+    *******************/
+
+    Input abe_0 = abe1[1][0]
+    PrintI(abe_0.getPort())
+
+    abe_0 = abe2["dic1"]["dic2"]
+    PrintI(abe_0.getPort())
+
+    /*******************
+    *    AnyAssing     *
+    *******************/
+    x -= 3
+    x *= 3
+    x /= 3
+    x %= 20
+
+    /*******************
+    *****if/elseif/else*
+    *******************/
+
+    if(x == 314)
+        x++
+    elseif(43 == x)
+        x = x + 123
+    else
+        x += 4
+        y += 4
+    endif
+
+    Boolean XXX = true
+    if (XXX)
+        PrintS("if(XXX) - Virker")
+    elseif (XXX)
+        PrintS("if(XXX) - Noget Virker")
+    else
+        PrintS("if(XXX) - Intet virker")
+    endif
+
+    if(x == 3.0)
+        if(y < 3)
+            y++
+        else
+            x--
+        endif
+    endif
+
+    PrintI(x)
+
+    /**********
+    **Repeats**
+    **********/
+
+    repeat while(x < 300)
+        x++
     endrepeat
 
-    return lamps
+    repeat until(true == (y > 8.1))
+        y++
+    endrepeat
+
+    repeat while(y < 3.2)
+        repeat while(x > 3)
+            y++
+        endrepeat
+    endrepeat
+
+    //PrintD(y)
+
+    /************
+    *  List    **
+    ************/
+
+    List<List<Integer>> list_2 = {{11,22,33}, {44,55,66}, {77,88,99}}
+
+    repeat foreach(List<Integer> list in list_2)
+        repeat foreach(Integer xxx in list)
+            PrintI(xxx)
+        endrepeat
+    endrepeat
+
+    /************
+    *Dictionary**
+    ************/
+    Dictionary<Dictionary<Integer>> dic2
+    Dictionary<Dictionary<Integer>> dic = {}
+    dic = {}
+    dic = dic
+
+    dic2 = hejd()
+    dic = dic2
+
+    dic["dic1"]["two"] = dic["dic1"]["two"] * 203
+    dic["dic1"]["one"] -= 202
+
+    repeat foreach(Integer x in dic["dic1"])
+        PrintI(x)
+    endrepeat
+
+
+    /***********
+    *List init**
+    ***********/
+
+    Integer intnnnn  = 3 * (3*3) + x
+    Boolean booltest1 = true AND (false OR true)
+    Boolean booltest2 = 3 > 3 AND true
+    Boolean booltest3 = ((((((((((true))))))OR false))))
+    String f = "asdf"
+
+    PrintS(f)
+
+    /**************
+    ****Classes****
+    **************/
+
+    PrintI(TESTER.getPort())
+
+
+    /********************
+    *Function call tests*
+    **Everything below***
+    ********************/
+
+    Input inputParam = TESTER2
+
+    inputParam = Input(42)
+    PrintI(inputParam.getPort())
+
+
+    returnForkTest1()
+    returnForkTest2()
+    returnForkTest3()
+
+    List<List<String>> bye
+    bye = hejz()
+    List<String> bye2 = bye[0]
+    PrintS(bye2[0])
+endfunction
+
+function returnTest2() returns Input
+    Input testingObject = Input(333)
+ return testingObject
+endfunction
+
+function returnForkTest1() returns Integer
+    if(3==3)
+        return 5
+    endif
+    return 3
+endfunction
+
+function hej() returns String
+    String sf = "HEJ"
+    return sf
+endfunction
+
+function returnForkTest2() returns Integer
+    if(3==4)
+        return 6
+    elseif(5==6)
+        return 7
+    else
+        return 8
+    endif
+endfunction
+
+function returnForkTest3() returns Integer
+    if(1 == 2)
+        if(3 == 4)
+            if(5 == 6)
+                return 7
+            endif
+        endif
+    endif
+    return 0
+endfunction
+
+function hejz() returns List<List<String>>
+    List<List<String>> tester = {{"lol2"}}
+    return tester
+endfunction
+
+function hejd() returns Dictionary<Dictionary<Integer>>
+    Dictionary<Dictionary<Integer>> tester = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
+    Dictionary<Dictionary<Integer>> tester2 = tester
+    return tester2
+endfunction
+
+function not() returns Nothing
+    not2()
+    return
+endfunction
+
+function not2() returns String
+    return hej()
+endfunction
+
+function testtt() returns Nothing
+    Boolean n = false
+    repeat until(n == true)
+        n = n == false
+    endrepeat
+endfunction
+
+function PrintI(Integer x) returns Integer
+    return x
+endfunction
+
+function PrintD(Decimal x) returns Decimal
+    return x
+endfunction
+
+function PrintS(String x) returns String
+    return x
 endfunction

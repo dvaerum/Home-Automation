@@ -1,6 +1,6 @@
 Classfile /home/alt_mulig/Dropbox/Home-Automation/HOME/CodeGene/HOME.class
-  Last modified May 26, 2014; size 2195 bytes
-  MD5 checksum 4d030cb9fa1c46fed20c91ecea19fabe
+  Last modified May 26, 2014; size 2862 bytes
+  MD5 checksum 8cd038f196f64d33773d69868ac98863
   Compiled from "HOME.java"
 public class HOME
   SourceFile: "HOME.java"
@@ -8,142 +8,181 @@ public class HOME
   major version: 45
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
-    #1 = Class              #52           //  java/util/List
-    #2 = Fieldref           #41.#67       //  HOME.kitchenThermostat2:LHOME/classes/standard/AnalogInput;
-    #3 = Utf8               HOME.java
-    #4 = Utf8               java/lang/Integer
-    #5 = Utf8               radiator
-    #6 = Methodref          #15.#117      //  java/util/HashMap."<init>":()V
-    #7 = Utf8               SourceFile
-    #8 = InterfaceMethodref #1.#118       //  java/util/List.add:(Ljava/lang/Object;)Z
-    #9 = Utf8               java/lang/System
-   #10 = Utf8               <init>
-   #11 = NameAndType        #120:#18      //  put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-   #12 = Utf8               ()Ljava/lang/String;
-   #13 = Fieldref           #41.#55       //  HOME.kitchenLamp2:LHOME/classes/standard/Output;
-   #14 = NameAndType        #36:#121      //  kitchenThermostats:Ljava/util/HashMap;
-   #15 = Class              #30           //  java/util/HashMap
-   #16 = Methodref          #15.#35       //  java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
-   #17 = NameAndType        #10:#82       //  "<init>":(I)V
-   #18 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-   #19 = Methodref          #112.#103     //  java/lang/Integer.toString:()Ljava/lang/String;
-   #20 = NameAndType        #134:#33      //  thermostat:LHOME/classes/standard/AnalogInput;
-   #21 = NameAndType        #22:#82       //  println:(I)V
-   #22 = Utf8               println
-   #23 = Methodref          #112.#50      //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-   #24 = NameAndType        #72:#33       //  kitchenThermostat3:LHOME/classes/standard/AnalogInput;
-   #25 = Fieldref           #41.#24       //  HOME.kitchenThermostat3:LHOME/classes/standard/AnalogInput;
-   #26 = Utf8               add
-   #27 = Class              #51           //  java/lang/Object
-   #28 = Utf8               valueOf
-   #29 = Utf8               LHOME/classes/standard/Input;
-   #30 = Utf8               java/util/HashMap
-   #31 = Methodref          #113.#17      //  HOME/classes/standard/Output."<init>":(I)V
-   #32 = Utf8               (Ljava/lang/Object;)Z
-   #33 = Utf8               LHOME/classes/standard/AnalogInput;
-   #34 = Fieldref           #132.#49      //  java/lang/System.out:Ljava/io/PrintStream;
-   #35 = NameAndType        #102:#58      //  get:(Ljava/lang/Object;)Ljava/lang/Object;
-   #36 = Utf8               kitchenThermostats
-   #37 = Utf8               thermo
-   #38 = Fieldref           #41.#131      //  HOME.kitchenLamp1:LHOME/classes/standard/Output;
-   #39 = Utf8               LHOME/classes/standard/Output;
-   #40 = Utf8               HOME/classes/standard/Output
-   #41 = Class              #64           //  HOME
-   #42 = Fieldref           #41.#105      //  HOME.kitchenThermostat4:LHOME/classes/standard/AnalogInput;
-   #43 = Methodref          #122.#117     //  java/lang/StringBuilder."<init>":()V
-   #44 = Fieldref           #41.#20       //  HOME.thermostat:LHOME/classes/standard/AnalogInput;
-   #45 = Utf8               value
-   #46 = Utf8               append
-   #47 = Utf8               HOME/classes/standard/AnalogInput
-   #48 = Utf8               java/lang/StringBuilder
-   #49 = NameAndType        #126:#114     //  out:Ljava/io/PrintStream;
-   #50 = NameAndType        #28:#65       //  valueOf:(I)Ljava/lang/Integer;
-   #51 = Utf8               java/lang/Object
-   #52 = Utf8               java/util/List
-   #53 = NameAndType        #46:#123      //  append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-   #54 = Class              #130          //  HOME/classes/standard/AnalogOutput
-   #55 = NameAndType        #108:#39      //  kitchenLamp2:LHOME/classes/standard/Output;
-   #56 = Utf8               kitchenLamps
-   #57 = Methodref          #122.#53      //  java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-   #58 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
-   #59 = Methodref          #88.#117      //  java/util/ArrayList."<init>":()V
-   #60 = Utf8               Code
-   #61 = Methodref          #41.#81       //  HOME.getAverageKitchenTemperature:()I
-   #62 = Methodref          #94.#17       //  HOME/classes/standard/Input."<init>":(I)V
-   #63 = String             #37           //  thermo
-   #64 = Utf8               HOME
-   #65 = Utf8               (I)Ljava/lang/Integer;
-   #66 = Class              #47           //  HOME/classes/standard/AnalogInput
-   #67 = NameAndType        #73:#33       //  kitchenThermostat2:LHOME/classes/standard/AnalogInput;
-   #68 = Utf8               HOME/classes/standard/Input
-   #69 = Utf8               I
-   #70 = Utf8               kitchenThermostat4
-   #71 = Class              #90           //  java/io/PrintStream
-   #72 = Utf8               kitchenThermostat3
-   #73 = Utf8               kitchenThermostat2
-   #74 = String             #97           //  thermo4
-   #75 = Utf8               kitchenThermostat1
-   #76 = String             #98           //  thermo3
-   #77 = Utf8               ()V
-   #78 = Fieldref           #41.#136      //  HOME.radiator:LHOME/classes/standard/AnalogOutput;
-   #79 = String             #100          //  thermo2
+    #1 = Utf8               println
+    #2 = Utf8               value
+    #3 = Class              #56           //  java/lang/System
+    #4 = Methodref          #141.#78      //  HOME/classes/standard/Output.toggle:()V
+    #5 = Methodref          #101.#120     //  java/lang/StringBuilder.toString:()Ljava/lang/String;
+    #6 = Methodref          #150.#100     //  java/io/PrintStream.println:(I)V
+    #7 = Methodref          #20.#167      //  java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    #8 = Utf8               HOME/classes/standard/AnalogOutput
+    #9 = Utf8               HOME/classes/standard/Input
+   #10 = Utf8               kitchenSwitch
+   #11 = Utf8               HOME.java
+   #12 = NameAndType        #108:#99      //  kitchenLamp2:LHOME/classes/standard/Output;
+   #13 = Utf8               ()Z
+   #14 = Utf8               java/util/Iterator
+   #15 = Utf8               get
+   #16 = Utf8               registerEvent
+   #17 = Utf8               append
+   #18 = NameAndType        #55:#160      //  kitchenThermostat1:LHOME/classes/standard/AnalogInput;
+   #19 = Utf8               ()V
+   #20 = Class              #45           //  java/util/HashMap
+   #21 = Fieldref           #82.#18       //  HOME.kitchenThermostat1:LHOME/classes/standard/AnalogInput;
+   #22 = Utf8               kitchenThermostats
+   #23 = InterfaceMethodref #97.#143      //  java/util/Iterator.next:()Ljava/lang/Object;
+   #24 = Class              #9            //  HOME/classes/standard/Input
+   #25 = String             #149          //  thermo4
+   #26 = String             #151          //  thermo3
+   #27 = String             #152          //  thermo2
+   #28 = Utf8               LHOME/classes/standard/Input;
+   #29 = String             #153          //  thermo1
+   #30 = String             #41           //  ON_TOGGLED
+   #31 = Utf8               valueOf
+   #32 = Utf8               ()I
+   #33 = Utf8               toString
+   #34 = Methodref          #82.#48       //  HOME.getAverageKitchenTemperature:()I
+   #35 = Methodref          #130.#91      //  HOME/classes/standard/AnalogOutput.setValue:(I)V
+   #36 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+   #37 = Methodref          #20.#112      //  java/util/HashMap."<init>":()V
+   #38 = NameAndType        #79:#124      //  kitchenLamps:Ljava/util/ArrayList;
+   #39 = Methodref          #133.#120     //  java/lang/Integer.toString:()Ljava/lang/String;
+   #40 = InterfaceMethodref #76.#60       //  java/util/List.iterator:()Ljava/util/Iterator;
+   #41 = Utf8               ON_TOGGLED
+   #42 = Fieldref           #82.#111      //  HOME.radiator:LHOME/classes/standard/AnalogOutput;
+   #43 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #44 = Fieldref           #82.#169      //  HOME.kitchenAirCond:LHOME/classes/standard/AnalogOutput;
+   #45 = Utf8               java/util/HashMap
+   #46 = Utf8               put
+   #47 = NameAndType        #109:#99      //  kitchenLamp1:LHOME/classes/standard/Output;
+   #48 = NameAndType        #80:#32       //  getAverageKitchenTemperature:()I
+   #49 = Utf8               add
+   #50 = Utf8               kitchenThermostat4
+   #51 = Utf8               kitchenThermostat3
+   #52 = String             #156          //  handleTemperatureChanges
+   #53 = Utf8               kitchenThermostat2
+   #54 = Utf8               setValue
+   #55 = Utf8               kitchenThermostat1
+   #56 = Utf8               java/lang/System
+   #57 = Fieldref           #82.#115      //  HOME.kitchenThermostat4:LHOME/classes/standard/AnalogInput;
+   #58 = Utf8               kitchenAirCond
+   #59 = Methodref          #62.#112      //  java/lang/Object."<init>":()V
+   #60 = NameAndType        #98:#137      //  iterator:()Ljava/util/Iterator;
+   #61 = Utf8               thermo
+   #62 = Class              #121          //  java/lang/Object
+   #63 = NameAndType        #132:#73      //  out:Ljava/io/PrintStream;
+   #64 = NameAndType        #53:#160      //  kitchenThermostat2:LHOME/classes/standard/AnalogInput;
+   #65 = NameAndType        #10:#28       //  kitchenSwitch:LHOME/classes/standard/Input;
+   #66 = Utf8               HOME/classes/standard/Output
+   #67 = Fieldref           #3.#63        //  java/lang/System.out:Ljava/io/PrintStream;
+   #68 = NameAndType        #2:#155       //  value:I
+   #69 = Methodref          #130.#116     //  HOME/classes/standard/AnalogOutput."<init>":(I)V
+   #70 = NameAndType        #16:#159      //  registerEvent:(Ljava/lang/String;Ljava/lang/String;)V
+   #71 = Methodref          #141.#116     //  HOME/classes/standard/Output."<init>":(I)V
+   #72 = Utf8               HOME/classes/standard/AnalogInput
+   #73 = Utf8               Ljava/io/PrintStream;
+   #74 = Utf8               next
+   #75 = InterfaceMethodref #76.#95       //  java/util/List.add:(Ljava/lang/Object;)Z
+   #76 = Class              #147          //  java/util/List
+   #77 = NameAndType        #129:#32      //  getValue:()I
+   #78 = NameAndType        #90:#19       //  toggle:()V
+   #79 = Utf8               kitchenLamps
    #80 = Utf8               getAverageKitchenTemperature
-   #81 = NameAndType        #80:#91       //  getAverageKitchenTemperature:()I
-   #82 = Utf8               (I)V
-   #83 = String             #101          //  thermo1
-   #84 = NameAndType        #111:#29      //  kitchenSwitch:LHOME/classes/standard/Input;
-   #85 = Fieldref           #41.#87       //  HOME.kitchenLamps:Ljava/util/ArrayList;
-   #86 = Utf8               toString
-   #87 = NameAndType        #56:#125      //  kitchenLamps:Ljava/util/ArrayList;
-   #88 = Class              #104          //  java/util/ArrayList
-   #89 = Methodref          #66.#17       //  HOME/classes/standard/AnalogInput."<init>":(I)V
-   #90 = Utf8               java/io/PrintStream
-   #91 = Utf8               ()I
-   #92 = NameAndType        #45:#69       //  value:I
-   #93 = Fieldref           #66.#92       //  HOME/classes/standard/AnalogInput.value:I
-   #94 = Class              #68           //  HOME/classes/standard/Input
-   #95 = Fieldref           #41.#84       //  HOME.kitchenSwitch:LHOME/classes/standard/Input;
-   #96 = Utf8               LineNumberTable
-   #97 = Utf8               thermo4
-   #98 = Utf8               thermo3
-   #99 = Methodref          #71.#21       //  java/io/PrintStream.println:(I)V
-  #100 = Utf8               thermo2
-  #101 = Utf8               thermo1
-  #102 = Utf8               get
-  #103 = NameAndType        #86:#12       //  toString:()Ljava/lang/String;
-  #104 = Utf8               java/util/ArrayList
-  #105 = NameAndType        #70:#33       //  kitchenThermostat4:LHOME/classes/standard/AnalogInput;
-  #106 = Utf8               Setup
-  #107 = Utf8               kitchenLamp3
+   #81 = Utf8               Ljava/util/HashMap;
+   #82 = Class              #171          //  HOME
+   #83 = Utf8               (I)Ljava/lang/Integer;
+   #84 = String             #106          //  ON_CHANGED
+   #85 = Utf8               toggleKitchenLamps
+   #86 = Utf8               java/util/ArrayList
+   #87 = Fieldref           #82.#47       //  HOME.kitchenLamp1:LHOME/classes/standard/Output;
+   #88 = Fieldref           #82.#38       //  HOME.kitchenLamps:Ljava/util/ArrayList;
+   #89 = NameAndType        #51:#160      //  kitchenThermostat3:LHOME/classes/standard/AnalogInput;
+   #90 = Utf8               toggle
+   #91 = NameAndType        #54:#170      //  setValue:(I)V
+   #92 = Utf8               LineNumberTable
+   #93 = Fieldref           #82.#64       //  HOME.kitchenThermostat2:LHOME/classes/standard/AnalogInput;
+   #94 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #95 = NameAndType        #49:#102      //  add:(Ljava/lang/Object;)Z
+   #96 = Fieldref           #82.#128      //  HOME.thermostat:LHOME/classes/standard/AnalogInput;
+   #97 = Class              #14           //  java/util/Iterator
+   #98 = Utf8               iterator
+   #99 = Utf8               LHOME/classes/standard/Output;
+  #100 = NameAndType        #1:#170       //  println:(I)V
+  #101 = Class              #172          //  java/lang/StringBuilder
+  #102 = Utf8               (Ljava/lang/Object;)Z
+  #103 = Methodref          #101.#112     //  java/lang/StringBuilder."<init>":()V
+  #104 = Utf8               java/io/PrintStream
+  #105 = Utf8               kitchenLamp3
+  #106 = Utf8               ON_CHANGED
+  #107 = InterfaceMethodref #97.#146      //  java/util/Iterator.hasNext:()Z
   #108 = Utf8               kitchenLamp2
   #109 = Utf8               kitchenLamp1
-  #110 = Utf8               LHOME/classes/standard/AnalogOutput;
-  #111 = Utf8               kitchenSwitch
-  #112 = Class              #4            //  java/lang/Integer
-  #113 = Class              #40           //  HOME/classes/standard/Output
-  #114 = Utf8               Ljava/io/PrintStream;
-  #115 = Fieldref           #41.#124      //  HOME.kitchenThermostat1:LHOME/classes/standard/AnalogInput;
-  #116 = Fieldref           #41.#14       //  HOME.kitchenThermostats:Ljava/util/HashMap;
-  #117 = NameAndType        #10:#77       //  "<init>":()V
-  #118 = NameAndType        #26:#32       //  add:(Ljava/lang/Object;)Z
-  #119 = Fieldref           #41.#127      //  HOME.kitchenLamp3:LHOME/classes/standard/Output;
-  #120 = Utf8               put
-  #121 = Utf8               Ljava/util/HashMap;
-  #122 = Class              #48           //  java/lang/StringBuilder
-  #123 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
-  #124 = NameAndType        #75:#33       //  kitchenThermostat1:LHOME/classes/standard/AnalogInput;
-  #125 = Utf8               Ljava/util/ArrayList;
-  #126 = Utf8               out
-  #127 = NameAndType        #107:#39      //  kitchenLamp3:LHOME/classes/standard/Output;
-  #128 = Methodref          #15.#11       //  java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-  #129 = Methodref          #122.#103     //  java/lang/StringBuilder.toString:()Ljava/lang/String;
-  #130 = Utf8               HOME/classes/standard/AnalogOutput
-  #131 = NameAndType        #109:#39      //  kitchenLamp1:LHOME/classes/standard/Output;
-  #132 = Class              #9            //  java/lang/System
-  #133 = Methodref          #27.#117      //  java/lang/Object."<init>":()V
-  #134 = Utf8               thermostat
-  #135 = Methodref          #54.#17       //  HOME/classes/standard/AnalogOutput."<init>":(I)V
-  #136 = NameAndType        #5:#110       //  radiator:LHOME/classes/standard/AnalogOutput;
+  #110 = Utf8               ()Ljava/lang/String;
+  #111 = NameAndType        #175:#139     //  radiator:LHOME/classes/standard/AnalogOutput;
+  #112 = NameAndType        #138:#19      //  "<init>":()V
+  #113 = Fieldref           #82.#140      //  HOME.kitchenThermostats:Ljava/util/HashMap;
+  #114 = Fieldref           #82.#12       //  HOME.kitchenLamp2:LHOME/classes/standard/Output;
+  #115 = NameAndType        #50:#160      //  kitchenThermostat4:LHOME/classes/standard/AnalogInput;
+  #116 = NameAndType        #138:#170     //  "<init>":(I)V
+  #117 = Class              #72           //  HOME/classes/standard/AnalogInput
+  #118 = Methodref          #123.#112     //  java/util/ArrayList."<init>":()V
+  #119 = Utf8               Code
+  #120 = NameAndType        #33:#110      //  toString:()Ljava/lang/String;
+  #121 = Utf8               java/lang/Object
+  #122 = Utf8               Setup
+  #123 = Class              #86           //  java/util/ArrayList
+  #124 = Utf8               Ljava/util/ArrayList;
+  #125 = Methodref          #24.#116      //  HOME/classes/standard/Input."<init>":(I)V
+  #126 = Utf8               hasNext
+  #127 = Methodref          #117.#70      //  HOME/classes/standard/AnalogInput.registerEvent:(Ljava/lang/String;Ljava/lang/String;)V
+  #128 = NameAndType        #131:#160     //  thermostat:LHOME/classes/standard/AnalogInput;
+  #129 = Utf8               getValue
+  #130 = Class              #8            //  HOME/classes/standard/AnalogOutput
+  #131 = Utf8               thermostat
+  #132 = Utf8               out
+  #133 = Class              #166          //  java/lang/Integer
+  #134 = Methodref          #117.#116     //  HOME/classes/standard/AnalogInput."<init>":(I)V
+  #135 = Methodref          #101.#157     //  java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #136 = Fieldref           #82.#65       //  HOME.kitchenSwitch:LHOME/classes/standard/Input;
+  #137 = Utf8               ()Ljava/util/Iterator;
+  #138 = Utf8               <init>
+  #139 = Utf8               LHOME/classes/standard/AnalogOutput;
+  #140 = NameAndType        #22:#81       //  kitchenThermostats:Ljava/util/HashMap;
+  #141 = Class              #66           //  HOME/classes/standard/Output
+  #142 = String             #61           //  thermo
+  #143 = NameAndType        #74:#165      //  next:()Ljava/lang/Object;
+  #144 = Fieldref           #82.#168      //  HOME.kitchenLamp3:LHOME/classes/standard/Output;
+  #145 = Utf8               SourceFile
+  #146 = NameAndType        #126:#13      //  hasNext:()Z
+  #147 = Utf8               java/util/List
+  #148 = String             #85           //  toggleKitchenLamps
+  #149 = Utf8               thermo4
+  #150 = Class              #104          //  java/io/PrintStream
+  #151 = Utf8               thermo3
+  #152 = Utf8               thermo2
+  #153 = Utf8               thermo1
+  #154 = Fieldref           #130.#68      //  HOME/classes/standard/AnalogOutput.value:I
+  #155 = Utf8               I
+  #156 = Utf8               handleTemperatureChanges
+  #157 = NameAndType        #17:#43       //  append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #158 = Methodref          #117.#77      //  HOME/classes/standard/AnalogInput.getValue:()I
+  #159 = Utf8               (Ljava/lang/String;Ljava/lang/String;)V
+  #160 = Utf8               LHOME/classes/standard/AnalogInput;
+  #161 = NameAndType        #31:#83       //  valueOf:(I)Ljava/lang/Integer;
+  #162 = Methodref          #24.#70       //  HOME/classes/standard/Input.registerEvent:(Ljava/lang/String;Ljava/lang/String;)V
+  #163 = Fieldref           #82.#89       //  HOME.kitchenThermostat3:LHOME/classes/standard/AnalogInput;
+  #164 = NameAndType        #46:#36       //  put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #165 = Utf8               ()Ljava/lang/Object;
+  #166 = Utf8               java/lang/Integer
+  #167 = NameAndType        #15:#94       //  get:(Ljava/lang/Object;)Ljava/lang/Object;
+  #168 = NameAndType        #105:#99      //  kitchenLamp3:LHOME/classes/standard/Output;
+  #169 = NameAndType        #58:#139      //  kitchenAirCond:LHOME/classes/standard/AnalogOutput;
+  #170 = Utf8               (I)V
+  #171 = Utf8               HOME
+  #172 = Utf8               java/lang/StringBuilder
+  #173 = Methodref          #133.#161     //  java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #174 = Methodref          #20.#164      //  java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #175 = Utf8               radiator
 {
   public HOME.classes.standard.Input kitchenSwitch;
     flags: ACC_PUBLIC
@@ -185,6 +224,10 @@ Constant pool:
     flags: ACC_PUBLIC
 
 
+  public HOME.classes.standard.AnalogOutput kitchenAirCond;
+    flags: ACC_PUBLIC
+
+
   public HOME.classes.standard.AnalogInput thermostat;
     flags: ACC_PUBLIC
 
@@ -196,147 +239,155 @@ Constant pool:
   public HOME();
     flags: ACC_PUBLIC
     Code:
-      stack=15, locals=13, args_size=1
+      stack=16, locals=14, args_size=1
          0: aload_0       
-         1: invokespecial #133                // Method java/lang/Object."<init>":()V
+         1: invokespecial #59                 // Method java/lang/Object."<init>":()V
          4: aload_0       
-         5: new           #94                 // class HOME/classes/standard/Input
+         5: new           #24                 // class HOME/classes/standard/Input
          8: dup           
          9: bipush        1
-        11: invokespecial #62                 // Method HOME/classes/standard/Input."<init>":(I)V
+        11: invokespecial #125                // Method HOME/classes/standard/Input."<init>":(I)V
         14: aload_0       
         15: swap          
-        16: putfield      #95                 // Field kitchenSwitch:LHOME/classes/standard/Input;
+        16: putfield      #136                // Field kitchenSwitch:LHOME/classes/standard/Input;
         19: aload_0       
-        20: new           #113                // class HOME/classes/standard/Output
+        20: new           #141                // class HOME/classes/standard/Output
         23: dup           
         24: bipush        2
-        26: invokespecial #31                 // Method HOME/classes/standard/Output."<init>":(I)V
+        26: invokespecial #71                 // Method HOME/classes/standard/Output."<init>":(I)V
         29: aload_0       
         30: swap          
-        31: putfield      #38                 // Field kitchenLamp1:LHOME/classes/standard/Output;
+        31: putfield      #87                 // Field kitchenLamp1:LHOME/classes/standard/Output;
         34: aload_0       
-        35: new           #113                // class HOME/classes/standard/Output
+        35: new           #141                // class HOME/classes/standard/Output
         38: dup           
         39: bipush        3
-        41: invokespecial #31                 // Method HOME/classes/standard/Output."<init>":(I)V
+        41: invokespecial #71                 // Method HOME/classes/standard/Output."<init>":(I)V
         44: aload_0       
         45: swap          
-        46: putfield      #13                 // Field kitchenLamp2:LHOME/classes/standard/Output;
+        46: putfield      #114                // Field kitchenLamp2:LHOME/classes/standard/Output;
         49: aload_0       
-        50: new           #113                // class HOME/classes/standard/Output
+        50: new           #141                // class HOME/classes/standard/Output
         53: dup           
         54: bipush        4
-        56: invokespecial #31                 // Method HOME/classes/standard/Output."<init>":(I)V
+        56: invokespecial #71                 // Method HOME/classes/standard/Output."<init>":(I)V
         59: aload_0       
         60: swap          
-        61: putfield      #119                // Field kitchenLamp3:LHOME/classes/standard/Output;
+        61: putfield      #144                // Field kitchenLamp3:LHOME/classes/standard/Output;
         64: aload_0       
-        65: new           #88                 // class java/util/ArrayList
+        65: new           #123                // class java/util/ArrayList
         68: dup           
-        69: invokespecial #59                 // Method java/util/ArrayList."<init>":()V
+        69: invokespecial #118                // Method java/util/ArrayList."<init>":()V
         72: astore        5
         74: aload         5
         76: aload_0       
-        77: getfield      #38                 // Field kitchenLamp1:LHOME/classes/standard/Output;
-        80: invokeinterface #8,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        77: getfield      #87                 // Field kitchenLamp1:LHOME/classes/standard/Output;
+        80: invokeinterface #75,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
         85: pop           
         86: aload         5
         88: aload_0       
-        89: getfield      #13                 // Field kitchenLamp2:LHOME/classes/standard/Output;
-        92: invokeinterface #8,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        89: getfield      #114                // Field kitchenLamp2:LHOME/classes/standard/Output;
+        92: invokeinterface #75,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
         97: pop           
         98: aload         5
        100: aload_0       
-       101: getfield      #119                // Field kitchenLamp3:LHOME/classes/standard/Output;
-       104: invokeinterface #8,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       101: getfield      #144                // Field kitchenLamp3:LHOME/classes/standard/Output;
+       104: invokeinterface #75,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
        109: pop           
        110: aload         5
        112: aload_0       
        113: swap          
-       114: putfield      #85                 // Field kitchenLamps:Ljava/util/ArrayList;
+       114: putfield      #88                 // Field kitchenLamps:Ljava/util/ArrayList;
        117: aload_0       
-       118: new           #66                 // class HOME/classes/standard/AnalogInput
+       118: new           #117                // class HOME/classes/standard/AnalogInput
        121: dup           
        122: bipush        5
-       124: invokespecial #89                 // Method HOME/classes/standard/AnalogInput."<init>":(I)V
+       124: invokespecial #134                // Method HOME/classes/standard/AnalogInput."<init>":(I)V
        127: aload_0       
        128: swap          
-       129: putfield      #115                // Field kitchenThermostat1:LHOME/classes/standard/AnalogInput;
+       129: putfield      #21                 // Field kitchenThermostat1:LHOME/classes/standard/AnalogInput;
        132: aload_0       
-       133: new           #66                 // class HOME/classes/standard/AnalogInput
+       133: new           #117                // class HOME/classes/standard/AnalogInput
        136: dup           
        137: bipush        6
-       139: invokespecial #89                 // Method HOME/classes/standard/AnalogInput."<init>":(I)V
+       139: invokespecial #134                // Method HOME/classes/standard/AnalogInput."<init>":(I)V
        142: aload_0       
        143: swap          
-       144: putfield      #2                  // Field kitchenThermostat2:LHOME/classes/standard/AnalogInput;
+       144: putfield      #93                 // Field kitchenThermostat2:LHOME/classes/standard/AnalogInput;
        147: aload_0       
-       148: new           #66                 // class HOME/classes/standard/AnalogInput
+       148: new           #117                // class HOME/classes/standard/AnalogInput
        151: dup           
        152: bipush        7
-       154: invokespecial #89                 // Method HOME/classes/standard/AnalogInput."<init>":(I)V
+       154: invokespecial #134                // Method HOME/classes/standard/AnalogInput."<init>":(I)V
        157: aload_0       
        158: swap          
-       159: putfield      #25                 // Field kitchenThermostat3:LHOME/classes/standard/AnalogInput;
+       159: putfield      #163                // Field kitchenThermostat3:LHOME/classes/standard/AnalogInput;
        162: aload_0       
-       163: new           #66                 // class HOME/classes/standard/AnalogInput
+       163: new           #117                // class HOME/classes/standard/AnalogInput
        166: dup           
        167: bipush        8
-       169: invokespecial #89                 // Method HOME/classes/standard/AnalogInput."<init>":(I)V
+       169: invokespecial #134                // Method HOME/classes/standard/AnalogInput."<init>":(I)V
        172: aload_0       
        173: swap          
-       174: putfield      #42                 // Field kitchenThermostat4:LHOME/classes/standard/AnalogInput;
+       174: putfield      #57                 // Field kitchenThermostat4:LHOME/classes/standard/AnalogInput;
        177: aload_0       
-       178: new           #15                 // class java/util/HashMap
+       178: new           #20                 // class java/util/HashMap
        181: dup           
-       182: invokespecial #6                  // Method java/util/HashMap."<init>":()V
+       182: invokespecial #37                 // Method java/util/HashMap."<init>":()V
        185: astore        10
        187: aload         10
-       189: ldc           #83                 // String thermo1
+       189: ldc           #29                 // String thermo1
        191: aload_0       
-       192: getfield      #115                // Field kitchenThermostat1:LHOME/classes/standard/AnalogInput;
-       195: invokevirtual #128                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       192: getfield      #21                 // Field kitchenThermostat1:LHOME/classes/standard/AnalogInput;
+       195: invokevirtual #174                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
        198: pop           
        199: aload         10
-       201: ldc           #79                 // String thermo2
+       201: ldc           #27                 // String thermo2
        203: aload_0       
-       204: getfield      #2                  // Field kitchenThermostat2:LHOME/classes/standard/AnalogInput;
-       207: invokevirtual #128                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       204: getfield      #93                 // Field kitchenThermostat2:LHOME/classes/standard/AnalogInput;
+       207: invokevirtual #174                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
        210: pop           
        211: aload         10
-       213: ldc           #76                 // String thermo3
+       213: ldc           #26                 // String thermo3
        215: aload_0       
-       216: getfield      #25                 // Field kitchenThermostat3:LHOME/classes/standard/AnalogInput;
-       219: invokevirtual #128                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       216: getfield      #163                // Field kitchenThermostat3:LHOME/classes/standard/AnalogInput;
+       219: invokevirtual #174                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
        222: pop           
        223: aload         10
-       225: ldc           #74                 // String thermo4
+       225: ldc           #25                 // String thermo4
        227: aload_0       
-       228: getfield      #42                 // Field kitchenThermostat4:LHOME/classes/standard/AnalogInput;
-       231: invokevirtual #128                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       228: getfield      #57                 // Field kitchenThermostat4:LHOME/classes/standard/AnalogInput;
+       231: invokevirtual #174                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
        234: pop           
        235: aload         10
        237: aload_0       
        238: swap          
-       239: putfield      #116                // Field kitchenThermostats:Ljava/util/HashMap;
+       239: putfield      #113                // Field kitchenThermostats:Ljava/util/HashMap;
        242: aload_0       
-       243: new           #66                 // class HOME/classes/standard/AnalogInput
+       243: new           #130                // class HOME/classes/standard/AnalogOutput
        246: dup           
        247: bipush        9
-       249: invokespecial #89                 // Method HOME/classes/standard/AnalogInput."<init>":(I)V
+       249: invokespecial #69                 // Method HOME/classes/standard/AnalogOutput."<init>":(I)V
        252: aload_0       
        253: swap          
-       254: putfield      #44                 // Field thermostat:LHOME/classes/standard/AnalogInput;
+       254: putfield      #44                 // Field kitchenAirCond:LHOME/classes/standard/AnalogOutput;
        257: aload_0       
-       258: new           #54                 // class HOME/classes/standard/AnalogOutput
+       258: new           #117                // class HOME/classes/standard/AnalogInput
        261: dup           
        262: bipush        10
-       264: invokespecial #135                // Method HOME/classes/standard/AnalogOutput."<init>":(I)V
+       264: invokespecial #134                // Method HOME/classes/standard/AnalogInput."<init>":(I)V
        267: aload_0       
        268: swap          
-       269: putfield      #78                 // Field radiator:LHOME/classes/standard/AnalogOutput;
-       272: return        
+       269: putfield      #96                 // Field thermostat:LHOME/classes/standard/AnalogInput;
+       272: aload_0       
+       273: new           #130                // class HOME/classes/standard/AnalogOutput
+       276: dup           
+       277: bipush        11
+       279: invokespecial #69                 // Method HOME/classes/standard/AnalogOutput."<init>":(I)V
+       282: aload_0       
+       283: swap          
+       284: putfield      #42                 // Field radiator:LHOME/classes/standard/AnalogOutput;
+       287: return        
       LineNumberTable:
         line 2: 4
         line 3: 19
@@ -348,24 +399,45 @@ Constant pool:
         line 11: 147
         line 12: 162
         line 13: 177
-        line 16: 242
+        line 14: 242
         line 17: 257
+        line 18: 272
 
   public void Setup();
     flags: ACC_PUBLIC
     Code:
-      stack=1, locals=2, args_size=1
+      stack=3, locals=2, args_size=1
          0: aload_0       
-         1: invokevirtual #61                 // Method getAverageKitchenTemperature:()I
-         4: istore        1
-         6: return        
+         1: getfield      #136                // Field kitchenSwitch:LHOME/classes/standard/Input;
+         4: ldc           #30                 // String ON_TOGGLED
+         6: ldc           #148                // String toggleKitchenLamps
+         8: invokevirtual #162                // Method HOME/classes/standard/Input.registerEvent:(Ljava/lang/String;Ljava/lang/String;)V
+        11: aload_0       
+        12: getfield      #96                 // Field thermostat:LHOME/classes/standard/AnalogInput;
+        15: ldc           #84                 // String ON_CHANGED
+        17: ldc           #52                 // String handleTemperatureChanges
+        19: invokevirtual #127                // Method HOME/classes/standard/AnalogInput.registerEvent:(Ljava/lang/String;Ljava/lang/String;)V
+        22: aload_0       
+        23: invokevirtual #34                 // Method getAverageKitchenTemperature:()I
+        26: istore        1
+        28: aload_0       
+        29: getfield      #44                 // Field kitchenAirCond:LHOME/classes/standard/AnalogOutput;
+        32: bipush        25
+        34: iload         1
+        36: isub          
+        37: invokestatic  #173                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        40: invokevirtual #35                 // Method HOME/classes/standard/AnalogOutput.setValue:(I)V
+        43: return        
       LineNumberTable:
-        line 20: 0
+        line 21: 0
+        line 22: 11
+        line 27: 22
+        line 28: 28
 
   public int getAverageKitchenTemperature();
     flags: ACC_PUBLIC
     Code:
-      stack=3, locals=6, args_size=1
+      stack=4, locals=6, args_size=1
          0: bipush        10
          2: istore        1
          4: bipush        1
@@ -374,27 +446,27 @@ Constant pool:
         10: bipush        4
         12: if_icmpgt     80
         15: aload_0       
-        16: getfield      #116                // Field kitchenThermostats:Ljava/util/HashMap;
-        19: ldc           #63                 // String thermo
+        16: getfield      #113                // Field kitchenThermostats:Ljava/util/HashMap;
+        19: ldc           #142                // String thermo
         21: iload         2
-        23: invokestatic  #23                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
-        26: invokevirtual #19                 // Method java/lang/Integer.toString:()Ljava/lang/String;
+        23: invokestatic  #173                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        26: invokevirtual #39                 // Method java/lang/Integer.toString:()Ljava/lang/String;
         29: astore        5
         31: astore        4
-        33: new           #122                // class java/lang/StringBuilder
+        33: new           #101                // class java/lang/StringBuilder
         36: dup           
-        37: invokespecial #43                 // Method java/lang/StringBuilder."<init>":()V
+        37: invokespecial #103                // Method java/lang/StringBuilder."<init>":()V
         40: aload         4
-        42: invokevirtual #57                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        42: invokevirtual #135                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
         45: aload         5
-        47: invokevirtual #57                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
-        50: invokevirtual #129                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
-        53: invokevirtual #16                 // Method java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
-        56: checkcast     #66                 // class HOME/classes/standard/AnalogInput
+        47: invokevirtual #135                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        50: invokevirtual #5                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        53: invokevirtual #7                  // Method java/util/HashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        56: checkcast     #117                // class HOME/classes/standard/AnalogInput
         59: astore        5
         61: iload         1
         63: aload         5
-        65: getfield      #93                 // Field HOME/classes/standard/AnalogInput.value:I
+        65: invokevirtual #158                // Method HOME/classes/standard/AnalogInput.getValue:()I
         68: iadd          
         69: istore        1
         71: iload         2
@@ -402,17 +474,82 @@ Constant pool:
         74: iadd          
         75: istore        2
         77: goto          8
-        80: bipush        4
-        82: getstatic     #34                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        85: bipush        4
-        87: invokevirtual #99                 // Method java/io/PrintStream.println:(I)V
-        90: ireturn       
+        80: iload         1
+        82: bipush        4
+        84: idiv          
+        85: getstatic     #67                 // Field java/lang/System.out:Ljava/io/PrintStream;
+        88: iload         1
+        90: bipush        4
+        92: idiv          
+        93: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
+        96: ireturn       
       LineNumberTable:
-        line 24: 0
-        line 26: 4
-        line 27: 8
-        line 28: 15
-        line 29: 61
-        line 30: 71
-        line 33: 80
+        line 33: 0
+        line 35: 4
+        line 36: 8
+        line 37: 15
+        line 38: 61
+        line 39: 71
+        line 42: 80
+
+  public void handleTemperatureChanges();
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=1
+         0: aload_0       
+         1: getfield      #96                 // Field thermostat:LHOME/classes/standard/AnalogInput;
+         4: invokevirtual #158                // Method HOME/classes/standard/AnalogInput.getValue:()I
+         7: istore        1
+         9: iload         1
+        11: bipush        10
+        13: if_icmplt     35
+        16: iload         1
+        18: bipush        20
+        20: if_icmpgt     47
+        23: aload_0       
+        24: getfield      #42                 // Field radiator:LHOME/classes/standard/AnalogOutput;
+        27: bipush        1
+        29: putfield      #154                // Field HOME/classes/standard/AnalogOutput.value:I
+        32: goto          59
+        35: aload_0       
+        36: getfield      #42                 // Field radiator:LHOME/classes/standard/AnalogOutput;
+        39: bipush        5
+        41: putfield      #154                // Field HOME/classes/standard/AnalogOutput.value:I
+        44: goto          59
+        47: aload_0       
+        48: getfield      #42                 // Field radiator:LHOME/classes/standard/AnalogOutput;
+        51: bipush        3
+        53: putfield      #154                // Field HOME/classes/standard/AnalogOutput.value:I
+        56: goto          59
+        59: return        
+      LineNumberTable:
+        line 47: 0
+        line 49: 9
+        line 51: 16
+        line 54: 23
+        line 50: 35
+        line 52: 47
+
+  public void toggleKitchenLamps();
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=3, args_size=1
+         0: aload_0       
+         1: getfield      #88                 // Field kitchenLamps:Ljava/util/ArrayList;
+         4: invokeinterface #40,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+         9: astore        1
+        11: aload         1
+        13: invokeinterface #107,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        18: ifeq          41
+        21: aload         1
+        23: invokeinterface #23,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        28: checkcast     #141                // class HOME/classes/standard/Output
+        31: astore        2
+        33: aload         2
+        35: invokevirtual #4                  // Method HOME/classes/standard/Output.toggle:()V
+        38: goto          11
+        41: return        
+      LineNumberTable:
+        line 61: 0
+        line 62: 33
 }

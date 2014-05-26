@@ -1,4 +1,5 @@
 package HOME;
+
 import HOME.Grammar.*;
 import HOME.Type.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -20,72 +21,74 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = null;
 
-        if(ctx.stmt() == null)
+        if (ctx.stmt() == null)
             return Main.nothing;
 
-        if(ctx.stmt().declaration() != null)
+        if (ctx.stmt().declaration() != null)
             returnType = visitDeclaration(ctx.stmt().declaration());
-        else if(ctx.stmt().assignment() != null)
+        else if (ctx.stmt().assignment() != null)
             returnType = visitAssignment(ctx.stmt().assignment());
-        else if(ctx.stmt().ifStmt() != null){
+        else if (ctx.stmt().ifStmt() != null)
+        {
             returnType = visitIfStmt(ctx.stmt().ifStmt());
 
-            if(forkReturnStack.closed() && ctx.stmt().ifStmt().elseStmt() != null){
-                if(ctx.stmts().getChildCount() > 0)
+            if (forkReturnStack.closed() && ctx.stmt().ifStmt().elseStmt() != null)
+            {
+                if (ctx.stmts().getChildCount() > 0)
                 {
-                    //Unreachable code ahead!
-                    System.out.println("Unreachable code found, after if/else stuff");
+                    //Unreachable code found
+                    System.out.println(String.format("WARNING line %d: Reached unreachable code!", ctx.getStart().getLine()));
                     ctx.removeLastChild();
                 }
 
                 forkReturnStack.dispose();
                 forkReturnStack.addReturn();
-            } else {
+            }
+            else
+            {
                 forkReturnStack.dispose();
             }
 
         }
-        else if(ctx.stmt().loop() != null)
+        else if (ctx.stmt().loop() != null)
         {
             returnType = visitLoop(ctx.stmt().loop());
-//            if(returnType instanceof ErrorType)
-//                return returnType;
         }
-        else if(ctx.stmt().funcCall() != null)
+        else if (ctx.stmt().funcCall() != null)
             returnType = visitFuncCall(ctx.stmt().funcCall());
-        else if(ctx.stmt().returnFunction() != null)
+        else if (ctx.stmt().returnFunction() != null)
         {
             returnType = visitReturnFunction((ctx.stmt().returnFunction()));
-            if(returnType == null)
-                returnType = new ErrorType( String.format("Missing return statement at function: %s", currentFunction), false);
-            else if(ctx.stmts().getChildCount() > 0)
+            if (returnType == null)
+                returnType = new ErrorType(String.format("Missing return statement at function: %s", currentFunction), false);
+            else if (ctx.stmts().getChildCount() > 0)
             {
                 System.out.println(String.format("WARNING line %d: Reached unreachable code!", ctx.getStart().getLine()));
-                //ctx.removeLastChild();
+                ctx.removeLastChild();
             }
         }
-        else if(ctx.stmt().variableMethodCall() != null)
+        else if (ctx.stmt().variableMethodCall() != null)
             returnType = visitVariableMethodCall(ctx.stmt().variableMethodCall());
-        else if(ctx.stmt().incDec() != null)
+        else if (ctx.stmt().incDec() != null)
         {
             returnType = visitIncDec(ctx.stmt().incDec());
         }
 
-        if(returnType instanceof ErrorType)
+        if (returnType instanceof ErrorType)
         {
-            if(!((ErrorType) returnType).isPrinted)
+            if (!((ErrorType) returnType).isPrinted)
             {
-            System.out.println(String.format("ERROR line %d: %s", ctx.getStart().getLine(), returnType.toString()));
+                System.out.println(String.format("ERROR line %d: %s", ctx.getStart().getLine(), returnType.toString()));
                 ((ErrorType) returnType).isPrinted = true;
             }
             return returnType;
         }
 
         Type stmtsType = null;
-        if(ctx.stmts() != null && ctx.stmts().getChildCount() > 0)
+        if (ctx.stmts() != null && ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         return returnType;
@@ -98,14 +101,14 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type blockType;
 
         //Checks if function exists
-        if(ctx.function() != null)
+        if (ctx.function() != null)
         {
             returnType = visitFunction(ctx.function());
         }
 
-        if(returnType instanceof ErrorType)
+        if (returnType instanceof ErrorType)
         {
-            if(!((ErrorType) returnType).isPrinted)
+            if (!((ErrorType) returnType).isPrinted)
             {
                 System.out.println(String.format("ERROR line %d: %s", ctx.getStart().getLine(), returnType.toString()));
                 ((ErrorType) returnType).isPrinted = true;
@@ -114,10 +117,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         }
 
         //Calls visitBlock recursively if it hasn't failed already.
-        if(ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
+        if (ctx.moreFunctions().block() != null && ctx.moreFunctions().block().getChildCount() > 0)
         {
             blockType = visitBlock(ctx.moreFunctions().block());
-            if(!blockType.equals(Main.nothing))
+            if (!blockType.equals(Main.nothing))
                 returnType = blockType;
         }
 
@@ -129,12 +132,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         String symbol = ctx.identifier().getText();
 
-        if(!Main.symbolTable.variables.symbolExists(symbol))
+        if (!Main.symbolTable.variables.symbolExists(symbol))
             return new ErrorType(String.format("The variable \"%s\" is undefined.", symbol), false);
 
         Type collectionType = Main.symbolTable.variables.getSymbol(symbol).var.type;
         Type indexType = null;
-        Type innerType = null;
+        Type innerType;
         int count = 0;
 
         if (collectionType instanceof CollectionType)
@@ -147,7 +150,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else
             return new ErrorType(String.format("Type %s is not a collection.", collectionType), false);
 
-        for(HOMEParser.ExpressionContext expr : ctx.expression())
+        for (HOMEParser.ExpressionContext expr : ctx.expression())
         {
             count++;
             if (!indexType.equals(visitExpression(expr)))
@@ -156,10 +159,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
         }
         innerType = collectionType;
-        for(int i=0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             if (innerType instanceof CollectionType)
-                innerType = ((CollectionType)innerType).innerType;
+                innerType = ((CollectionType) innerType).innerType;
             else
                 return new ErrorType(String.format("Type %s is not a collection.", innerType), false);
         }
@@ -173,7 +176,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type returnType;
         String symbol = ctx.IdentifierExact().getText();
 
-        if(!Main.symbolTable.variables.symbolExists(symbol))
+        if (!Main.symbolTable.variables.symbolExists(symbol))
         {
             returnType = new ErrorType(String.format("Unknown identifier. Symbol \"%s\" doesn't exist in the current context", symbol), false);
         }
@@ -186,8 +189,6 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     @Override
     public Type visitField(@NotNull HOMEParser.FieldContext ctx)
     {
-        Type returnType = new ErrorType("Variable method call went wrong", false);
-
         Type typeOfObject = visitIdentifier(ctx.identifier(0));
 
         if (typeOfObject instanceof ErrorType)
@@ -196,7 +197,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         String fieldName = ctx.identifier(1).getText();
 
         //Get method from type object, and return if not found
-        if((field = typeOfObject.getFieldByName(fieldName)) == null)
+        if ((field = typeOfObject.getFieldByName(fieldName)) == null)
         {
             return new ErrorType(String.format("Field \"%s\" doesn't exist for class \"%s\"", fieldName, typeOfObject.name), false);
         }
@@ -213,7 +214,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         currentFunction = name;
 
-        if(ctx.type() != null)
+        if (ctx.type() != null)
             returnType = visitType(ctx.type());
         else
             returnType = Main.nothing;
@@ -230,20 +231,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type stmtsType = null;
 
         //Checks for stmts before visiting
-        if(ctx.stmts().getChildCount() > 0)
+        if (ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
-        else if(!returnType.equals(Main.nothing))
+        else if (!returnType.equals(Main.nothing))
         {
             return new ErrorType(String.format("The function \"%s\" isn't complete, please provide a return statement.", name), false);
         }
 
-        if(stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
+        if (stmtsType != null && !(stmtsType instanceof ErrorType) && !returnType.equals(Main.nothing))
         {
 
-            if(!forkReturnStack.closed())
-                return new ErrorType(String.format("Function doesn't contain sufficient return statements", ctx.getStart().getLine()), false);
+            if (!forkReturnStack.closed())
+                return new ErrorType(String.format("Function doesn't contain sufficient return statements"), false);
         }
-        else if(stmtsType instanceof ErrorType)
+        else if (stmtsType instanceof ErrorType)
             returnType = stmtsType;
 
         forkReturnStack.dispose();
@@ -258,18 +259,18 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type returnType;
         String funcName = ctx.identifier().getText();
 
-        ArrayList<Type> paramList = getFunctionParameters(ctx.funcParameters());  //(ArrayList<Type>)visitFuncParameters(ctx.funcParameters()).value;
+        ArrayList<Type> paramList = getFunctionParameters(ctx.funcParameters());
 
-        if(funcName.equals("RegisterEvent") && paramList.size() == 2 && paramList.get(1) instanceof ErrorType)
+        if (funcName.equals("RegisterEvent") && paramList.size() == 2 && paramList.get(1) instanceof ErrorType)
         {
             String eventFunctionName = ctx.funcParameters().expression(1).getText();
-            if(Main.symbolTable.functions.symbolExists(eventFunctionName))
+            if (Main.symbolTable.functions.symbolExists(eventFunctionName))
             {
                 Function eventFunction = Main.symbolTable.functions.getSymbol(eventFunctionName);
 
-                if(eventFunction.parameters.size() != 0)
+                if (eventFunction.parameters.size() != 0)
                     return new ErrorType("A function for events can't contain any parameters", false);
-                if(!eventFunction.returnType.equals(Main.nothing))
+                if (!eventFunction.returnType.equals(Main.nothing))
                     return new ErrorType("A function for events can't return other types than Nothing", false);
 
                 paramList.set(1, Main.functionType);
@@ -280,55 +281,54 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         StringBuilder errorString = new StringBuilder();
 
-        for(Type t : paramList)
+        for (Type t : paramList)
         {
-            if(errorString.length() > 0)
+            if (errorString.length() > 0)
                 errorString.append("\n");
-            if(t instanceof ErrorType)
+            if (t instanceof ErrorType)
                 errorString.append(((ErrorType) t).message);
 
         }
 
-        if(errorString.length() > 0)
+        if (errorString.length() > 0)
             return new ErrorType(errorString.toString(), false);
 
-        if(funcName.equals("Setup"))
+        if (funcName.equals("Setup"))
         {
             returnType = new ErrorType("\"Setup\" function can't be called.", false);
         }
-        else if(Main.symbolTable.functions.symbolExists(funcName))
+        else if (Main.symbolTable.functions.symbolExists(funcName))
         {
             List<Type> expectedParameters = Main.symbolTable.functions.getSymbol(funcName).parameters;
-            if(Type.isListSubtypeOfList(paramList, expectedParameters))
+            if (Type.isListSubtypeOfList(paramList, expectedParameters))
             {
-                for(int i=0; i < paramList.size(); i++)
+                for (int i = 0; i < paramList.size(); i++)
                 {
                     addConversionNode(expectedParameters.get(i), paramList.get(i), ctx.funcParameters().expression(i));
                 }
                 returnType = Main.symbolTable.functions.getSymbol(funcName).returnType;
             }
-                //returnType = new HOME.Type("Nothing");
             else
             {
                 errorString = new StringBuilder("Function parameters didn't match:");
 
-                if(paramList.size() < expectedParameters.size())
+                if (paramList.size() < expectedParameters.size())
                 {
                     errorString.append(String.format("\n - Too few arguments provided, function expects %d parameters, got %d.", expectedParameters.size(), paramList.size()));
                     return new ErrorType(errorString.toString(), false);
                 }
 
-                if(paramList.size() > expectedParameters.size())
+                if (paramList.size() > expectedParameters.size())
                 {
                     errorString.append(String.format("\n - Too many arguments provided, function expects %d parameters, got %d.", expectedParameters.size(), paramList.size()));
                     return new ErrorType(errorString.toString(), false);
                 }
 
-                for(int i = 0; i < paramList.size(); i++)
+                for (int i = 0; i < paramList.size(); i++)
                 {
-                    if(!paramList.get(i).isSubtypeOf(expectedParameters.get(i)))
+                    if (!paramList.get(i).isSubtypeOf(expectedParameters.get(i)))
                     {
-                        errorString.append(String.format("\n - Parameter %d: \"%s\" isn't compatible with \"%s\".", i+1, expectedParameters.get(i), paramList.get(i)));
+                        errorString.append(String.format("\n - Parameter %d: \"%s\" isn't compatible with \"%s\".", i + 1, expectedParameters.get(i), paramList.get(i)));
                     }
                 }
                 returnType = new ErrorType(errorString.toString(), false);
@@ -344,9 +344,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         ArrayList<Type> returnList = new ArrayList<>();
 
-        for(HOMEParser.ExpressionContext currExpr : ctx.expression())
+        for (HOMEParser.ExpressionContext currExpr : ctx.expression())
         {
-            if(currExpr.expression() != null)
+            if (currExpr.expression() != null)
                 returnList.add(visitExpression(currExpr));
         }
 
@@ -357,7 +357,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = Main.nothing;
 
-        for(HOMEParser.FuncParamDeclarationContext currCtx : ctx.funcParamDeclaration())
+        for (HOMEParser.FuncParamDeclarationContext currCtx : ctx.funcParamDeclaration())
         {
             Main.symbolTable.variables.addSymbol(currCtx.identifier().getText(), visitType(currCtx.type()));
         }
@@ -370,29 +370,33 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitReturnFunction(@NotNull HOMEParser.ReturnFunctionContext ctx)
     {
         Type returnType = null;
-        if(Main.symbolTable.functions.symbolExists(currentFunction))
+        if (Main.symbolTable.functions.symbolExists(currentFunction))
         {
             Type expressionType;
-            if(ctx.expression() == null){
+            if (ctx.expression() == null)
+            {
                 expressionType = Main.nothing;
-            } else {
+            }
+            else
+            {
                 expressionType = visitExpression(ctx.expression());
             }
 
             Type functionType = Main.symbolTable.functions.getSymbol(currentFunction).returnType;
 
-            if(expressionType instanceof ErrorType)
+            if (expressionType instanceof ErrorType)
                 return expressionType;
 
-            //Check that the user don't call a function that returns Nothing. This isn't logical.
-            if(functionType.equals(Main.nothing) && expressionType.equals(Main.nothing) && ctx.expression() != null)
+            //Check that the user don't return from a function that returns Nothing. This isn't logical.
+            if (functionType.equals(Main.nothing) && expressionType.equals(Main.nothing) && ctx.expression() != null)
                 return new ErrorType("Cant call a function that returns Nothing inside a return-statement", false);
 
-            if(functionType.equals(expressionType)){
+            if (functionType.equals(expressionType))
+            {
                 returnType = functionType;
                 forkReturnStack.addReturn();
             }
-            else if(expressionType.isSubtypeOf(functionType))
+            else if (expressionType.isSubtypeOf(functionType))
             {
                 addConversionNode(functionType, expressionType, ctx.expression());
                 returnType = functionType;
@@ -423,20 +427,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             return LHSType;
 
         Type expression = visitExpression(ctx.expression());
-        if(expression instanceof ErrorType)
+        if (expression instanceof ErrorType)
             return expression;
 
 
-        if(expression.isSubtypeOf(LHSType))      //LHSType.compatibleWith(expression)
+        if (expression.isSubtypeOf(LHSType))
         {
             String operator = ctx.getChild(1).getText();
             //Check if assign got a combined assignment operator like +=
-            if(operator.length() > 1)
+            if (operator.length() > 1)
             {
                 //If variable is not integer or decimal, check if other object may use combined assignment operator
-                if( !(LHSType.equals(Main.integer) || LHSType.equals(Main.decimal)) )
+                if (!(LHSType.equals(Main.integer) || LHSType.equals(Main.decimal)))
                 {
-                    if(!(LHSType.equals(Main.string) && operator.equals("+=")))
+                    if (!(LHSType.equals(Main.string) && operator.equals("+=")))
                         return new ErrorType(String.format("Can't use the operator \"%s\" with %s", operator, LHSType), false);
                 }
             }
@@ -452,39 +456,37 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
-
     @Override
     public Type visitDeclaration(@NotNull HOMEParser.DeclarationContext ctx)
     {
-         Type returnType;
+        Type returnType;
 
         Type type = visitType(ctx.type());
         String identifier = ctx.getChild(1).getText();
         Type expression = null;
 
-        if(type instanceof ErrorType)
+        if (type instanceof ErrorType)
             return type;
 
         //if expression found: integer i = something
-        if(ctx.expression() != null)
+        if (ctx.expression() != null)
         {
             expression = visitExpression(ctx.expression());
-            if(expression instanceof ErrorType)
+            if (expression instanceof ErrorType)
                 return expression;
         }
 
-        if(!Main.symbolTable.variables.addSymbol(identifier, type))
+        if (!Main.symbolTable.variables.addSymbol(identifier, type))
             return new ErrorType(String.format("Can't declare symbol. %s already exists!", identifier), false);
 
 
-        //if "integer i", return no value back. If "Integer i = 3" return value
-        if(expression == null || expression.isSubtypeOf(type))       //type.compatibleWith(expression)
+        //if "Integer i", return no value back. If "Integer i = 3" return value
+        if (expression == null || expression.isSubtypeOf(type))
         {
             if (expression != null)
                 addConversionNode(type, expression, ctx.expression());
             returnType = type;
         }
-//        }
         else
             returnType = new ErrorType(String.format("Incompatible types. Expected %s, got %s", type, expression), false);
 
@@ -494,17 +496,17 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     Type checkInnerExpressions(@NotNull HOMEParser.ExpressionContext ctx)
     {
         Type returnType;
-        Type r1 = null, r2 = null;
-        String operator = null;
+        Type r1, r2;
+        String operator;
 
         //1 expr = expression in parenteses
-        if(ctx.expression().size() == 1)
+        if (ctx.expression().size() == 1)
         {
             returnType = visitExpression(ctx.expression().get(0));
-            if(ctx.getChild(0).getText().equals("-"))
+            if (ctx.getChild(0).getText().equals("-"))
             {
                 //unary + or - can only be in front of integer and decimal
-                if(! (returnType.equals(Main.integer) || returnType.equals(Main.decimal)) )
+                if (!(returnType.equals(Main.integer) || returnType.equals(Main.decimal)))
                 {
                     returnType = new ErrorType(String.format("Unary \"%s\" can only be used in front of integer or decimal", ctx.getChild(0).getText()), false);
                 }
@@ -523,48 +525,48 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             else if (r2 instanceof ErrorType)
                 return r2;
 
-            if(isBooleanOperator(operator))
+            if (isBooleanOperator(operator))
             {
                 //If AND or OR is used, check that both sides are boolean, else throw an error
-                if((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
+                if ((operator.equals("AND") || operator.equals("OR")) && !(r1.equals(Main.bool) && r1.equals(r2)))
                     returnType = new ErrorType(String.format("AND/OR can't be used with other types than boolean"), false);
                     //If comparison is used, and both sides are not numbers, throw an error
-                else if((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1)) && (r1.equals(Main.integer) || r1.equals(Main.decimal))))
+                else if ((operator.equals("<") || operator.equals(">") || operator.equals("<=") || operator.equals(">=")) && !((r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1)) && (r1.equals(Main.integer) || r1.equals(Main.decimal))))
                     returnType = new ErrorType(String.format("Comparison can only be used with integers and decimals"), false);
                     //check if both sides of expression is boolean
-                else if(((operator.equals("==") || operator.equals("!=")) && !(r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1))))
+                else if (((operator.equals("==") || operator.equals("!=")) && !(r1.isSubtypeOf(r2) || r2.isSubtypeOf(r1))))
                     returnType = new ErrorType("Can't use equals on different types", false);
                     //Else accept the expression
                 else
                     returnType = Main.bool;
 
-                if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
+                if ((r1.equals(Main.integer) && r2.equals(Main.decimal)))
                 {
                     addIntToDecNode(ctx.expression(0));
                 }
-                else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
+                else if ((r1.equals(Main.decimal) && r2.equals(Main.integer)))
                 {
                     addIntToDecNode(ctx.expression(1));
                 }
             }
             // Check for a single literal
             //Check if type is equal
-            else if(r1.equals(r2))
+            else if (r1.equals(r2))
             {
-                if(r1.equals(Main.bool))
+                if (r1.equals(Main.bool))
                     returnType = new ErrorType("Can't use this operator with Booleans", false);
-                else if(r1.equals(Main.string) && !operator.equals("+"))
+                else if (r1.equals(Main.string) && !operator.equals("+"))
                     returnType = new ErrorType("String can only be concatenated with \"+\", no other operations allowed", false);
                 else
                     returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
             }
             //Check if it is possible to convert from Int to Dec
-            else if((r1.equals(Main.integer) && r2.equals(Main.decimal)))
+            else if ((r1.equals(Main.integer) && r2.equals(Main.decimal)))
             {
                 addIntToDecNode(ctx.expression(0));
                 returnType = Main.decimal;
             }
-            else if((r1.equals(Main.decimal) && r2.equals(Main.integer)))
+            else if ((r1.equals(Main.decimal) && r2.equals(Main.integer)))
             {
                 addIntToDecNode(ctx.expression(1));
                 returnType = Main.decimal;
@@ -583,20 +585,20 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type returnType = new ErrorType("Unknown expression", false);
 
         //Check the expression consists of additional expressions.
-        if(ctx.expression().size() > 0)
+        if (ctx.expression().size() > 0)
             returnType = checkInnerExpressions(ctx);
-        // If expression doesn't contain any expressions, use one of the following:
-        else if(ctx.funcCall() != null)
+            // If expression doesn't contain any expressions, use one of the following:
+        else if (ctx.funcCall() != null)
             returnType = visitFuncCall(ctx.funcCall());
-        else if(ctx.literal() != null)
+        else if (ctx.literal() != null)
             returnType = visitLiteral(ctx.literal());
-        else if(ctx.variableMethodCall() != null)
+        else if (ctx.variableMethodCall() != null)
             returnType = visitVariableMethodCall(ctx.variableMethodCall());
-        else if(ctx.identifier() != null)
+        else if (ctx.identifier() != null)
             returnType = visitIdentifier(ctx.identifier());
-        else if(ctx.listIndex() != null)
+        else if (ctx.listIndex() != null)
             returnType = visitListIndex(ctx.listIndex());
-        else if(ctx.field() != null)
+        else if (ctx.field() != null)
             returnType = visitField(ctx.field());
 
         return returnType;
@@ -606,19 +608,18 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     public Type visitLiteral(@NotNull HOMEParser.LiteralContext ctx)
     {
         Type returnType = null;
-        Object value = ctx.getChild(0);
 
-        if(ctx.IntegerLiteral() != null)
+        if (ctx.IntegerLiteral() != null)
             returnType = Main.integer;
-        else if(ctx.booleanLiteral() != null)
+        else if (ctx.booleanLiteral() != null)
             returnType = Main.bool;
-        else if(ctx.DecimalLiteral() != null)
+        else if (ctx.DecimalLiteral() != null)
             returnType = Main.decimal;
-        else if(ctx.StringLiteral() != null)
+        else if (ctx.StringLiteral() != null)
             returnType = Main.string;
-        else if(ctx.listLiteral() != null)
+        else if (ctx.listLiteral() != null)
             returnType = visitListLiteral(ctx.listLiteral());
-        else if(ctx.dictionaryLiteral() != null)
+        else if (ctx.dictionaryLiteral() != null)
             returnType = visitDictionaryLiteral(ctx.dictionaryLiteral());
 
         return returnType;
@@ -637,7 +638,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         innerType = visitExpression(ctx.expression(0));
 
         Type current;
-        for(HOMEParser.ExpressionContext expr : ctx.expression())
+        for (HOMEParser.ExpressionContext expr : ctx.expression())
         {
             current = visitExpression(expr);
             if (innerType.isSubtypeOf(current))
@@ -650,11 +651,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 return new ErrorType("Invalid List literal, types do not match", false);
             }
         }
-        if(innerType.equals(Main.decimal))
+        if (innerType.equals(Main.decimal))
         {
-            for(HOMEParser.ExpressionContext expr : ctx.expression())
+            for (HOMEParser.ExpressionContext expr : ctx.expression())
             {
-                if(visitExpression(expr).equals(Main.integer))
+                if (visitExpression(expr).equals(Main.integer))
                     addIntToDecNode(expr);
             }
         }
@@ -673,12 +674,12 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         innerType = visitExpression(ctx.dictionaryEntry(0).expression(1));
 
         Type current;
-        for(HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
+        for (HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
         {
             Type keyType = visitExpression(entry.expression(0));
             if (keyType instanceof ErrorType)
                 return keyType;
-            else if(!keyType.equals(Main.string))
+            else if (!keyType.equals(Main.string))
                 return new ErrorType("Invalid Dictionary literal, key must be of type String.", false);
             current = visitExpression(entry.expression(1));
             if (innerType.isSubtypeOf(current))
@@ -692,11 +693,11 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
             }
 
         }
-        if(innerType.equals(Main.decimal))
+        if (innerType.equals(Main.decimal))
         {
-            for(HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
+            for (HOMEParser.DictionaryEntryContext entry : ctx.dictionaryEntry())
             {
-                if(visitExpression(entry.expression(1)).equals(Main.integer))
+                if (visitExpression(entry.expression(1)).equals(Main.integer))
                     addIntToDecNode(entry.expression(1));
             }
         }
@@ -708,9 +709,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         if (ctx.collectionType() != null)
             return visitCollectionType(ctx.collectionType());
-        //if(ctx.classes() != null)
         return visitClasses(ctx.classes());
-        //return visitPrimitiveType(ctx.primitiveType());
     }
 
     Type getCollectionType(String typeName, Type innerType)
@@ -765,41 +764,41 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
 
         Type returnType = null;
 
-        if(ctx.expression() != null)
+        if (ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
-        if(returnType instanceof ErrorType)
+        if (returnType instanceof ErrorType)
             return returnType;
 
-        if(!returnType.equals(Main.bool))
+        if (!returnType.equals(Main.bool))
             return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType, false);
 
         Type stmtsType = null;
-        if(ctx.stmts().getChildCount() > 0)
+        if (ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         Main.symbolTable.closeScope();
 
-        if(!returnType.equals(Main.bool))
+        if (!returnType.equals(Main.bool))
             return new ErrorType("Statement in if-condition must be of type Boolean, got: " + returnType, false);
 
-        if(ctx.elseIfStmt().size() > 0)
+        if (ctx.elseIfStmt().size() > 0)
         {
             for (HOMEParser.ElseIfStmtContext currCtx : ctx.elseIfStmt())
             {
                 forkReturnStack.addFork();
-                if(visitElseIfStmt(currCtx) instanceof ErrorType)
+                if (visitElseIfStmt(currCtx) instanceof ErrorType)
                     return new ErrorType("Error", false);
             }
         }
 
-        if(ctx.elseStmt() != null)
+        if (ctx.elseStmt() != null)
         {
             forkReturnStack.addFork();
-            if(visitElseStmt(ctx.elseStmt()) instanceof ErrorType)
+            if (visitElseStmt(ctx.elseStmt()) instanceof ErrorType)
             {
                 return new ErrorType("Error", false);
             }
@@ -814,18 +813,18 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Main.symbolTable.openScope();
         Type returnType = null;
 
-        if(ctx.expression() != null)
+        if (ctx.expression() != null)
             returnType = visitExpression(ctx.expression());
 
-        if(returnType instanceof ErrorType)
+        if (returnType instanceof ErrorType)
             return returnType;
 
         Type stmtsType = null;
 
-        if(ctx.stmts() != null)
+        if (ctx.stmts() != null)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         Main.symbolTable.closeScope();
@@ -841,10 +840,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Type returnType = Main.bool;
 
         Type stmtsType = null;
-        if(ctx.stmts() != null)
+        if (ctx.stmts() != null)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         Main.symbolTable.closeScope();
@@ -852,23 +851,19 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     }
 
     @Override
-    public Type visitLoop (@NotNull HOMEParser.LoopContext ctx)
+    public Type visitLoop(@NotNull HOMEParser.LoopContext ctx)
     {
         forkReturnStack.newStack();
         forkReturnStack.addFork();
 
         Type returnType = null;
-//        System.out.println("\trepeat statement: ");
 
-        if(ctx.loopWhileOrUntil() != null)
+        if (ctx.loopWhileOrUntil() != null)
             returnType = visitLoopWhileOrUntil(ctx.loopWhileOrUntil());
         else if (ctx.loopForeach() != null)
             returnType = visitLoopForeach(ctx.loopForeach());
 
-//        System.out.println("\t" + returnType);
-
         forkReturnStack.dispose();
-
         return returnType;
     }
 
@@ -876,20 +871,18 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Main.symbolTable.openScope();
 
-        String loopType = ctx.getChild(1).getText();
-
         Type returnType = visitExpression(ctx.expression());
 
-        if(ctx.expression() != null && ctx.expression().literal() != null && ctx.expression().literal().booleanLiteral() != null)
+        if (ctx.expression() != null && ctx.expression().literal() != null && ctx.expression().literal().booleanLiteral() != null)
             returnType = new ErrorType("Illegal loop expression booleanLiteral", false);
-        else if( !(returnType instanceof ErrorType) &&  !returnType.equals(Main.bool))
+        else if (!(returnType instanceof ErrorType) && !returnType.equals(Main.bool))
             returnType = new ErrorType(String.format("Loop expressions should be of type Boolean - got %s", returnType), false);
 
         Type stmtsType = null;
-        if(ctx.stmts().getChildCount() > 0)
+        if (ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         Main.symbolTable.closeScope();
@@ -916,10 +909,10 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         Main.symbolTable.variables.addSymbol(ctx.identifier().getText(), returnType);
 
         Type stmtsType = null;
-        if(ctx.stmts().getChildCount() > 0)
+        if (ctx.stmts().getChildCount() > 0)
             stmtsType = visitStmts(ctx.stmts());
 
-        if(stmtsType instanceof ErrorType)
+        if (stmtsType instanceof ErrorType)
             return stmtsType;
 
         Main.symbolTable.closeScope();
@@ -931,66 +924,59 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     {
         Type returnType = null;
 
-        if(ctx.identifier() != null)
-        {
+        if (ctx.identifier() != null)
             returnType = visitIdentifier(ctx.identifier());
-        }
         else if (ctx.listIndex() != null)
-        {
             returnType = visitListIndex(ctx.listIndex());
-        }
         else if (ctx.field() != null)
-        {
             returnType = visitField(ctx.field());
-        }
 
         if (returnType instanceof ErrorType)
             return returnType;
 
         if (!(returnType.equals(Main.integer) || returnType.equals(Main.decimal)))
-            return new ErrorType( "Increment or decrement can't be used on other types than Integer or Decimal.", false);
+            return new ErrorType("Increment or decrement can't be used on other types than Integer or Decimal.", false);
 
         return returnType;
     }
 
     @Override
-    public Type visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx) {
+    public Type visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx)
+    {
         Type returnType;
-        HOMEParser.FuncCallContext currctx = ctx.funcCall();
+        HOMEParser.FuncCallContext currCtx = ctx.funcCall();
 
         Type typeOfObject = visitIdentifier(ctx.identifier());
         Function method;
         String methodName = ctx.funcCall().identifier().getText();
 
-        if(typeOfObject instanceof ErrorType)
+        if (typeOfObject instanceof ErrorType)
             return typeOfObject;
 
         //Get method from type object, and return if not found
-        if((method = typeOfObject.getMethodByName(methodName)) == null)
-        {
+        if ((method = typeOfObject.getMethodByName(methodName)) == null)
             return new ErrorType(String.format("Method \"%s\" doesn't exist for class \"%s\"", methodName, typeOfObject.name), false);
-        }
 
-        ArrayList<Type> paramList = getFunctionParameters(currctx.funcParameters());
+        ArrayList<Type> paramList = getFunctionParameters(currCtx.funcParameters());
         StringBuilder errorString = new StringBuilder();
 
-        for(Type t : paramList)
+        for (Type t : paramList)
         {
-            if(errorString.length() > 0)
+            if (errorString.length() > 0)
                 errorString.append("\n");
-            if(t instanceof ErrorType)
+            if (t instanceof ErrorType)
                 errorString.append(((ErrorType) t).message);
         }
 
-        if(errorString.length() > 0)
+        if (errorString.length() > 0)
             return new ErrorType(errorString.toString(), false);
 
         //Check if the parameters inserted are compatible with the formal parameters
-        if(Type.isListSubtypeOfList(paramList, method.parameters))
+        if (Type.isListSubtypeOfList(paramList, method.parameters))
         {
             for (int i = 0; i < paramList.size(); i++)
             {
-                addConversionNode(method.parameters.get(i), paramList.get(i), currctx.funcParameters().expression(i));
+                addConversionNode(method.parameters.get(i), paramList.get(i), currCtx.funcParameters().expression(i));
             }
             returnType = method.returnType;
         }
@@ -1003,7 +989,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
     void addIntToDecNode(HOMEParser.ExpressionContext ctx)
     {
         int lastChild = ctx.getChildCount() - 1;
-        if(!(ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext))
+        if (!(ctx.getChild(lastChild) instanceof HOMEParser.Int2decContext))
             ctx.addChild(new HOMEParser.Int2decContext(ctx, ctx.invokingState));
     }
 
@@ -1017,16 +1003,13 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
         else if (expectedType instanceof CollectionType && exprType instanceof CollectionType)
         {
             if (((CollectionType) expectedType).getInnermostType().equals(Main.decimal) && ((CollectionType) exprType).getInnermostType().equals(Main.integer))
-            {
                 addIntToDecNode(expr);
-            }
         }
         return false;
     }
 
 
     private List<String> BooleanOperator = Arrays.asList("==", ">", "<", "<=", ">=", "!=", "AND", "OR");
-
 
     boolean isBooleanOperator(String str)
     {

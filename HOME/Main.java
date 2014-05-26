@@ -55,9 +55,7 @@ public class Main
         lexer.addErrorListener(errorListener);
         parser.addErrorListener(errorListener);
 
-
         ParseTree tree = parser.program();
-
 
         if (errorListener.HasErrors())
         {
@@ -142,8 +140,6 @@ public class Main
 
         nothing.bytecode = "V";
         System.out.println("-----------------------------Code Generation-----------------------");
-        //ByteCodeVisitor bytecode = new ByteCodeVisitor();
-        //bytecode.visit(tree);
         File file = new File("HOME.class");
         if (file.exists())
         {

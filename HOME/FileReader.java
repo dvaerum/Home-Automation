@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 /**
  * Created by Jacob on 26-03-14.
  */
-class FileReader {
+class FileReader
+{
     private SymbolTable symbolTable = Main.symbolTable;
 
     //Insert prototype of classes
@@ -29,7 +30,7 @@ class FileReader {
         List<File> listOfFiles2 = new ArrayList(Arrays.asList(customDir.listFiles()));
 
         //Combine lists
-        for(File tmpfile : listOfFiles2)
+        for (File tmpfile : listOfFiles2)
         {
             listOfFiles.add(tmpfile);
         }
@@ -38,17 +39,16 @@ class FileReader {
         String name;
 
         //Run through all .def files, and create a prototype type
-        for(File file : listOfFiles)
+        for (File file : listOfFiles)
         {
             files = file.getName();
             name = files.replaceFirst(".def", "");
-            if(files.toLowerCase().endsWith(".def"))
+            if (files.toLowerCase().endsWith(".def"))
             {
                 type = new Type(name);
                 symbolTable.types.addSymbol(name, type);
             }
         }
-
     }
 
     public void expandTypes()
@@ -57,8 +57,7 @@ class FileReader {
         {
             loadClasses("standard");
             loadClasses("custom");
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             System.err.println(e.initCause(e.getCause()));
         }
@@ -69,20 +68,22 @@ class FileReader {
         File standardDir = new File("HOME" + File.separator + "classes" + File.separator + folderName);
 
         //Get all files that ends with .def, to prevent both processing .txt and .def files
-        List<File> expectedClasses = new ArrayList(Arrays.asList(standardDir.listFiles(new FilenameFilter() {
+        List<File> expectedClasses = new ArrayList(Arrays.asList(standardDir.listFiles(new FilenameFilter()
+        {
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(File dir, String name)
+            {
                 return name.toLowerCase().endsWith(".def");
             }
         })));
 
         //Run through all standard, and update the prototype type with all info
-        for(File importclass : expectedClasses)
+        for (File importclass : expectedClasses)
         {
             String fileName = importclass.getName().replaceFirst(".def", "");
             File classfile = new File(standardDir + File.separator + fileName + ".class");
             //Check if java .class file for the type exists, if not give a warning
-            if(! classfile.exists() && !classfile.isDirectory() )
+            if (!classfile.exists() && !classfile.isDirectory())
             {
                 System.out.println(String.format("Error: The class %s doesn't have a .class file", fileName));
                 System.exit(1);
@@ -92,8 +93,7 @@ class FileReader {
                 try
                 {
                     readClassDef(standardDir + File.separator + fileName + ".def");
-                }
-                catch (FileNotFoundException e)
+                } catch (FileNotFoundException e)
                 {
                     System.err.println(e.initCause(e.getCause()));
                 }
@@ -105,9 +105,8 @@ class FileReader {
     void readClassDef(String fullPath) throws IOException
     {
         //Create a file scanner, and check if the scanner can read the file
-        Scanner sc = new Scanner(new File(fullPath));
-        String str = null;
-        if(!new Scanner(new File(fullPath)).useDelimiter("\\Z").hasNext())
+        String str;
+        if (!new Scanner(new File(fullPath)).useDelimiter("\\Z").hasNext())
         {
             System.out.println(String.format("Warning: Class reader failed at path: %s", fullPath));
             return;
@@ -124,7 +123,7 @@ class FileReader {
 
         Matcher mtchr = classPtrn.matcher(str);
         //Try to match, and check if a match is found
-        if(mtchr.matches())
+        if (mtchr.matches())
         {
             String className = mtchr.group(1);
             String fields = mtchr.group(2);
@@ -133,16 +132,13 @@ class FileReader {
 
             String methods = mtchr.group(5);
 
-            String[] methodList = methods.split("-");
-
             String bytecode = mtchr.group(6).replace("-", "").trim();
 
             try
             {
                 //Update the existing type with fields, constructors and methods
                 symbolTable.types.getSymbol(className).Update(className, fields, constrName, constrArgs, methods, bytecode);
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 System.out.println(className);
                 e.printStackTrace();

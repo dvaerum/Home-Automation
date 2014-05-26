@@ -239,7 +239,7 @@ collectionType
     ;
 
 classes
-    : IdentifierExact
+    : identifier
     ;
 
 // Characters

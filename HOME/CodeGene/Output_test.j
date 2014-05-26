@@ -227,7 +227,7 @@ return
 .end method
 
 .method public Setup()V
-    .limit stack 8
+    .limit stack 9
     .limit locals 31
 .line 12
     aload_0
@@ -427,15 +427,17 @@ return
     Label6:
 .line 57
     iload 1
-    bipush 3
-    if_icmpeq Label7
+    i2d
+    ldc2_w 3.0d
+    dcmpl
+    ifeq Label7
     goto Label8
     Label7:
 .line 58
     aload_0
     getfield HOME/y Ljava/lang/Double;
     invokevirtual java/lang/Double.doubleValue()D
-    ldc2_w 3.3d
+    ldc2_w 3.d
     dcmpl
     iflt Label9
 .line 61
@@ -830,8 +832,10 @@ return
     getfield HOME/TESTER2 LHOME/classes/standard/Input;
     astore 30
 .line 138
-    aload_0
-    invokevirtual HOME/returnTest2()LHOME/classes/standard/Input;
+    new HOME/classes/standard/Input
+    dup
+    bipush 42
+    invokespecial HOME/classes/standard/Input.<init>(I)V
     astore 30
 .line 139
     aload_0
@@ -855,20 +859,6 @@ return
     aload_0
     invokevirtual HOME/hejz()Ljava/util/ArrayList;
     pop
-    getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "Great Success!!"
-    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
-    return
-.end method
-
-.method public static main([Ljava/lang/String;)V
-    .limit stack 2
-    .limit locals 1
-.line 11
-    new HOME
-    dup
-    invokespecial HOME/<init>()V
-    invokespecial HOME/Setup()V
     return
 .end method
 
@@ -1024,15 +1014,12 @@ return
 .end method
 
 .method public not()V
-    .limit stack 2
+    .limit stack 1
     .limit locals 1
 .line 193
     aload_0
     invokevirtual HOME/not2()Ljava/lang/String;
     pop
-    getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "Great Success!!"
-    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
     return
 .end method
 
@@ -1050,7 +1037,7 @@ return
 .end method
 
 .method public testtt()V
-    .limit stack 3
+    .limit stack 2
     .limit locals 2
 .line 202
     iconst_0
@@ -1072,9 +1059,6 @@ return
     istore 1
     goto Label48
     Label49:
-    getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "Great Success!!"
-    invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V
     return
 .end method
 
@@ -1091,7 +1075,7 @@ return
 
 .method public PrintD(D)D
     .limit stack 5
-    .limit locals 2
+    .limit locals 3
 .line 213
     dload 1
     getstatic java/lang/System/out Ljava/io/PrintStream;

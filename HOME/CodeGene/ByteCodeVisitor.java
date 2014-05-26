@@ -188,7 +188,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stackDec();
                     break;
 
-                case "dstore":case "dreturn":
+                case "dreturn":
+                    stackDec(2);
+                    limitLocale++;
+                    break;
+
+                case "dstore":
                     stackDec(2);
                     break;
 
@@ -386,12 +391,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         public boolean equals(ExpressionReturn epxR)
         {
-            return this.type.equals(epxR.type);
+            return this.actualType.equals(epxR.actualType);
         }
 
         public boolean equals(Type epxR)
         {
-            return this.type.equals(epxR);
+            return this.actualType.equals(epxR);
         }
 
         public void invokeToObject(ParserRuleContext ctx, Statements stmts)
@@ -502,21 +507,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         {
             this.setup = new Function(".method public Setup()V", ".end method");
             setup.stmts = new Statements();
-
-            Function mainFunc = new Function(".method public static main([Ljava/lang/String;)V",
-                    ".end method");
-
-            mainFunc.stmts = new Statements();
-
-            Statements mainStmts = mainFunc.stmts;
-
-            mainStmts.add("new HOME", ctx);
-            mainStmts.add("dup", ctx);
-            mainStmts.add("invokespecial HOME/<init>()V", ctx);
-            mainStmts.add("invokespecial HOME/Setup()V", ctx);
-            mainStmts.add("return", ctx);
-
-            this.functions.add(mainFunc);
 
             visitStmts(ctx.stmts(), setup.stmts);
 
@@ -1426,6 +1416,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         if (convertingFlag)
         {
             stmts.add("i2d", ctx);
+            return new ExpressionReturn(Main.decimal, "");
         }
 
         return new ExpressionReturn(variableMethod.returnType, "");
@@ -1436,9 +1427,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         forkReturnStack.addReturn();
         if (ctx == null || ctx.expression() == null)
         {
-            stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
-            stmts.add("ldc \"Great Success!!\"");
-            stmts.add("invokevirtual java/io/PrintStream.println(Ljava/lang/String;)V");
             stmts.add("return");
         }
         else
@@ -1675,6 +1663,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         if (convertingFlag)
         {
             stmts.add("i2d", ctx);
+            return new ExpressionReturn(ctx.getText(), Main.decimal);
         }
         return new ExpressionReturn(ctx.getText(), type);
     }
@@ -1695,10 +1684,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (type.primaryType.name)
             {
                 case "List":
-                    stmts.add(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.bytecode), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
                     break;
                 case "Dictionary":
-                    stmts.add(String.format("invokevirtual %s.get(%s)Ljava/lang/Object;", Main.dictionary.getClassByteCode(), Main.object.bytecode), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.dictionary.getClassByteCode(), Main.object.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
                     break;
             }
 
@@ -1709,6 +1698,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             if (convertingFlag)
             {
                 stmts.add("i2d", ctx);
+                return new ExpressionReturn(Main.decimal, "");
             }
 
             if (type.innerType instanceof CollectionType)
@@ -1735,6 +1725,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         if (convertingFlag)
         {
             stmts.add("i2d", ctx);
+            return new ExpressionReturn(Main.decimal, "");
         }
 
         return new ExpressionReturn(fieldType, "");
@@ -2210,52 +2201,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     }
 
 
+    // Check that the the actual type of r1 and r2 are identical.
+    // If not identical it will return null and it will most likely resolve in a NullPointerException
     Type compareTypes(ExpressionReturn r1, ExpressionReturn r2)
     {
-        if (r1.equals(Main.integer) && r2.equals(Main.integer))
-        {
-            return Main.integer;
-
+        if (r1.equals(r2)) {
+            return r1.actualType;
         }
-        else if (r1.equals(Main.bool) && r2.equals(Main.bool))
-        {
-            return Main.bool;
-
-        }
-        else if (r1.equals(Main.variable) || r2.equals(Main.variable))
-        {
-            if (r1.equals(Main.variable) && symbolTable.variables.getType(r1.returnValue).equals(Main.decimal))
-            {
-                return Main.decimal;
-            }
-            else if (r2.equals(Main.variable) && symbolTable.variables.getType(r2.returnValue).equals(Main.decimal))
-            {
-                return Main.decimal;
-            }
-            else if (r1.equals(Main.variable) && symbolTable.variables.getType(r1.returnValue).equals(Main.string))
-            {
-                return Main.string;
-            }
-            else if (r2.equals(Main.variable) && symbolTable.variables.getType(r2.returnValue).equals(Main.string))
-            {
-                return Main.string;
-            }
-            else
-            {
-                return Main.integer;
-            }
-
-        }
-        else if (r1.equals(Main.string) || r2.equals(Main.string))
-        {
-            return Main.string;
-
-        }
-        else if (r1.equals(Main.decimal) || r2.equals(Main.decimal))
-        {
-            return Main.decimal;
-        }
-
         return null;
     }
 
@@ -2310,7 +2262,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return returnType;
     }
 
-    // Adds at literal value to the operater stack
+    // Adds at literal value to the operator stack
     void addLiteral(ParserRuleContext ctx, Statements stmts, ExpressionReturn literal, boolean convertingFlag)
     {
         // Adds a value of type integer

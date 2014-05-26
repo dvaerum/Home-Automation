@@ -708,6 +708,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 break;
 
             case "List":
+                // There are 4 different special cases when creating a List, each being handled in their own special way.
+                // 1. List<Integer> aList, this case builds the list from the description given and only creates arraylist.
+                // 2. List<Integer> aList = {}, same as above yet we detect the depth of this list in case of a list within a list.
+                // 3. List<Integer> aList = {1,2,3}
+                // 4. List<Integer> aList = someFunction
                 symbolType = (CollectionType) symbolTable.types.getSymbol(ctx.type().getText());
                 int currentLocal = stmts.nextLocal();
                 if (ctx.expression() != null)
@@ -718,16 +723,18 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         //If depth equals -1, then it contains something
                         if (depth == -1)
                         {
+                            // case 4
                             visitExpression(ctx.expression(), stmts);
                         }
                         else
                         {
+                            // case 2
                             buildList(ctx, stmts, symbolType, depth);
                         }
                     }
                     else
                     {
-                        // Here we do not re-use the list
+                        // case 3
                         visitExpression(ctx.expression(), stmts);
                         stmts.add("astore " + currentLocal, ctx);
                         stmts.LocalInc();
@@ -735,6 +742,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 }
                 else
                 {
+                    // case 1
                     buildList(ctx, stmts, symbolType, 1);
                 }
                 symbolTable.variables.addSymbol(ctx.identifier().getText(), symbolType, currentLocal);
@@ -1357,6 +1365,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(function.returnType, "");
     }
 
+    // Special case for the function RegisterEvent
     ExpressionReturn visitFuncCallRegisterEvent(@NotNull HOMEParser.FuncCallContext ctx, Statements stmts)
     {
         SymbolInfo symbolInfo = symbolTable.variables.getSymbol(ctx.funcParameters().expression(0).field().identifier(0).getText());
@@ -1378,33 +1387,42 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(Main.nothing, "");
     }
 
+
     ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts)
     {
         return visitVariableMethodCall(ctx, stmts, false);
     }
 
+    // Handles and generate jasmin code for method calls
     ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo variable = symbolTable.variables.getSymbol(ctx.identifier().getText());
         Type type = variable.var.type;
 
+        // If the type is a list or dictionary
         if (type instanceof CollectionType){
+            // the variable 'type' is being to list or dictinary
             type = ((CollectionType) type).primaryType;
         }
 
         HOME.Type.Function variableMethod = variable.var.type.getMethodByName(ctx.funcCall().identifier().getText());
 
-        visitIdentifier(ctx.identifier(), stmts, false);
+        // push object ref. to operator stack
+        visitIdentifier(ctx.identifier(), stmts, false).invokeToObject(ctx, stmts);
 
+        // push object ref. to operator stack from arguments
         for (HOMEParser.ExpressionContext expressionContext : ctx.funcCall().funcParameters().expression())
         {
             visitExpression(expressionContext, stmts).actualType.invokeToObject(ctx, stmts);
         }
 
+        // Construct method call
+        // Example: invokevirtual class.method(parameter)returnType
         StringBuilder bytecode = new StringBuilder("invokevirtual ").
                 append(type.getClassByteCode()).
                 append(".").append(variableMethod.name).
                 append("(");
+
 
         if (listOfSpecialCaseMethods.containsKey(variableMethod.name) && (type.equals(Main.list) || type.equals(Main.dictionary))){
             bytecode.append(listOfSpecialCaseMethods.get(variableMethod.name));
@@ -1462,7 +1480,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        stmts.add("ldc " + ctx.expression().literal().getText(), ctx);
+                        visitExpression(ctx.expression(), stmts);
                     }
                     stmts.add("invokevirtual java/io/PrintStream/println(I)V", ctx);
                     //endregion
@@ -1480,7 +1498,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        stmts.add("ldc2_w " + ctx.expression().literal().getText(), ctx);
+                        visitExpression(ctx.expression(), stmts);
                     }
                     stmts.add("invokevirtual java/io/PrintStream/println(D)V", ctx);
                     //endregion
@@ -1498,7 +1516,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        stmts.add("bipush " + ctx.expression().literal().getText(), ctx);
+                       visitExpression(ctx.expression(), stmts);
                     }
                     stmts.add("invokevirtual java/io/PrintStream/println(Z)V", ctx);
                     //endregion

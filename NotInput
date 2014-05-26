@@ -1,20 +1,34 @@
+ //--------Kitchen devices---------//
 Input kitchenSwitch = Input(1)
-List<Output> kitchenLamps = getKitchenLamps()
+Output kitchenLamp1 = Output(2)
+Output kitchenLamp2 = Output(3)
+Output kitchenLamp3 = Output(4)
+List<Output> kitchenLamps = {kitchenLamp1, kitchenLamp2, kitchenLamp3}
+
+//---Thermostats----//
+AnalogInput kitchenThermostat1 = AnalogInput(5)
+AnalogInput kitchenThermostat2 = AnalogInput(6)
+AnalogInput kitchenThermostat3 = AnalogInput(7)
+AnalogInput kitchenThermostat4 = AnalogInput(8)
+Dictionary<AnalogInput> kitchenThermostats = {"thermo1" = kitchenThermostat1, "thermo2" = kitchenThermostat2, "thermo3" = kitchenThermostat3, "thermo4" = kitchenThermostat4}
+
+//--------Other devices-----------//
+AnalogInput thermostat = AnalogInput(9)
+AnalogOutput radiator = AnalogOutput(10)
 
 function Setup() returns Nothing
-    List<Integer> ints = {1,2,3}
-    ints.add(1)
+    Integer i = getAverageKitchenTemperature()
 endfunction
 
-//Create kitchen lamps
-function  getKitchenLamps() returns List<Output>
-    List<Output> lamps
+function getAverageKitchenTemperature() returns Integer
+    Integer sum = 10
 
-    Integer i = 2
+    Integer i =  1
     repeat until(i > 4)
-        lamps.add(Output(i))
+        AnalogInput a = kitchenThermostats["thermo" + i.toString()]
+        sum += a.value
         i++
     endrepeat
 
-    return lamps
+    return 4
 endfunction

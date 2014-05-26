@@ -2,7 +2,6 @@ class Input
     fields
         - Boolean state
         - Event ON_TOGGLED
-        - Event ON_CHANGED
     endfields
 
     constructor

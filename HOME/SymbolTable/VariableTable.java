@@ -13,7 +13,6 @@ import HOME.Type.*;
 public class VariableTable
 {
     private HashMap<String, Deque<SymbolInfo>> table = new HashMap<String, Deque<SymbolInfo>>();
-
     private int currentScope = 0;
 
     public void openScope()

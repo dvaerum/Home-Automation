@@ -541,13 +541,9 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                     returnType = Main.bool;
 
                 if ((r1.equals(Main.integer) && r2.equals(Main.decimal)))
-                {
                     addIntToDecNode(ctx.expression(0));
-                }
                 else if ((r1.equals(Main.decimal) && r2.equals(Main.integer)))
-                {
                     addIntToDecNode(ctx.expression(1));
-                }
             }
             // Check for a single literal
             //Check if type is equal
@@ -558,7 +554,7 @@ public class TypeChecker extends HOMEBaseVisitor<Type>
                 else if (r1.equals(Main.string) && !operator.equals("+"))
                     returnType = new ErrorType("String can only be concatenated with \"+\", no other operations allowed", false);
                 else
-                    returnType = r1;            //new Type(r1.type, r1.value + operator + r2.value);
+                    returnType = r1;
             }
             //Check if it is possible to convert from Int to Dec
             else if ((r1.equals(Main.integer) && r2.equals(Main.decimal)))

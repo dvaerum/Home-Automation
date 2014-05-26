@@ -425,11 +425,16 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     private FileOutputStream newClass;
 
+
+    HashMap<String, String> listOfSpecialCaseMethods = new HashMap<>();
+
     // The constructor of the bytecode visitor only generates the shell of the Jasmin J file.
     // The ByteCodeVisitor can then visit(ParseTree) from the HOMEBaseVisitor which in turn
     // runs through our entire code depending on the nodes attached to the tree.
     public ByteCodeVisitor()
     {
+        listOfSpecialCaseMethods.put("add", "Ljava/lang/Object;");
+
         globalVariables = new GlobalVariables();
     }
 
@@ -599,7 +604,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.assignment() != null)
         {
-            visitassignment(ctx.assignment(), stmts);
+            visitAssignment(ctx.assignment(), stmts);
         }
         else if (ctx.ifStmt() != null)
         {
@@ -615,7 +620,14 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else if (ctx.variableMethodCall() != null)
         {
-            visitVariableMethodCall(ctx.variableMethodCall(), stmts);
+            ExpressionReturn returnvalue = visitVariableMethodCall(ctx.variableMethodCall(), stmts);
+            if (returnvalue.equals(Main.decimal)){
+                stmts.add("pop2", ctx);
+            }
+            else if (!returnvalue.equals(Main.nothing))
+            {
+                stmts.add("pop", ctx);
+            }
         }
         else if (ctx.incDec() != null)
         {
@@ -624,10 +636,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (ctx.returnFunction() != null)
         {
             visitReturnFunction(ctx.returnFunction(), stmts);
-        }
-        else if (ctx.ifStmt() != null)
-        {
-            visitIfStmt(ctx.ifStmt(), stmts);
         }
     }
 
@@ -827,7 +835,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     }
 
     // Assign a value to a variable
-    void visitassignment(@NotNull HOMEParser.AssignmentContext ctx, Statements stmts)
+    void visitAssignment(@NotNull HOMEParser.AssignmentContext ctx, Statements stmts)
     {
         if (ctx.identifier() != null)
         {
@@ -893,11 +901,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             }
                         }
                     }
-                    else
-                    {
-                        buildList(ctx, stmts, symbolType, 1);
-                        stmts.add("aload " + currentLocal, ctx);
-                    }
                     variable.store(ctx, stmts);
                     break;
 
@@ -932,16 +935,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             }
                         }
                     }
-                    else
-                    {
-                        buildDictionary(ctx, stmts, symbolType, 1);
-                        stmts.add("aload " + currentLocal, ctx);
-                    }
                     variable.store(ctx, stmts);
                     break;
                 default:
                     visitExpression(ctx.expression(), stmts);
-                    stmts.add("astore " + variable.var.location, ctx);
+                    variable.store(ctx, stmts);
                     break;
 
             }
@@ -1380,14 +1378,19 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(Main.nothing, "");
     }
 
-    void visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts)
+    ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts)
     {
-        visitVariableMethodCall(ctx, stmts, false);
+        return visitVariableMethodCall(ctx, stmts, false);
     }
 
     ExpressionReturn visitVariableMethodCall(@NotNull HOMEParser.VariableMethodCallContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo variable = symbolTable.variables.getSymbol(ctx.identifier().getText());
+        Type type = variable.var.type;
+
+        if (type instanceof CollectionType){
+            type = ((CollectionType) type).primaryType;
+        }
 
         HOME.Type.Function variableMethod = variable.var.type.getMethodByName(ctx.funcCall().identifier().getText());
 
@@ -1399,13 +1402,17 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
 
         StringBuilder bytecode = new StringBuilder("invokevirtual ").
-                append(variable.var.type.getClassByteCode()).
+                append(type.getClassByteCode()).
                 append(".").append(variableMethod.name).
                 append("(");
 
-        for (Type parameter : variableMethod.parameters)
-        {
-            bytecode.append(parameter.getSimpleByteCode()); // TODO if this is a class, check bytecode for it.
+        if (listOfSpecialCaseMethods.containsKey(variableMethod.name) && (type.equals(Main.list) || type.equals(Main.dictionary))){
+            bytecode.append(listOfSpecialCaseMethods.get(variableMethod.name));
+        } else {
+            for (Type parameter : variableMethod.parameters)
+            {
+                bytecode.append(parameter.getSimpleByteCode());
+            }
         }
 
         bytecode.append(")").

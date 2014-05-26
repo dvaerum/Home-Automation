@@ -1,21 +1,33 @@
-Input TESTER = Input (32, "Stue")
-Input TESTER2 = returnTest2()
-List<List<Input>> abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
-Dictionary<Dictionary<Input>> abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
-List<Boolean> listBool = {true, false, true, true}
-String t = "hej" + " " + "med" + " " + "dig"
+Input TESTER = Input(32)
+Input TESTER2
+List<List<Input>> abe1 = {}
+Dictionary<Dictionary<Input>> abe2
+Boolean f
+List<Boolean> listBool = {f, false, true, true}
+String t
 
-    Decimal y = -24.3
-    Integer z = 3
+Decimal y
+Integer z
 
 function Setup() returns Nothing
+    TESTER2 = returnTest2()
+    abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
+    abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
+
+    abe1 = {}
+    abe1 = abe1
+    t = "hej" + " " + "med" + " " + "dig"
+    y = -24.3
+    z = 3
+
+    Decimal d = y
     y++
     z++
     PrintD(y)
     PrintI(z)
-    y--
+    d--
     z--
-    PrintD(y)
+    PrintD(d)
     PrintI(z)
 
     Integer x = 3
@@ -34,6 +46,14 @@ function Setup() returns Nothing
     PrintI(abe_0.getPort())
 
     /*******************
+    *    AnyAssing     *
+    *******************/
+    x -= 3
+    x *= 3
+    x /= 3
+    x %= 20
+
+    /*******************
     *****if/elseif/else*
     *******************/
 
@@ -42,7 +62,8 @@ function Setup() returns Nothing
     elseif(43 == x)
         x = x + 123
     else
-        x=x+4
+        x += 4
+        y += 4
     endif
 
     Boolean XXX = true
@@ -54,8 +75,8 @@ function Setup() returns Nothing
         PrintS("if(XXX) - Intet virker")
     endif
 
-    if(x == 3)
-        if(y < 3.3)
+    if(x == 3.0)
+        if(y < 3)
             y++
         else
             x--
@@ -99,7 +120,13 @@ function Setup() returns Nothing
     /************
     *Dictionary**
     ************/
-    Dictionary<Dictionary<Integer>> dic = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
+    Dictionary<Dictionary<Integer>> dic2
+    Dictionary<Dictionary<Integer>> dic = {}
+    dic = {}
+    dic = dic
+
+    dic2 = hejd()
+    dic = dic2
 
     dic["dic1"]["two"] = dic["dic1"]["two"] * 203
     dic["dic1"]["one"] -= 202
@@ -126,11 +153,6 @@ function Setup() returns Nothing
     **************/
 
     PrintI(TESTER.getPort())
-    TESTER.port = 4
-    PrintI(TESTER.getPort())
-
-    TESTER.setPort(1337)
-    PrintI(TESTER.port)
 
 
     /********************
@@ -139,11 +161,8 @@ function Setup() returns Nothing
     ********************/
 
     Input inputParam = TESTER2
-    PrintI(inputParam.port)
 
-    inputParam = returnTest2()
-    PrintI(inputParam.port)
-    inputParam.setPort(666)
+    inputParam = Input(42)
     PrintI(inputParam.getPort())
 
 
@@ -151,11 +170,14 @@ function Setup() returns Nothing
     returnForkTest2()
     returnForkTest3()
 
-    hejz()
+    List<List<String>> bye
+    bye = hejz()
+    List<String> bye2 = bye[0]
+    PrintS(bye2[0])
 endfunction
 
 function returnTest2() returns Input
-    Input testingObject = Input(333, "King")
+    Input testingObject = Input(333)
  return testingObject
 endfunction
 
@@ -195,6 +217,12 @@ endfunction
 function hejz() returns List<List<String>>
     List<List<String>> tester = {{"lol2"}}
     return tester
+endfunction
+
+function hejd() returns Dictionary<Dictionary<Integer>>
+    Dictionary<Dictionary<Integer>> tester = {"dic1" = {"one" = 1, "two" = 2}, "dic2" = {"three" = 3, "four" = 4}}
+    Dictionary<Dictionary<Integer>> tester2 = tester
+    return tester2
 endfunction
 
 function not() returns Nothing

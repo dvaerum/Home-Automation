@@ -96,7 +96,7 @@ public class Main
         //Create generic list and dictionary
         list = new Type("List");
         list.bytecode = "LJava/Lang/ArrayList;";
-        list.methods.add(new Function("add", nothing, generic.toList()));
+        list.methods.add(new Function("add", bool, generic.toList()));
         list.methods.add(new Function("remove", nothing, generic.toList()));
         list.methods.add(new Function("toString", string, new ArrayList<Type>()));
         dictionary = new Type("Dictionary");

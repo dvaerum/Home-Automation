@@ -584,7 +584,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
-//region Stmts
+    //region Stmts
 
     // Compiler jasmin code for one statement and
     // continue to the next statement if there are more
@@ -1567,9 +1567,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         symbolInfo.store(ctx, stmts);
     }
 
-//endregion
+    //endregion
 
-//region Visit Expression
+    //region Visit Expression
 
     ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts)
     {
@@ -1581,9 +1581,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return visitExpression(ctx, stmts, label, false);
     }
 
+    // Determines how to calculate expression and handling type converting if necessary
     ExpressionReturn visitExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, String label, boolean convertingFlag)
     {
-
+        // if set to true the value on the top of the operator stack is converted to decimal (double)
         if (!convertingFlag)
         {
             int lastChild = ctx.getChildCount() - 1;
@@ -1591,6 +1592,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             convertingFlag = ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext;
         }
 
+        //
         if (ctx.expression().size() == 2)
         {
             ExpressionReturn r1, r2;
@@ -1600,10 +1602,12 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             Type type = compareTypes(r1, r2);
 
+            // pops 2 values from the operator stack, calculate/compare and push one back
             if (label == null)
             {
                 type = visitOperator(ctx, stmts, type);
             }
+            // pops 2 values from the operator stack, compare and adds label
             else
             {
                 type = visitOperator(ctx, stmts, type, label);
@@ -1617,12 +1621,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             return new ExpressionReturn(r1.type, "");
         }
+        // Special case for if-stmt, if there only is one expression
+        // Example: if (x)
         else if (ctx.expression().size() == 0 && label != null)
         {
             ExpressionReturn r1 = visitExpression(ctx, stmts, null, convertingFlag);
 
             stmts.add("ifne " + label, ctx);
         }
+        // determines the method to push value to the operator stack
         else
         {
             // Is expression doesn't contain any expressions, use below
@@ -1652,13 +1659,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             }
         }
 
-        //should never get here
+        //should never get here, but if it happens it will almost always end with a NullPointerException
         return null;
     }
 
-//endregion
+    //endregion
 
-//region Visit Variables
+    //region Visit Variables
 
     ExpressionReturn visitIdentifier(@NotNull HOMEParser.IdentifierContext ctx, Statements stmts, boolean convertingFlag)
     {
@@ -1712,6 +1719,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(type.innerType, "");
     }
 
+    // Push a value from a field to the operator stack
     ExpressionReturn visitField(@NotNull HOMEParser.FieldContext ctx, Statements stmts, boolean convertingFlag)
     {
         SymbolInfo symbolClassInfo = symbolTable.variables.getSymbol(ctx.identifier(0).getText());
@@ -1732,10 +1740,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return new ExpressionReturn(fieldType, "");
     }
 
-//endregion
+    //endregion
 
-//region Expression methods
+    //region Expression methods
 
+    // Changes the value on the top of the operator stack to a negative value if positive and vice versa
     void visitNegate(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, ExpressionReturn value, boolean convertingFlag)
     {
         if (getNegate(ctx).equals("-"))
@@ -1751,6 +1760,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Returns a negate as a string if existing else return return empty string
     String getNegate(HOMEParser.ExpressionContext expressionContext)
     {
         if (expressionContext.expression().size() == 1)
@@ -1760,6 +1770,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return "";
     }
 
+    // Returns the operator as a string
     String getOperator(HOMEParser.ExpressionContext expressionContext)
     {
         if (expressionContext.expression().size() == 1)
@@ -1772,6 +1783,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Handling of the assignments operators +=, -=, *=, /= and %=
     private void visitAnyassignment(ParserRuleContext ctx, TerminalNode terminalNode, SymbolInfo variable, Statements stmts)
     {
         if (terminalNode == null)
@@ -1822,6 +1834,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         stmts.add(sassignment.toString(), ctx);
     }
 
+    // Determines literal, identifier or field  and adds it value to operator stack
     ExpressionReturn checkExpression(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, boolean convertingFlag)
     {
         if (ctx.expression(0).literal() != null)
@@ -1850,7 +1863,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             {
                 return null;
             }
-            //r1 = new ExpressionReturn(Main.integer, ctx.expression(0).literal().IntegerLiteral().getText());
         }
         else if (ctx.expression(0).identifier() != null)
         {
@@ -1872,6 +1884,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Determines and adds the operators for a comparison of 2 literal
     Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type)
     {
         //TODO: generalize for any operator
@@ -2092,6 +2105,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return null;
     }
 
+    // Determines and adds the operator for a if-stmt and set its goto label
     Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type, String label)
     {
         String operator = getOperator(ctx);
@@ -2195,6 +2209,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return null;
     }
 
+
     Type compareTypes(ExpressionReturn r1, ExpressionReturn r2)
     {
         if (r1.equals(Main.integer) && r2.equals(Main.integer))
@@ -2245,10 +2260,11 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     }
 
 
-//endregion
+    //endregion
 
-//region Literal
+    //region Literal
 
+    // Determines which kind of literal should be added to the stack
     ExpressionReturn visitLiteral(@NotNull HOMEParser.LiteralContext ctx, Statements stmts, boolean convertingFlag)
     {
         ExpressionReturn returnType = null;
@@ -2294,8 +2310,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return returnType;
     }
 
+    // Adds at literal value to the operater stack
     void addLiteral(ParserRuleContext ctx, Statements stmts, ExpressionReturn literal, boolean convertingFlag)
     {
+        // Adds a value of type integer
         if (literal.type == Main.integer && !convertingFlag)
         {
             int value = Integer.valueOf(literal.returnValue);
@@ -2321,6 +2339,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.add("bipush " + literal.returnValue, ctx); // can be optimized with bipush when below 127
             }
         }
+
+        // Adds a value of type decimal if it is integer value that needs to be converted to decimal
         else if (literal.type == Main.integer && convertingFlag)
         {
             double value = Double.valueOf(literal.returnValue);
@@ -2337,6 +2357,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 stmts.add("ldc2_w " + literal.returnValue + ".d", ctx); // check if .0d notation works or 2.d
             }
         }
+        // Adds a value of type decimal
         else if (literal.type == Main.decimal)
         {
             double value = Double.valueOf(literal.returnValue);
@@ -2356,15 +2377,16 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     stmts.add("ldc2_w " + literal.returnValue + ".d", ctx);
             }
         }
+        // Adds a reference to a string
         else if (literal.type == Main.string)
         {
             stmts.add("ldc " + literal.returnValue, ctx);
         }
     }
 
-//endregion
+    //endregion
 
-//region List and Dictionary
+    //region List and Dictionary
 
     void visitListLiteral(@NotNull HOMEParser.ListLiteralContext ctx, Statements stmts)
     {
@@ -2523,6 +2545,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         return -1;
     }
 
-//endregion
+    //endregion
 
 }

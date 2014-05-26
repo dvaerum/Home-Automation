@@ -1,6 +1,5 @@
 class AnalogInput
     fields
-        - Integer value
         - Event ON_CHANGED
     endfields
 

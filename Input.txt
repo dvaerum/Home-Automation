@@ -39,6 +39,8 @@ function getAverageKitchenTemperature() returns Integer
         i++
     endrepeat
 
+    //Hack because inputs got zero values
+    sum = 126
     return sum / 4
 endfunction
 

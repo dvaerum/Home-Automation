@@ -205,7 +205,6 @@ return
     bipush 25
     iload 1
     isub
-    invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
     invokevirtual HOME/classes/standard/AnalogOutput.setValue(I)V
     return
 .end method
@@ -244,6 +243,12 @@ return
     invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
     checkcast HOME/classes/standard/AnalogInput
     astore 5
+.line 38
+    iload 1
+    aload 5
+    invokevirtual HOME/classes/standard/AnalogInput.getValue()I
+    iadd
+    istore 1
 .line 39
     iload 2
     iconst_1

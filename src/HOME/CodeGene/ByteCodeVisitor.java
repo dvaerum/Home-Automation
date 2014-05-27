@@ -1408,13 +1408,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         // push object ref. to operator stack
         visitIdentifier(ctx.identifier(), stmts, false).invokeToObject(ctx, stmts);
 
-        ExpressionReturn returntype = null;
-        // push object ref. to operator stack from arguments
+        ExpressionReturn returnValue = null;
+        // push object ref. or simple type to operator stack from parameter
         for (HOMEParser.ExpressionContext expressionContext : ctx.funcCall().funcParameters().expression())
         {
-            visitExpression(expressionContext, stmts).actualType.invokeToObject(ctx, stmts);
+            returnValue = visitExpression(expressionContext, stmts);
+            if (listOfSpecialCaseMethods.containsKey(variableMethod.name) && (type.equals(Main.list) || type.equals(Main.dictionary))){
+                returnValue.actualType.invokeToObject(ctx, stmts);
+            }
         }
-        //returntype
 
         // Construct method call
         // Example: invokevirtual class.method(parameter)returnType

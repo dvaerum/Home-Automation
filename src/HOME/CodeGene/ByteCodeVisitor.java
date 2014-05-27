@@ -1286,7 +1286,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (loopType.equalsIgnoreCase("until"))
         {
             statements.add(label1 + ":", ctx);
-            // Check condition. If TRUE goto Label2
+            // Check condition. If true goto Label2
             visitExpression(ctx.expression(), statements, label2);
         }
 
@@ -1297,7 +1297,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         if (loopType.equalsIgnoreCase("while"))
         {
             statements.add(label2 + ":", ctx);
-            // Check condition. If TRUE goto Label1
+            // Check condition. If true goto Label1
             visitExpression(ctx.expression(), statements, label1);
         }
         else if (loopType.equalsIgnoreCase("until"))

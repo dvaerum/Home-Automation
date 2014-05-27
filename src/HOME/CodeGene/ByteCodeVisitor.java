@@ -707,10 +707,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
             case "List":
                 // There are 4 different special cases when creating a List, each being handled in their own special way.
-                // 1. List<Integer> aList, this case builds the list from the description given and only creates arraylist.
-                // 2. List<Integer> aList = {}, same as above yet we detect the depth of this list in case of a list within a list.
+                // 1. List<Integer> aList   , this case builds the list from the description given and only creates arraylist.
+                // 2. List<List<Integer>> aList = {{}}, same as above yet we detect the depth of this list in case of a list within a list.
                 // 3. List<Integer> aList = {1,2,3}
-                // 4. List<Integer> aList = someFunction
+                // 4. List<Integer> aList = someFunction()
                 symbolType = (CollectionType) symbolTable.types.getSymbol(ctx.type().getText());
                 int currentLocal = stmts.nextLocal();
                 if (ctx.expression() != null)
@@ -718,10 +718,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     if (ctx.expression().literal() != null)
                     {
                         int depth = emptyInit(ctx.expression().literal(), 1);
-                        //If depth equals -1, then it contains something
+                        //If depth equals -1, then the expression contains elements
                         if (depth == -1)
                         {
-                            // case 4
+                            // case 3
                             visitExpression(ctx.expression(), stmts);
                         }
                         else
@@ -732,7 +732,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     }
                     else
                     {
-                        // case 3
+                        // case 4
                         visitExpression(ctx.expression(), stmts);
                         stmts.add("astore " + currentLocal, ctx);
                         stmts.LocalInc();
@@ -753,27 +753,33 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 break;
 
             case "Dictionary":
+                // There are 4 different special cases when creating a List, each being handled in their own special way.
+                // 1. Dictionary<Integer> aList, this case builds the dictionary from the description given and only creates hashmap.
+                // 2. Dictionary<Integer> aList = {}, same as above yet we detect the depth of this list in case of a Dictionary within a dictionary.
+                // 3. Dictionary<Integer> aList = {"Test"=1}
+                // 4. Dictionary<Integer> aList = someFunction()
                 symbolType = (CollectionType) symbolTable.types.getSymbol(ctx.type().getText());
                 int currentLocal2 = stmts.nextLocal();
                 if (ctx.expression() != null)
                 {
-                    //If depth equals -1, then it contains something
                     if (ctx.expression().literal() != null)
                     {
                         int depth2 = emptyInit(ctx.expression().literal(), 1);
                         //If depth equals -1, then it contains something
                         if (depth2 == -1)
                         {
+                            // case 3
                             visitExpression(ctx.expression(), stmts);
                         }
                         else
                         {
+                            // case 2
                             buildDictionary(ctx, stmts, symbolType, depth2);
                         }
                     }
                     else
                     {
-                        // Here we do not re-use the list
+                        // case 4
                         visitExpression(ctx.expression(), stmts);
                         stmts.add("astore " + currentLocal2, ctx);
                         stmts.LocalInc();
@@ -781,6 +787,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 }
                 else
                 {
+                    // case 1
                     buildDictionary(ctx, stmts, symbolType, 1);
                 }
                 symbolTable.variables.addSymbol(ctx.identifier().getText(), symbolType, currentLocal2);
@@ -877,6 +884,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                     break;
 
                 case "List":
+                    // There are 4 different special cases when creating a List, each being handled in their own special way.
+                    // 1. List<List<Integer>> aList = {{}}, same as above yet we detect the depth of this list in case of a list within a list.
+                    // 2. List<Integer> aList = {1,2,3}
+                    // 3. List<Integer> aList = someFunction()
                     CollectionType symbolType = (CollectionType) variable.var.type;
                     int currentLocal = stmts.nextLocal();
                     if (ctx.expression() != null)
@@ -884,21 +895,23 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         if (ctx.expression().literal() != null)
                         {
                             int depth = emptyInit(ctx.expression().literal(), 1);
-                            //If depth equals -1, then it contains something
+                            //If depth equals -1, then the list literal contains elements
                             if (depth == -1)
                             {
+                                // case 2
                                 visitExpression(ctx.expression(), stmts);
                                 stmts.add("aload " + currentLocal, ctx);
                             }
                             else
                             {
+                                // case 1
                                 buildList(ctx, stmts, symbolType, depth);
                                 stmts.add("aload " + currentLocal, ctx);
                             }
                         }
                         else
                         {
-                            // Here we do not re-use the list and it is therefore on the stack, no need to aload
+                            // case 3
                             visitExpression(ctx.expression(), stmts);
                             if (variable.depth != 0)
                             {
@@ -907,10 +920,15 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                             }
                         }
                     }
+
                     variable.store(ctx, stmts);
                     break;
 
                 case "Dictionary":
+                    // There are 4 different special cases when creating a List, each being handled in their own special way.
+                    // 1. Dictionary<Integer> aList = {}, same as above yet we detect the depth of this list in case of a Dictionary within a dictionary.
+                    // 2. Dictionary<Integer> aList = {"Test"=1}
+                    // 3. Dictionary<Integer> aList = someFunction()
                     symbolType = (CollectionType) variable.var.type;
                     currentLocal = stmts.nextLocal();
                     if (ctx.expression() != null)
@@ -918,21 +936,23 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                         if (ctx.expression().literal() != null)
                         {
                             int depth = emptyInit(ctx.expression().literal(), 1);
-                            //If depth equals -1, then it contains something
+                            //If depth equals -1, then the dictionary literal contains elements
                             if (depth == -1)
                             {
+                                // case 2
                                 visitExpression(ctx.expression(), stmts);
                                 stmts.add("aload " + currentLocal, ctx);
                             }
                             else
                             {
+                                // case 1
                                 buildDictionary(ctx, stmts, symbolType, depth);
                                 stmts.add("aload " + currentLocal, ctx);
                             }
                         }
                         else
                         {
-                            // Here we do not re-use the list and it is therefore on the stack, no need to aload
+                            // case 3
                             visitExpression(ctx.expression(), stmts);
                             if (variable.depth != 0)
                             {
@@ -988,8 +1008,8 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
                 {
                     stmts.add("invokevirtual java/util/HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;", ctx);
                 }
-                stmts.add("checkcast " + Main.integer.getClassByteCode(), ctx); // TODO: real class pls
-                stmts.add("invokevirtual java/lang/Integer/intValue()I", ctx); // TODO: real class pls
+                stmts.add("checkcast " + Main.integer.getClassByteCode(), ctx);
+                stmts.add("invokevirtual java/lang/Integer/intValue()I", ctx);
                 visitExpression(ctx.expression(), stmts);
                 visitAnyassignment(ctx, ctx.AnyAssign(), symbol, stmts);
             }
@@ -1014,10 +1034,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (type.primaryType.name)
             {
                 case "List":
-                    stmts.add(String.format("invokevirtual %s.set(%sLjava/lang/Object;)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.set(%sLjava/lang/Object;)Ljava/lang/Object;", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode()), ctx);
                     break;
                 case "Dictionary":
-                    stmts.add(String.format("invokevirtual %s.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", Main.dictionary.getClassByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", Main.dictionary.getClassByteCode()), ctx);
                     break;
             }
             stmts.add("pop", ctx);
@@ -1328,7 +1348,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else
         {
             bytecode = "invokevirtual ";
-            // TODO This is hard coded, nono
+
             bytecode += "HOME/";
             bytecode += function.name + "(";
         }
@@ -1463,7 +1483,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
         else
         {
-            // TODO: MAKE USE OF visitExpression
+
             SymbolInfo symbol = null;
             if (ctx.expression().identifier() != null)
             {
@@ -1477,79 +1497,26 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (type)
             {
                 case "Integer":
-
-                    //TODO: Remove debug
-                    //region Debug
-                    stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;", ctx);
-                    if (ctx.expression().identifier() != null)
-                    {
-                        symbol.load(ctx, stmts);
-                    }
-                    else
-                    {
-                        visitExpression(ctx.expression(), stmts);
-                    }
-                    stmts.add("invokevirtual java/io/PrintStream/println(I)V", ctx);
-                    //endregion
-
                     stmts.add("ireturn", ctx);
                     break;
+
                 case "Decimal":
-
-                    // TODO: Remove debug
-                    //region Debug
-                    stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;", ctx);
-                    if (ctx.expression().identifier() != null)
-                    {
-                        symbol.load(ctx, stmts);
-                    }
-                    else
-                    {
-                        visitExpression(ctx.expression(), stmts);
-                    }
-                    stmts.add("invokevirtual java/io/PrintStream/println(D)V", ctx);
-                    //endregion
-
                     stmts.add("dreturn", ctx);
                     break;
 
                 case "Boolean":
-                    //TODO: Remove debug
-                    //region Debug
-                    stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;", ctx);
-                    if (ctx.expression().identifier() != null)
-                    {
-                        symbol.load(ctx, stmts);
-                    }
-                    else
-                    {
-                       visitExpression(ctx.expression(), stmts);
-                    }
-                    stmts.add("invokevirtual java/io/PrintStream/println(Z)V", ctx);
-                    //endregion
-
                     stmts.add("ireturn", ctx);
                     break;
 
-                //region Debug
                 case "String":
-                    // TODO: Remove debug
-                    stmts.add("dup", ctx);
-                    stmts.add("getstatic java/lang/System/out Ljava/io/PrintStream;", ctx);
-                    stmts.add("swap", ctx);
-                    stmts.add("invokevirtual java/io/PrintStream/println(" + symbolTable.types.getSymbol(type).getObjectByteCode() + ")V", ctx);
-
-
                     stmts.add("areturn", ctx);
                     break;
-                //endregion
 
                 case "Nothing":
                     stmts.add("return", ctx);
                     break;
 
                 default:
-
                     stmts.add("areturn", ctx);
                     break;
             }
@@ -1716,10 +1683,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             switch (type.primaryType.name)
             {
                 case "List":
-                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.list.getClassByteCode(), Main.integer.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx);
                     break;
                 case "Dictionary":
-                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.dictionary.getClassByteCode(), Main.object.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx); // TODO replace '%r' if this doesn't work for everything
+                    stmts.add(String.format("invokevirtual %s.get(%s)%s", Main.dictionary.getClassByteCode(), Main.object.getSimpleByteCode(), Main.object.getSimpleByteCode()), ctx);
                     break;
             }
 
@@ -1910,7 +1877,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     // Determines and adds the operators for a comparison of 2 literal
     Type visitOperator(@NotNull HOMEParser.ExpressionContext ctx, Statements stmts, Type type)
     {
-        //TODO: generalize for any operator
+
 
         String label1 = null;
         String label2 = null;
@@ -2283,13 +2250,13 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (ctx.listLiteral() != null)
         {
             returnType = new ExpressionReturn(Main.list, ctx.getText());
-            visitListLiteral(ctx.listLiteral(), stmts); // Todo visitListLiteral
+            visitListLiteral(ctx.listLiteral(), stmts);
         }
         else if (ctx.dictionaryLiteral() != null)
         {
             returnType = new ExpressionReturn(Main.dictionary, ctx.getText());
-            visitDictionaryLiteral(ctx.dictionaryLiteral(), stmts); // Todo visitListLiteral
-            // returnType = visitDictionaryLiteral(ctx.dictionaryLiteral()); Todo visitDictionaryLiteral
+            visitDictionaryLiteral(ctx.dictionaryLiteral(), stmts);
+
         }
         return returnType;
     }
@@ -2412,6 +2379,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+
+    // This function is called when we have a Declaration or Assignment with any elements in the expression,
+    // this results in the need to create the List from the definition of the input itself,
+    // meaning that the input: "List<List<Integer>> aList = {{}}" creates a List within a List without any elements
     private void buildList(ParserRuleContext ctx, Statements stmts, CollectionType symbolType, int depth)
     {
         stmts.add("new java/util/ArrayList", ctx);
@@ -2478,6 +2449,9 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // This function is called when we have a Declaration or Assignment with any elements in the expression,
+    // this results in the need to create the Dictionary from the definition of the input itself,
+    // meaning that the input: "List<Dictionary<Integer>> aList = {{}}" creates a Dictionary within a List without any elements
     private void buildDictionary(ParserRuleContext ctx, Statements stmts, CollectionType symbolType, int depth)
     {
         stmts.add("new java/util/HashMap", ctx);
@@ -2495,6 +2469,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         }
     }
 
+    // Check whether an expression on the right side contains any input and returns the depth of the expression. Case: List<Integer> = {}
     private int emptyInit(HOMEParser.LiteralContext ctx, int currDepth)
     {
         // if it returns -1, the expression/LiteralContext contains values. Otherwise it returns the depth of the list/dictionary

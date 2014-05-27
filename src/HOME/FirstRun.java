@@ -6,17 +6,16 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jacob on 20-03-14.
- */
 public class FirstRun extends HOMEBaseVisitor<Type>
 {
+    //Visits global declarations.
     @Override
     public Type visitGlobal(@NotNull HOMEParser.GlobalContext ctx)
     {
         Type returnType;
         if (ctx.declaration() != null)
         {
+            //Visits current declaration.
             returnType = Main.typeChecker.visitDeclaration(ctx.declaration());
             if (returnType instanceof ErrorType)
             {
@@ -27,7 +26,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
                 }
                 return returnType;
             }
-
+            //Visits next global if any.
             if (ctx.global() != null)
                 returnType = visitGlobal(ctx.global());
 
@@ -103,6 +102,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
 
         Function symbol = new Function(funcName, returns, paramTypes);
 
+        //Setup function. Special criteria exists for this function.
         if (funcName.equals("Setup"))
             if (paramTypes.size() > 0)
                 return new ErrorType("Function \"Setup\" doesn't accept any parameters, please remove these.", false);
@@ -118,6 +118,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
         return returnType;
     }
 
+    //Gets a list the parameters
     ArrayList<Type> getFunctionParameters(@NotNull HOMEParser.FunctionParametersContext ctx)
     {
         ArrayList<Type> returnLIst = new ArrayList<>();
@@ -130,7 +131,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
         return returnLIst;
     }
 
-
+    //Visits the type which can be either a collection or a class.
     @Override
     public Type visitType(@NotNull HOMEParser.TypeContext ctx)
     {
@@ -144,6 +145,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
     {
         String className = ctx.getText();
 
+        //Gets symbol in symbol table if it exist
         if (Main.symbolTable.types.symbolExists(className))
             return Main.symbolTable.types.getSymbol(className);
 
@@ -153,6 +155,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
     @Override
     public Type visitCollectionType(@NotNull HOMEParser.CollectionTypeContext ctx)
     {
+        //Gets type of the collection and the type within it.
         String primaryTypeText = ctx.getText().split("<")[0];
         Type innerType = visitType(ctx.type());
         String typeName = primaryTypeText + "<" + innerType.name + ">";
@@ -165,6 +168,7 @@ public class FirstRun extends HOMEBaseVisitor<Type>
         else
             return new ErrorType("Invalid collection Type", false);
 
+        //Returns collection if encountered before. Otherwise, add it to symbol table
         if (Main.symbolTable.types.symbolExists(typeName))
             return Main.symbolTable.types.getSymbol(typeName);
         else

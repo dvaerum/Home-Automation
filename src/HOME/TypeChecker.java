@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Jacob on 13-03-14.
- */
 public class TypeChecker extends HOMEBaseVisitor<Type>
 {
     private String currentFunction = "";

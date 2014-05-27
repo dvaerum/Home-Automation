@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Frederik on 09-04-2014.
- */
-
 public class Type
 {
     public String name;
@@ -46,7 +42,7 @@ public class Type
 
         //--------------Field parsing---------------------
         List<String> fieldNames = new ArrayList(Arrays.asList(fields.split("- ")));
-        //String[] fieldNames = constructorArgs.split("- ");
+
         fieldNames.remove(0);
         for (String singleField : fieldNames)
         {
@@ -158,6 +154,7 @@ public class Type
         //--------------End of constructor---------------------
     }
 
+    //Compares types regarding lists.
     public static boolean isListSubtypeOfList(List<Type> l1, List<Type> l2)
     {
         if (l1.size() == l2.size())
@@ -175,6 +172,7 @@ public class Type
         return true;
     }
 
+    //Comparison of simpler types
     public boolean isSubtypeOf(Type otherType)
     {
         if (this.equals(Main.integer))
@@ -189,6 +187,7 @@ public class Type
         return this.equals(otherType);
     }
 
+    //Find a method by its name.
     public Function getMethodByName(String name)
     {
         for (Function func : methods)
@@ -201,6 +200,7 @@ public class Type
         return null;
     }
 
+    //Gets a field by its name.
     public Variable getFieldByName(String name)
     {
         for (Variable var : fields)
@@ -219,6 +219,7 @@ public class Type
         return name;
     }
 
+    //Changes types to their java object implementation.
     public void invokeToObject(ParserRuleContext ctx, ByteCodeVisitor.Statements stmts)
     {
         switch (this.name)
@@ -235,6 +236,7 @@ public class Type
         }
     }
 
+    //Changes objects back to their primitive type.
     public void invokeToSimpleType(ParserRuleContext ctx, ByteCodeVisitor.Statements stmts)
     {
         switch (this.name)
@@ -273,7 +275,7 @@ public class Type
         {
             return "Ljava/lang/String;";
         }
-        if (this.equals(Main.list))
+        else if (this.equals(Main.list))
         {
             return "Ljava/util/ArrayList;";
         }
@@ -314,7 +316,7 @@ public class Type
         {
             return "Ljava/lang/String;";
         }
-        if (this.equals(Main.list))
+        else if (this.equals(Main.list))
         {
             return "Ljava/util/ArrayList;";
         }
@@ -328,7 +330,6 @@ public class Type
         }
         else
         {
-            //return "LHOME/" + this.bytecode + ";";
             return "LHOME/classes/" + this.bytecode + ";";
         }
     }
@@ -352,7 +353,7 @@ public class Type
         {
             return "java/lang/String";
         }
-        if (this.equals(Main.list))
+        else if (this.equals(Main.list))
         {
             return "java/util/ArrayList";
         }
@@ -366,7 +367,6 @@ public class Type
         }
         else
         {
-            //return "HOME/" + this.bytecode;
             return "HOME/classes/" + this.bytecode;
         }
     }

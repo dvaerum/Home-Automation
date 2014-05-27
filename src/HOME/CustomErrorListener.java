@@ -13,9 +13,6 @@ import org.antlr.v4.runtime.misc.Nullable;
 
 import java.util.*;
 
-/**
- * Created by alt_mulig on 3/26/14.
- */
 class CustomErrorListener extends DiagnosticErrorListener
 {
 
@@ -26,11 +23,13 @@ class CustomErrorListener extends DiagnosticErrorListener
 
     public List<String> ErrorMessages()
     {
+        //Returns the list of errors.
         return _errorMessages;
     }
 
     public Boolean HasErrors()
     {
+        //return true if there are any errors.
         return _errorMessages.size() > 0;
     }
 
@@ -43,7 +42,7 @@ class CustomErrorListener extends DiagnosticErrorListener
     @Override
     public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e)
     {
-
+        //Adds error messages.
         String temp = String.format("line %d,%d:", line, charPositionInLine);
         _errorMessages.add(String.format("%s %s",
                 msg.replace("\\n", ""),

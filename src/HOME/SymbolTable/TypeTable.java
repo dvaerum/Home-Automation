@@ -1,15 +1,10 @@
-package HOME.SymbolTable; /**
- * Created by Frederik on 09-04-2014.
- */
+package HOME.SymbolTable;
 
 import HOME.Type.*;
 
 import java.lang.Boolean;import java.lang.String;
 import java.util.HashMap;
 
-/**
- * Created by Frederik on 13-03-14.
- */
 public class TypeTable
 {
     private HashMap<String, Type> table = new HashMap<String, Type>();
@@ -31,11 +26,13 @@ public class TypeTable
 
     public Boolean symbolExists(String symbol)
     {
+        //Returns true or false for whether symbol exists.
         return table.containsKey(symbol);
     }
 
     public Type getSymbol(String symbol)
     {
+        //Returns the symbol
         return table.get(symbol);
     }
 }

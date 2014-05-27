@@ -12,9 +12,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Jacob on 12-03-14.
- */
 public class Main
 {
     public static SymbolTable symbolTable = new SymbolTable();
@@ -66,16 +63,6 @@ public class Main
             }
         }
 
-        //Remove this comment, if you want to see ANTLR warning messages.
-//        if (errorListener.HasWarnings())
-//        {
-//            System.out.println("--------------------------------- Warnings Messages ---------------------------------");
-//            for (String s : errorListener.WarningMessages())
-//            {
-//                System.out.println(s);
-//            }
-//        }
-
         if (parser.getNumberOfSyntaxErrors() > 0)
         {
             System.out.println("Syntax error, please check your program, and correct the errors above.");
@@ -109,7 +96,7 @@ public class Main
         //Instantiate typechecker, because this is used in firstrun
         typeChecker = new TypeChecker();
 
-        //System.out.println("\n-----------------------------FirstRun-----------------------\n");
+        System.out.println("\n-----------------------------FirstRun-----------------------\n");
         //Firstrun is the first pass in the compiler, and this reads the functions and global variables, and adds to symboltable
         FirstRun firstVisit = new FirstRun();
 
@@ -145,11 +132,9 @@ public class Main
         {
             file.delete();
         }
-        // TODO change
+
         symbolTable.resetVariableTable();
 
-//        HOME.CodeGene.Main codeGeneration = new HOME.CodeGene.Main();
-//        codeGeneration.main(null);
         object.bytecode = "Ljava/lang/Object;";
         symbolTable.types.addSymbol(object.name, object);
         list.bytecode = "Ljava/util/ArrayList;";
@@ -185,42 +170,11 @@ public class Main
             System.out.println(e.toString());
         }
 
-
-/*
-        System.out.println("-----------------------------Decompiling-----------------------");
-        try
-        {
-            // Run a java app in a separate system process
-            Process proc = Runtime.getRuntime().exec("javap -c -v -private HOME.class");
-            //proc.waitFor();
-            // Then retreive the process output
-            InputStream in = proc.getInputStream();
-            InputStream err = proc.getErrorStream();
-
-            BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
-            BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
-            String s;
-            while ((s = bIn.readLine()) != null)
-            {
-                System.out.println(s);
-            }
-            while ((s = bErr.readLine()) != null)
-            {
-                System.out.println(s);
-            }
-        } catch (Exception e)
-        {
-            System.out.println(e.toString());
-        }
-*/
-
-
         System.out.println("-----------------------------Running-----------------------");
         try
         {
             // Run a java app in a separate system process
             Process proc = Runtime.getRuntime().exec("java HOME");
-            //proc.waitFor();
             // Then retreive the process output
             InputStream in = proc.getInputStream();
             InputStream err = proc.getErrorStream();
@@ -240,12 +194,5 @@ public class Main
         {
             System.out.println(e.toString());
         }
-
-        // System.out.println("omagmward");
-//==============  UNCOMMENT THIS IF YOU WANT TO SEE THE TREE <-----------------------------------
-//        HOMEParser.ProgramContext lol = ((HOMEParser.ProgramContext)tree);
-//        lol.inspect(parser);
-//=================================================================================
-
     }
 }

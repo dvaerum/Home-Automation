@@ -11,9 +11,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Jacob on 26-03-14.
- */
 class FileReader
 {
     private SymbolTable symbolTable = Main.symbolTable;

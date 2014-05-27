@@ -1,15 +1,10 @@
-package HOME.SymbolTable; /**
- * Created by Frederik on 09-04-2014.
- */
+package HOME.SymbolTable;
 
 import java.lang.Boolean;import java.lang.RuntimeException;import java.lang.String;import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import HOME.Type.*;
 
-/**
- * Created by Frederik on 13-03-14.
- */
 public class VariableTable
 {
     private HashMap<String, Deque<SymbolInfo>> table = new HashMap<String, Deque<SymbolInfo>>();
@@ -25,6 +20,7 @@ public class VariableTable
         if (currentScope <= 0)
             throw new RuntimeException("Closing nonexistent scope");
 
+        //Removes all the variables on this scope. Goes through all the stacks for the variables.
         for (Deque<SymbolInfo> stack : table.values())
         {
             if (stack.peek() != null && stack.peek().depth == currentScope)
@@ -61,9 +57,12 @@ public class VariableTable
 
     private Deque<SymbolInfo> addSymbolIfNotExisting(String symbol){
         Deque<SymbolInfo> stack;
+
+        //If symbol already exists, return it.
         if (table.containsKey(symbol))
             return table.get(symbol);
         else {
+            //Otherwise, make new stack for the symbol.
             stack = new ArrayDeque<SymbolInfo>();
             table.put(symbol, stack);
             return stack;
@@ -72,8 +71,12 @@ public class VariableTable
 
     public SymbolInfo addAndGetSymbol(String symbol, Type type, int location){
         SymbolInfo info = new SymbolInfo(symbol, type, location, currentScope);
+
+        //Adds to stack
         Deque<SymbolInfo> stack = addSymbolIfNotExisting(symbol);
         stack.push(info);
+
+        //Return same symbol(which is now on top of stack)
         return stack.peek();
     }
 
@@ -83,8 +86,10 @@ public class VariableTable
 
     public Boolean symbolExists(String symbol)
     {
+        //Checks whether the symbol exists.
         Deque<SymbolInfo> stack = table.get(symbol);
         SymbolInfo info;
+
         if (stack == null)
             return false;
         info = stack.peek();

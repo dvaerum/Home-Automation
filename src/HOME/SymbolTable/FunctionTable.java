@@ -1,15 +1,12 @@
-package HOME.SymbolTable; /**
- * Created by Frederik on 09-04-2014.
- */
+package HOME.SymbolTable;
+
 import HOME.Main;
 import HOME.Type.*;
 
 import java.lang.Boolean;
 import java.lang.String;
 import java.util.HashMap;
-/**
- * Created by Frederik on 13-03-14.
- */
+
 public class FunctionTable
 {
     private HashMap<String, Function> table = new HashMap<String, Function>();
@@ -31,16 +28,19 @@ public class FunctionTable
 
     public Boolean symbolExists(String symbol)
     {
+        //Returns true or false for whether symbol exists.
         return table.containsKey(symbol);
     }
 
     public Function getSymbol(String symbol)
     {
+        //Returns the symbol
         return table.get(symbol);
     }
 
     public boolean isFunctionConstructor(String symbol)
     {
+        //Checks whether function is constructor.
         return Main.symbolTable.types.symbolExists(symbol);
     }
 }

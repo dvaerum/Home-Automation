@@ -1,12 +1,10 @@
 package HOME.Type;
 
-/**
- * Created by Frederik on 09-04-2014.
- */
 public class Variable
 {
     public String name;
     public Type type;
+    //Location in memory
     public int location;
 
     public Variable(String name, Type type)

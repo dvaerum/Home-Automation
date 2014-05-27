@@ -1,10 +1,5 @@
-package HOME.SymbolTable; /**
- * Created by Frederik on 09-04-2014.
- */
+package HOME.SymbolTable;
 
-/**
- * Created by Frederik on 13-03-14.
- */
 public class SymbolTable
 {
     public FunctionTable functions = new FunctionTable();
@@ -14,23 +9,28 @@ public class SymbolTable
     private Integer labelNumber = 0;
 
     public String newLabel() {
+        //Returns new label for jumps.
         labelNumber++;
         return "Label" + labelNumber;
     }
 
     public String getLabel() {
+        //Gets the current label
         return "Label" + labelNumber + ":";
     }
 
     public void newLine() {
+        //Increments the line number
         lineNumber++;
     }
 
     public String getLineNumberText() {
+        //Gives the line of the code
         return ".line " + lineNumber;
     }
 
     public void resetVariableTable(){
+        //Resets the entire variable table.
         variables= new VariableTable();
     }
 

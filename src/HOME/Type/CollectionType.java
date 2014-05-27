@@ -5,9 +5,6 @@ import HOME.Main;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by Frederik on 14-04-14.
- */
 public class CollectionType extends Type
 {
     public Type primaryType;
@@ -30,6 +27,7 @@ public class CollectionType extends Type
 
     public Type getInnermostType()
     {
+        //Continues to go down into collection until non-collection type is found.
         if (innerType instanceof CollectionType)
             return ((CollectionType) innerType).getInnermostType();
         return innerType;
@@ -38,6 +36,7 @@ public class CollectionType extends Type
     @Override
     public boolean isSubtypeOf(Type otherType)
     {
+        //Method used for comparing types
         if (otherType instanceof CollectionType)
         {
             if (this.innerType.equals(Main.anything))
@@ -76,7 +75,6 @@ public class CollectionType extends Type
         return null;
     }
 
-    //@Override
     public String getClassByteCode() {
         if (this.primaryType.equals(Main.list)){
             return "java/util/ArrayList";

@@ -25,6 +25,7 @@ public class SymbolInfo
 
     public void store(ParserRuleContext ctx, Statements stmts)
     {
+        //If at scope 0, it's a field
         if (depth == 0)
         {
             var.type.invokeToObject(ctx, stmts);
@@ -34,13 +35,15 @@ public class SymbolInfo
         }
         else
         {
-            storeOptimaze(ctx, stmts);
+            //Otherwise, store it regularly.
+            storeOptimize(ctx, stmts);
         }
     }
 
-    private void storeOptimaze(ParserRuleContext ctx, Statements stmts)
+    private void storeOptimize(ParserRuleContext ctx, Statements stmts)
     {
-        String typePrefix = "";
+        //Constructs correct store instruction.
+        String typePrefix;
 
         if (var.type.equals(Main.integer))
         {
@@ -77,6 +80,7 @@ public class SymbolInfo
 
     private void loadOptimaze(ParserRuleContext ctx, Statements stmts)
     {
+        //Constructs a correct load instruction
         String typePrefix = "";
 
         if (var.type.equals(Main.integer))

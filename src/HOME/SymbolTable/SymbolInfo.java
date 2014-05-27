@@ -74,14 +74,14 @@ public class SymbolInfo
         }
         else
         {
-            loadOptimaze(ctx, stmts);
+            loadOptimize(ctx, stmts);
         }
     }
 
-    private void loadOptimaze(ParserRuleContext ctx, Statements stmts)
+    private void loadOptimize(ParserRuleContext ctx, Statements stmts)
     {
         //Constructs a correct load instruction
-        String typePrefix = "";
+        String typePrefix;
 
         if (var.type.equals(Main.integer))
         {

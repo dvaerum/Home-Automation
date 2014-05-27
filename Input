@@ -11,11 +11,11 @@ Integer z
 
 function Setup() returns Nothing
     TESTER2 = returnTest2()
+    abe1 = {}
+    abe1 = abe1
     abe1 = {{TESTER, TESTER2},{TESTER, TESTER2}}
     abe2 = {"dic1"={"dic1"=TESTER, "dic2"=TESTER2},"dic1"={"dic1"=TESTER, "dic2"=TESTER2}}
 
-    abe1 = {}
-    abe1 = abe1
     t = "hej" + " " + "med" + " " + "dig"
     y = -24.3
     z = 3
@@ -110,6 +110,9 @@ function Setup() returns Nothing
     ************/
 
     List<List<Integer>> list_2 = {{11,22,33}, {44,55,66}, {77,88,99}}
+
+    list_2[1][1] = 555
+    list_2[1][1] += 5000
 
     repeat foreach(List<Integer> list in list_2)
         repeat foreach(Integer xxx in list)
@@ -215,7 +218,8 @@ function returnForkTest3() returns Integer
 endfunction
 
 function hejz() returns List<List<String>>
-    List<List<String>> tester = {{"lol2"}}
+    List<List<String>> tester = {{}}
+    tester = {{"lol2"}}
     return tester
 endfunction
 

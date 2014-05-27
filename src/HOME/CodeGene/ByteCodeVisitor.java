@@ -442,12 +442,10 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
     // write to the Jasmin J file corresponding to the results build
     public void build() throws IOException
     {
-        String cwd = new File("").getAbsolutePath();
-
-        File newClassFile = new File(cwd + "/HOME/CodeGene/" + "Output_test.j");
+        File newClassFile = new File("Output_test.j");
         newClass = new FileOutputStream(newClassFile);
 
-        Scanner metaClass = new Scanner(new File("HOME/CodeGene/Frame"));
+        Scanner metaClass = new Scanner(new File("src/HOME/CodeGene/Frame"));
         while (metaClass.hasNextLine())
         {
             Write(metaClass.nextLine());

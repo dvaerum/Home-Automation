@@ -21,10 +21,10 @@ class FileReader
     //Insert prototype of classes
     public void loadClassPrototypes()
     {
-        File standardDir = new File("HOME" + File.separator + "classes" + File.separator + "standard");
-        File customDir = new File("HOME" + File.separator + "classes" + File.separator + "custom");
+        File standardDir = new File("src/HOME/classes/standard");
+        File customDir = new File("src/HOME/classes/custom");
         String files;
-
+        //System.out.println(standardDir.getAbsolutePath());
         //Get list of standard and custom-classses
         List<File> listOfFiles = new ArrayList(Arrays.asList(standardDir.listFiles()));
         List<File> listOfFiles2 = new ArrayList(Arrays.asList(customDir.listFiles()));
@@ -65,7 +65,7 @@ class FileReader
 
     void loadClasses(String folderName) throws IOException
     {
-        File standardDir = new File("HOME" + File.separator + "classes" + File.separator + folderName);
+        File standardDir = new File("src/HOME/classes/" + folderName);
 
         //Get all files that ends with .def, to prevent both processing .txt and .def files
         List<File> expectedClasses = new ArrayList(Arrays.asList(standardDir.listFiles(new FilenameFilter()

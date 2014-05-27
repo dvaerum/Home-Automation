@@ -38,7 +38,7 @@ public class Main
 
     public static void main(String[] args) throws IOException
     {
-        ANTLRFileStream stream = new ANTLRFileStream("NotInput");
+        ANTLRFileStream stream = new ANTLRFileStream("Input.txt");
         HOMELexer lexer = new HOMELexer(stream);
         HOMEParser parser = new HOMEParser(new CommonTokenStream(lexer));
 
@@ -163,7 +163,7 @@ public class Main
         try
         {
             // Run a java app in a separate system process
-            Process proc = Runtime.getRuntime().exec("java -jar jar/jasmin.jar HOME/CodeGene/Output_test.j");
+            Process proc = Runtime.getRuntime().exec("java -jar src/jar/jasmin.jar Output_test.j");
             proc.waitFor();
             // Then retreive the process output
             InputStream in = proc.getInputStream();
@@ -186,6 +186,7 @@ public class Main
         }
 
 
+/*
         System.out.println("-----------------------------Decompiling-----------------------");
         try
         {
@@ -211,6 +212,7 @@ public class Main
         {
             System.out.println(e.toString());
         }
+*/
 
 
         System.out.println("-----------------------------Running-----------------------");

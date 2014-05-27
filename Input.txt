@@ -35,7 +35,7 @@ function getAverageKitchenTemperature() returns Integer
     Integer i =  1
     repeat until(i > 4)
         AnalogInput a = kitchenThermostats["thermo" + i.toString()]
-        sum += a.getValue()
+        //sum += a.getValue()
         i++
     endrepeat
 

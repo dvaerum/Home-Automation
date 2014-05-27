@@ -1286,18 +1286,18 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
         else if (loopType.equalsIgnoreCase("until"))
         {
             statements.add(label1 + ":", ctx);
-            // CHECK CONDITION. IF TRUE GOTO LABEL2);
+            // Check condition. If TRUE goto Label2
             visitExpression(ctx.expression(), statements, label2);
         }
 
-        // DO STUFF HERE
+        // Do stuff here
         visitStmts(ctx.stmts(), statements);
 
 
         if (loopType.equalsIgnoreCase("while"))
         {
             statements.add(label2 + ":", ctx);
-            // CHECK CONDITION. IF TRUE GOTO LABEL1);
+            // Check condition. If TRUE goto Label1
             visitExpression(ctx.expression(), statements, label1);
         }
         else if (loopType.equalsIgnoreCase("until"))

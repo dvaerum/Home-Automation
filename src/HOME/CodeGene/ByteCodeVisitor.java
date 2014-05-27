@@ -1579,7 +1579,7 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
             convertingFlag = ctx.getChild(lastChild) instanceof  HOMEParser.Int2decContext;
         }
 
-        //
+        // if a binary operator, like 2+3
         if (ctx.expression().size() == 2)
         {
             ExpressionReturn r1, r2;

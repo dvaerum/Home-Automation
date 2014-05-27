@@ -461,7 +461,6 @@ public class ByteCodeVisitor extends HOMEBaseVisitor
 
     void Write(String out)
     {
-        System.out.println(out);
         try
         {
             newClass.write(

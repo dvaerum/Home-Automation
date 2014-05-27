@@ -169,30 +169,5 @@ public class Main
         {
             System.out.println(e.toString());
         }
-
-        System.out.println("-----------------------------Running-----------------------");
-        try
-        {
-            // Run a java app in a separate system process
-            Process proc = Runtime.getRuntime().exec("java HOME");
-            // Then retreive the process output
-            InputStream in = proc.getInputStream();
-            InputStream err = proc.getErrorStream();
-
-            BufferedReader bIn = new BufferedReader(new InputStreamReader(in));
-            BufferedReader bErr = new BufferedReader(new InputStreamReader(err));
-            String s;
-            while ((s = bIn.readLine()) != null)
-            {
-                System.out.println(s);
-            }
-            while ((s = bErr.readLine()) != null)
-            {
-                System.out.println(s);
-            }
-        } catch (Exception e)
-        {
-            System.out.println(e.toString());
-        }
     }
 }
